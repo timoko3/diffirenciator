@@ -1,0 +1,209 @@
+[DEBUG] differentiator.cpp:60:differentiatorReadData(): akinator buffer: ("*" ("x" nil nil ) ("+" ("y" nil nil ) ("6" nil nil )))
+
+[DEBUG] differentiator.cpp:102:readNode(): скобочка
+
+[DEBUG] differentiator.cpp:190:differentiatorCreateNode(): записал указатель в data нового node
+[DEBUG] differentiator.cpp:196:differentiatorCreateNode(): буфер перед чтением: "*" ("x" nil nil ) ("+" ("y" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:199:differentiatorCreateNode(): Получил размер строки 3 и саму строку *
+[DEBUG] differentiator.cpp:217:differentiatorCreateNode(): 
+буфер после чтением:  ("x" nil nil ) ("+" ("y" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:112:readNode(): адрес текущей созданной ноды: 0x504000000010
+[DEBUG] differentiator.cpp:114:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:102:readNode(): скобочка
+
+[DEBUG] differentiator.cpp:184:differentiatorCreateNode(): Выделил память
+[DEBUG] differentiator.cpp:190:differentiatorCreateNode(): записал указатель в data нового node
+[DEBUG] differentiator.cpp:196:differentiatorCreateNode(): буфер перед чтением: "x" nil nil ) ("+" ("y" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:199:differentiatorCreateNode(): Получил размер строки 3 и саму строку x
+[DEBUG] differentiator.cpp:226:differentiatorCreateNode(): 
+буфер после чтением:  nil nil ) ("+" ("y" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:112:readNode(): адрес текущей созданной ноды: 0x504000000050
+[DEBUG] differentiator.cpp:114:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:139:isNilNode(): буфер перед чтением: nil nil ) ("+" ("y" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:142:isNilNode(): Прочиталось внутри случая nil: nil
+[DEBUG] general/strFunc.cpp:57:isEqualStrings(): hash answer nil, длина 4: 6385511880, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:144:isNilNode(): Зашел в nil
+[DEBUG] differentiator.cpp:146:isNilNode(): буфер после чтения:  nil ) ("+" ("y" nil nil ) ("6" nil nil )))
+
+[DEBUG] differentiator.cpp:139:isNilNode(): буфер перед чтением: nil ) ("+" ("y" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:142:isNilNode(): Прочиталось внутри случая nil: nil
+[DEBUG] general/strFunc.cpp:57:isEqualStrings(): hash answer nil, длина 4: 6385511880, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:144:isNilNode(): Зашел в nil
+[DEBUG] differentiator.cpp:146:isNilNode(): буфер после чтения:  ) ("+" ("y" nil nil ) ("6" nil nil )))
+
+[DEBUG] differentiator.cpp:102:readNode(): скобочка
+
+[DEBUG] differentiator.cpp:184:differentiatorCreateNode(): Выделил память
+[DEBUG] differentiator.cpp:190:differentiatorCreateNode(): записал указатель в data нового node
+[DEBUG] differentiator.cpp:196:differentiatorCreateNode(): буфер перед чтением: "+" ("y" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:199:differentiatorCreateNode(): Получил размер строки 3 и саму строку +
+[DEBUG] differentiator.cpp:217:differentiatorCreateNode(): 
+буфер после чтением:  ("y" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:112:readNode(): адрес текущей созданной ноды: 0x504000000090
+[DEBUG] differentiator.cpp:114:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:102:readNode(): скобочка
+
+[DEBUG] differentiator.cpp:184:differentiatorCreateNode(): Выделил память
+[DEBUG] differentiator.cpp:190:differentiatorCreateNode(): записал указатель в data нового node
+[DEBUG] differentiator.cpp:196:differentiatorCreateNode(): буфер перед чтением: "y" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:199:differentiatorCreateNode(): Получил размер строки 3 и саму строку y
+[DEBUG] differentiator.cpp:226:differentiatorCreateNode(): 
+буфер после чтением:  nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:112:readNode(): адрес текущей созданной ноды: 0x5040000000d0
+[DEBUG] differentiator.cpp:114:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:139:isNilNode(): буфер перед чтением: nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:142:isNilNode(): Прочиталось внутри случая nil: nil
+[DEBUG] general/strFunc.cpp:57:isEqualStrings(): hash answer nil, длина 4: 6385511880, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:144:isNilNode(): Зашел в nil
+[DEBUG] differentiator.cpp:146:isNilNode(): буфер после чтения:  nil ) ("6" nil nil )))
+
+[DEBUG] differentiator.cpp:139:isNilNode(): буфер перед чтением: nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:142:isNilNode(): Прочиталось внутри случая nil: nil
+[DEBUG] general/strFunc.cpp:57:isEqualStrings(): hash answer nil, длина 4: 6385511880, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:144:isNilNode(): Зашел в nil
+[DEBUG] differentiator.cpp:146:isNilNode(): буфер после чтения:  ) ("6" nil nil )))
+
+[DEBUG] differentiator.cpp:102:readNode(): скобочка
+
+[DEBUG] differentiator.cpp:184:differentiatorCreateNode(): Выделил память
+[DEBUG] differentiator.cpp:190:differentiatorCreateNode(): записал указатель в data нового node
+[DEBUG] differentiator.cpp:196:differentiatorCreateNode(): буфер перед чтением: "6" nil nil )))
+[DEBUG] differentiator.cpp:199:differentiatorCreateNode(): Получил размер строки 3 и саму строку 6
+[DEBUG] differentiator.cpp:112:readNode(): адрес текущей созданной ноды: 0x504000000110
+[DEBUG] differentiator.cpp:114:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:139:isNilNode(): буфер перед чтением: 6" nil nil )))
+[DEBUG] differentiator.cpp:142:isNilNode(): Прочиталось внутри случая nil: 6"
+[DEBUG] general/strFunc.cpp:57:isEqualStrings(): hash answer 6", длина 3: 193436925, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:112:readNode(): адрес текущей созданной ноды: (nil)
+[DEBUG] differentiator.cpp:114:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:139:isNilNode(): буфер перед чтением: " nil nil )))
+[DEBUG] differentiator.cpp:142:isNilNode(): Прочиталось внутри случая nil: "
+[DEBUG] general/strFunc.cpp:57:isEqualStrings(): hash answer ", длина 2: 5861031, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:112:readNode(): адрес текущей созданной ноды: (nil)
+[DEBUG] differentiator.cpp:114:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:139:isNilNode(): буфер перед чтением: nil nil )))
+[DEBUG] differentiator.cpp:142:isNilNode(): Прочиталось внутри случая nil: nil
+[DEBUG] general/strFunc.cpp:57:isEqualStrings(): hash answer nil, длина 4: 6385511880, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:144:isNilNode(): Зашел в nil
+[DEBUG] differentiator.cpp:146:isNilNode(): буфер после чтения:  nil )))
+
+[DEBUG] differentiator.cpp:60:differentiatorReadData(): akinator buffer: ("*" ("x" nil nil ) ("+" ("y" nil nil ) ("6" nil nil )))
+
+[DEBUG] differentiator.cpp:102:readNode(): скобочка
+
+[DEBUG] differentiator.cpp:193:differentiatorCreateNode(): записал указатель в data нового node
+[DEBUG] differentiator.cpp:199:differentiatorCreateNode(): буфер перед чтением: "*" ("x" nil nil ) ("+" ("y" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:202:differentiatorCreateNode(): Получил размер строки 3 и саму строку *
+[DEBUG] differentiator.cpp:220:differentiatorCreateNode(): 
+буфер после чтением:  ("x" nil nil ) ("+" ("y" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:115:readNode(): адрес текущей созданной ноды: 0x504000000010
+[DEBUG] differentiator.cpp:117:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:102:readNode(): скобочка
+
+[DEBUG] differentiator.cpp:187:differentiatorCreateNode(): Выделил память
+[DEBUG] differentiator.cpp:193:differentiatorCreateNode(): записал указатель в data нового node
+[DEBUG] differentiator.cpp:199:differentiatorCreateNode(): буфер перед чтением: "x" nil nil ) ("+" ("y" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:202:differentiatorCreateNode(): Получил размер строки 3 и саму строку x
+[DEBUG] differentiator.cpp:229:differentiatorCreateNode(): 
+буфер после чтением:  nil nil ) ("+" ("y" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:115:readNode(): адрес текущей созданной ноды: 0x504000000050
+[DEBUG] differentiator.cpp:117:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:142:isNilNode(): буфер перед чтением: nil nil ) ("+" ("y" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:145:isNilNode(): Прочиталось внутри случая nil: nil
+[DEBUG] general/strFunc.cpp:57:isEqualStrings(): hash answer nil, длина 4: 6385511880, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:147:isNilNode(): Зашел в nil
+[DEBUG] differentiator.cpp:149:isNilNode(): буфер после чтения:  nil ) ("+" ("y" nil nil ) ("6" nil nil )))
+
+[DEBUG] differentiator.cpp:142:isNilNode(): буфер перед чтением: nil ) ("+" ("y" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:145:isNilNode(): Прочиталось внутри случая nil: nil
+[DEBUG] general/strFunc.cpp:57:isEqualStrings(): hash answer nil, длина 4: 6385511880, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:147:isNilNode(): Зашел в nil
+[DEBUG] differentiator.cpp:149:isNilNode(): буфер после чтения:  ) ("+" ("y" nil nil ) ("6" nil nil )))
+
+[DEBUG] differentiator.cpp:102:readNode(): скобочка
+
+[DEBUG] differentiator.cpp:187:differentiatorCreateNode(): Выделил память
+[DEBUG] differentiator.cpp:193:differentiatorCreateNode(): записал указатель в data нового node
+[DEBUG] differentiator.cpp:199:differentiatorCreateNode(): буфер перед чтением: "+" ("y" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:202:differentiatorCreateNode(): Получил размер строки 3 и саму строку +
+[DEBUG] differentiator.cpp:220:differentiatorCreateNode(): 
+буфер после чтением:  ("y" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:115:readNode(): адрес текущей созданной ноды: 0x504000000090
+[DEBUG] differentiator.cpp:117:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:102:readNode(): скобочка
+
+[DEBUG] differentiator.cpp:187:differentiatorCreateNode(): Выделил память
+[DEBUG] differentiator.cpp:193:differentiatorCreateNode(): записал указатель в data нового node
+[DEBUG] differentiator.cpp:199:differentiatorCreateNode(): буфер перед чтением: "y" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:202:differentiatorCreateNode(): Получил размер строки 3 и саму строку y
+[DEBUG] differentiator.cpp:229:differentiatorCreateNode(): 
+буфер после чтением:  nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:115:readNode(): адрес текущей созданной ноды: 0x5040000000d0
+[DEBUG] differentiator.cpp:117:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:142:isNilNode(): буфер перед чтением: nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:145:isNilNode(): Прочиталось внутри случая nil: nil
+[DEBUG] general/strFunc.cpp:57:isEqualStrings(): hash answer nil, длина 4: 6385511880, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:147:isNilNode(): Зашел в nil
+[DEBUG] differentiator.cpp:149:isNilNode(): буфер после чтения:  nil ) ("6" nil nil )))
+
+[DEBUG] differentiator.cpp:142:isNilNode(): буфер перед чтением: nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:145:isNilNode(): Прочиталось внутри случая nil: nil
+[DEBUG] general/strFunc.cpp:57:isEqualStrings(): hash answer nil, длина 4: 6385511880, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:147:isNilNode(): Зашел в nil
+[DEBUG] differentiator.cpp:149:isNilNode(): буфер после чтения:  ) ("6" nil nil )))
+
+[DEBUG] differentiator.cpp:102:readNode(): скобочка
+
+[DEBUG] differentiator.cpp:187:differentiatorCreateNode(): Выделил память
+[DEBUG] differentiator.cpp:193:differentiatorCreateNode(): записал указатель в data нового node
+[DEBUG] differentiator.cpp:199:differentiatorCreateNode(): буфер перед чтением: "6" nil nil )))
+[DEBUG] differentiator.cpp:202:differentiatorCreateNode(): Получил размер строки 3 и саму строку 6
+[DEBUG] differentiator.cpp:115:readNode(): адрес текущей созданной ноды: 0x504000000110
+[DEBUG] differentiator.cpp:117:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:142:isNilNode(): буфер перед чтением: 6" nil nil )))
+[DEBUG] differentiator.cpp:145:isNilNode(): Прочиталось внутри случая nil: 6"
+[DEBUG] general/strFunc.cpp:57:isEqualStrings(): hash answer 6", длина 3: 193436925, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:110:readNode(): readNode: неожиданный символ, не '(' и не nil. Позиция: 42
+
+[DEBUG] differentiator.cpp:142:isNilNode(): буфер перед чтением: 6" nil nil )))
+[DEBUG] differentiator.cpp:145:isNilNode(): Прочиталось внутри случая nil: 6"
+[DEBUG] general/strFunc.cpp:57:isEqualStrings(): hash answer 6", длина 3: 193436925, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:110:readNode(): readNode: неожиданный символ, не '(' и не nil. Позиция: 42
+
