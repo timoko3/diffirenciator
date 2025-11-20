@@ -17,11 +17,14 @@ const char* LOG_FILE_NAME = "logDifferentiator.html";
 
 static size_t logCount = 0;
 
-const char* TREE_BRANCH_COLOR = "#785946ff";
-const char* LEAF_COLOR        = "#70c07cff";
-const char* LEAF_BORDER_COLOR = "#035068ff";
-const char* FONT_COLOR        = "#001effff";
-const char* CUR_LEAF_COLOR    = "#f8ff1fff";
+const char* TREE_BRANCH_COLOR   = "#785946ff";
+const char* LEAF_COLOR          = "#70c07cff";
+const char* LEAF_BORDER_COLOR   = "#035068ff";
+const char* FONT_COLOR          = "#001effff";
+const char* CUR_LEAF_COLOR      = "#f8ff1fff";
+const char* NUMBER_NODE_COLOR   = "#4ede8dff";
+const char* VARIABLE_NODE_COLOR = "#ff298dff";
+const char* OPERATOR_NODE_COLOR = "#ffca2aff";
 
 const size_t START_SCALE_GRAPH_DUMP = 10;
 const size_t SCALE_INCREASE_COEF    = 3;
@@ -176,9 +179,7 @@ void treeGraphDump(differentiator_t* akinator){
     printGraphNode(akinator->root, graphFilePtr);
 
     fprintf(graphFilePtr, "root_label [shape=box, width = 2.4, height = 1.4, label=\"ROOT\", style=\"filled\", fillcolor=\"#BBDDEE\", color=\"%s\", penwidth = 6,  fontcolor=\"darkblue\", fontsize = 40];\n", TREE_BRANCH_COLOR);
-    // fprintf(graphFilePtr, "cur_node_label [shape=box, width = 2.4, height = 1.4, label=\"curGuessNode\", style=\"filled\", fillcolor=\"#BBDDEE\", color=\"%s\", penwidth = 6,  fontcolor=\"darkblue\", fontsize = 40];\n", CUR_LEAF_COLOR);
     fprintf(graphFilePtr, "root_label -> node%d [color=\"%s\"  , arrowsize=2.5, penwidth=3];\n", (int)(uintptr_t) akinator->root, TREE_BRANCH_COLOR);
-    // fprintf(graphFilePtr, "cur_node_label -> node%d [color=\"%s\"  , arrowsize=2.5, penwidth=3];\n", (int)(uintptr_t) *curNode(akinator), CUR_LEAF_COLOR);
 
     fprintf(graphFilePtr, "}\n");
 
@@ -195,25 +196,35 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
     assert(node);
     assert(graphFilePtr);
 
-    if(node->nodeType != NUMBER){
-        fprintf(graphFilePtr, "\tnode%d [label=\"{type = %d | parent = %p | address = %p | data = %s | {left = %p | right = %p}} \"];\n", 
+    if(node->nodeType == NUMBER){
+        fprintf(graphFilePtr, "\tnode%d [label=\"{type = NUMBER | parent = %p | address = %p | data = %d | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
             (int)(uintptr_t) node,
-            node->nodeType,
             node->parent, 
             node, 
             node->data, 
             node->left, 
-            node->right);
+            node->right,
+            NUMBER_NODE_COLOR);
     }
-    else{
-        fprintf(graphFilePtr, "\tnode%d [label=\"{type = %d | parent = %p | address = %p | data = %d | {left = %p | right = %p}} \"];\n", 
+    else if(node->nodeType == VARIABLE){
+        fprintf(graphFilePtr, "\tnode%d [label=\"{type = VARIABLE | parent = %p | address = %p | data = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
             (int)(uintptr_t) node,
-            node->nodeType,
             node->parent, 
             node, 
             node->data, 
             node->left, 
-            node->right);
+            node->right,
+            VARIABLE_NODE_COLOR);
+    }
+    else if(node->nodeType == OPERATOR){
+        fprintf(graphFilePtr, "\tnode%d [label=\"{type = OPERATOR | parent = %p | address = %p | data = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
+            (int)(uintptr_t) node,
+            node->parent, 
+            node, 
+            node->data, 
+            node->left, 
+            node->right,
+            OPERATOR_NODE_COLOR);
     }
 
     if(node->left){

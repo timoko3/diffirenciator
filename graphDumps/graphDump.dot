@@ -4,9 +4,9 @@ nodesep = 1;
 ranksep = 1
 	node [shape=Mrecord, style="filled", fillcolor="#70c07cff", fontcolor="#001effff", color="#035068ff", penwidth=4, fontname="Menlo", fontsize=30];
 
-	node16 [label="{type = 1 | parent = (nil) | address = 0x504000000010 | data = x | {left = 0x504000000050 | right = 0x504000000090}} "];
-	node80 [label="{type = 0 | parent = (nil) | address = 0x504000000050 | data = ADD | {left = (nil) | right = (nil)}} "];
-	node144 [label="{type = 2 | parent = (nil) | address = 0x504000000090 | data = 30 | {left = (nil) | right = (nil)}} "];
+	node16 [label="{type = VARIABLE | parent = (nil) | address = 0x504000000010 | data = x | {left = 0x504000000050 | right = 0x504000000090}} ", fillcolor="#ff298dff"];
+	node80 [label="{type = OPERATOR | parent = (nil) | address = 0x504000000050 | data = ADD | {left = (nil) | right = (nil)}} ", fillcolor="#ffca2aff"];
+	node144 [label="{type = NUMBER | parent = (nil) | address = 0x504000000090 | data = 30 | {left = (nil) | right = (nil)}} ", fillcolor="#4ede8dff"];
 node16 ->node80 [color="#785946ff", arrowsize=1.5, penwidth=7, weight=1000];
 node16->node144 [color="#785946ff", arrowsize=1.5, penwidth=7, weight=1000];
 root_label [shape=box, width = 2.4, height = 1.4, label="ROOT", style="filled", fillcolor="#BBDDEE", color="#785946ff", penwidth = 6,  fontcolor="darkblue", fontsize = 40];
