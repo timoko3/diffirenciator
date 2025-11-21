@@ -37,6 +37,24 @@ struct differentiator_t{
     // treeStatusDescription status;
 };
 
+typedef char* (*handler_t)(treeNode_t* leftNode, treeNode_t* rightNode);
+
+enum operationNames{
+    ADD,
+    MULTIPLY
+};
+
+struct operation_t{
+    char* symbol;
+    operationNames name;
+    handler_t handler;
+};
+
+static operation_t operations[]{
+    {"+", ADD,      addDiff},
+    {"*", MULTIPLY, mulDiff}
+};
+
 treeVal_t* curData(differentiator_t* akinator);
 treeNode_t** curNode(differentiator_t* akinator);
 

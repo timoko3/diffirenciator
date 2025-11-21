@@ -21,6 +21,11 @@ static curAnchorNode readNode(differentiator_t* differentiator, char* buffer, si
 static curAnchorNode differentiatorCreateNode(differentiator_t* differentiator, char* buffer, size_t* cuBufferPose);
 static bool isNilNode(char* buffer, size_t* curBufferPos);
 static void skipSpaceAndCloseBracket(char* buffer, size_t* curBufferPos);
+static void differentiateNode(treeNode_t* node);
+
+static treeNode_t* createNewNodeNumber(int value);
+static treeNode_t* createNewNodeOperator();
+static treeNode_t* createNewNodeVariable();
 
 curAnchorNode differentiatorCtor(differentiator_t* differentiator){
     assert(differentiator);
@@ -66,6 +71,55 @@ void differentiatorReadData(differentiator_t* differentiator){
     free(differentiatorData.strings);
 
     log(differentiator, "ended reading");
+}
+
+differentiator_t differentiate(differentiator_t* differentiator){
+    assert(differentiator);
+
+    differentiator_t derivativeTree;
+
+    differentiatorCtor(&derivativeTree);
+    
+    differentiateNode(derivativeTree.root);
+
+    treeGraphDump(&derivativeTree);
+}
+
+static treeNode_t* createNewNodeNumber(int value){
+    treeNode_t* curNode = (treeNode_t*) calloc(1, sizeof(treeNode_t));
+    assert(curNode);
+    LPRINTF("Выделил память");
+
+    curNode->data.num = value;
+}
+
+static treeNode_t* createNewNodeOperator(){
+
+}
+
+static treeNode_t* createNewNodeVariable(){
+
+}
+
+static treeNode_t* differentiateNode(treeNode_t* node){
+    assert(node);
+
+    treeNode_t* createdNode = NULL;
+
+    switch(node->nodeType){
+        case NUMBER:   createdNode = createNewNodeNumber(0);
+        case OPERATOR: createdNode = createNewNodeOperator();
+        case VARIABLE: createdNode = createNewNodeVariable();
+    }
+
+    if(node->left){
+        createdNode->left  = differentiateNode(node->left);
+    }
+    if(node->right){
+        createdNode->right = differentiateNode(node->left);
+    }
+
+    return createdNode;
 }
 
 static void freeNode(treeNode_t* node){
