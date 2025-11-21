@@ -13,6 +13,7 @@ union treeVal_t {
 };
 
 enum infoType{
+    NO_TYPE,
     OPERATOR,
     VARIABLE,
     NUMBER
@@ -50,10 +51,10 @@ struct operation_t{
     handler_t handler;
 };
 
-static operation_t operations[]{
-    {"+", ADD,      addDiff},
-    {"*", MULTIPLY, mulDiff}
-};
+// static operation_t operations[]{
+//     {"+", ADD,      addDiff},
+//     {"*", MULTIPLY, mulDiff}
+// };
 
 treeVal_t* curData(differentiator_t* akinator);
 treeNode_t** curNode(differentiator_t* akinator);

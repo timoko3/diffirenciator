@@ -12,6 +12,12 @@ int main(void){
     differentiatorCtor(&differentiator);
 
     differentiatorReadData(&differentiator);
-    treeGraphDump(&differentiator);
+
+    log(&differentiator, "after reading");
+    differentiator_t derivative = differentiate(&differentiator);
+    log(&derivative, "after differentiation");
+
+
     differentiatorDtor(&differentiator);
+    differentiatorDtor(&derivative);
 }

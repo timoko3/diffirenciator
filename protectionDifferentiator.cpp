@@ -25,6 +25,7 @@ const char* CUR_LEAF_COLOR      = "#f8ff1fff";
 const char* NUMBER_NODE_COLOR   = "#4ede8dff";
 const char* VARIABLE_NODE_COLOR = "#ff298dff";
 const char* OPERATOR_NODE_COLOR = "#ffca2aff";
+const char* NO_TYPE_COLOR       = "#f02828ff";
 
 const size_t START_SCALE_GRAPH_DUMP = 10;
 const size_t SCALE_INCREASE_COEF    = 3;
@@ -225,6 +226,16 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
             node->left, 
             node->right,
             OPERATOR_NODE_COLOR);
+    }
+    else if(node->nodeType == NO_TYPE){
+        fprintf(graphFilePtr, "\tnode%d [label=\"{type = NO | parent = %p | address = %p | data = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
+            (int)(uintptr_t) node,
+            node->parent, 
+            node, 
+            node->data, 
+            node->left, 
+            node->right,
+            NO_TYPE_COLOR);
     }
 
     if(node->left){
