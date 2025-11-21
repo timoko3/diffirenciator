@@ -25,6 +25,7 @@ static treeNode_t* differentiateNode(treeNode_t* toDifferentiate);
 
 static treeNode_t* createNewNodeNumber(int value);
 static treeNode_t* createNewNodeOperator(char* name, treeNode_t* left, treeNode_t* right);
+static treeNode_t* copyNode(treeNode_t* toCopy);
 
 curAnchorNode differentiatorCtor(differentiator_t* differentiator){
     assert(differentiator);
@@ -80,6 +81,7 @@ differentiator_t differentiate(differentiator_t* differentiator){
     differentiator_t derivativeTree;
 
     differentiatorCtor(&derivativeTree);
+    free(derivativeTree.root);
     
     derivativeTree.root = differentiateNode(differentiator->root);
 
@@ -88,6 +90,7 @@ differentiator_t differentiate(differentiator_t* differentiator){
 
 static treeNode_t* differentiateNode(treeNode_t* toDifferentiate){
     assert(toDifferentiate);
+
 
     treeNode_t* createdNode = NULL;
 
@@ -100,22 +103,13 @@ static treeNode_t* differentiateNode(treeNode_t* toDifferentiate){
                     createdNode = createNewNodeOperator("+", differentiateNode(toDifferentiate->left), differentiateNode(toDifferentiate->right));
                     break;
                 case '*': 
-                    createdNode = createNewNodeOperator("+", createNewNodeOperator("*", differentiateNode(toDifferentiate->left), toDifferentiate->right), createNewNodeOperator("*", toDifferentiate->left, differentiateNode(toDifferentiate->right)));
+                    createdNode = createNewNodeOperator("+", createNewNodeOperator("*", differentiateNode(toDifferentiate->left), copyNode(toDifferentiate->right)), createNewNodeOperator("*", copyNode(toDifferentiate->left), differentiateNode(toDifferentiate->right)));
                     break;
                 default: break;
             }     
         default: break;
     }
 
-    LPRINTF("toDifferentiate value : %p", toDifferentiate);
-    LPRINTF("toDifferentiate->left value : %p", toDifferentiate->left);
-    LPRINTF("createdNode value : %p", createdNode);
-    // if(toDifferentiate->left){
-    //     createdNode->left = differentiateNode(toDifferentiate->left);
-    // }
-    // if(toDifferentiate->right){
-    //     createdNode->right = differentiateNode(toDifferentiate->right);
-    // }
 
     return createdNode;
 }
@@ -152,8 +146,39 @@ static treeNode_t* createNewNodeOperator(char* name, treeNode_t* left, treeNode_
     return newNode;
 }
 
+static treeNode_t* copyNode(treeNode_t* toCopy){
+    assert(toCopy);
+
+    treeNode_t* copy = (treeNode_t*) calloc(1, sizeof(treeNode_t));
+    assert(copy);
+
+    copy->nodeType = toCopy->nodeType;
+    if(toCopy->nodeType == NUMBER){
+        copy->data.num = toCopy->data.num;
+    }
+    else{
+        copy->data.operatorVar = (char*) calloc(MAX_ANSWER_SIZE, sizeof(char));
+        assert(copy->data.operatorVar);
+
+        strcpy(copy->data.operatorVar, toCopy->data.operatorVar);
+    }
+
+    if(toCopy->left){
+        copy->left  = copyNode(toCopy->left);
+    }
+    if(toCopy->right){
+        copy->right = copyNode(toCopy->right);
+    }
+
+    return copy;
+}
+
 static void freeNode(treeNode_t* node){
     assert(node);
+
+    static int i = 1;
+    printf("%d) MEOW\n", i++);
+    printf("nodeAddr: %p\n", node);
     
     if(node->left){
         freeNode(node->left);
@@ -162,6 +187,7 @@ static void freeNode(treeNode_t* node){
     if(node->right){
         freeNode(node->right);
     }
+
     
     if(node->nodeType != NUMBER){
         free(node->data.operatorVar);
