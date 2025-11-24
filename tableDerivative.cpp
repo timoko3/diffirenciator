@@ -15,6 +15,7 @@
 static treeNode_t* createNewNodeNumber(int value);
 static treeNode_t* createNewNodeOperator(char* name, treeNode_t* left, treeNode_t* right);
 static treeNode_t* copyNode(treeNode_t* toCopy);
+static bool setParent(treeNode_t* curNode);
 
 treeNode_t* numDiff(){
     LPRINTF("Создаю ноду численную производной");
@@ -77,13 +78,14 @@ static treeNode_t* createNewNodeOperator(char* name, treeNode_t* left, treeNode_
     LPRINTF("Выделил память");
 
     newNode->nodeType = OPERATOR;
+
     newNode->left  = left;
+    newNode->left->parent = newNode;
+
     newNode->right = right;
+    newNode->right->parent = newNode;
 
-    newNode->data.operatorVar = (char*) calloc(MAX_ANSWER_SIZE, sizeof(char));
-    assert(newNode->data.operatorVar);
-
-    strcpy(newNode->data.operatorVar, name);
+    newNode->data.operatorVar = myStrDup(name);
 
     return newNode;
 }
@@ -99,10 +101,7 @@ static treeNode_t* copyNode(treeNode_t* toCopy){
         copy->data.num = toCopy->data.num;
     }
     else{
-        copy->data.operatorVar = (char*) calloc(MAX_ANSWER_SIZE, sizeof(char));
-        assert(copy->data.operatorVar);
-
-        strcpy(copy->data.operatorVar, toCopy->data.operatorVar);
+        copy->data.operatorVar = myStrDup(toCopy->data.operatorVar);
     }
 
     if(toCopy->left){
@@ -111,6 +110,30 @@ static treeNode_t* copyNode(treeNode_t* toCopy){
     if(toCopy->right){
         copy->right = copyNode(toCopy->right);
     }
+    
+    setParent(copy);
 
     return copy;
+}
+
+
+static bool setParent(treeNode_t* curNode){
+    assert(curNode);
+    
+    if(curNode->left){
+        curNode->left->parent = curNode;
+    }
+    if(curNode->right){
+        curNode->right->parent = curNode;
+    }
+
+    if(curNode->left){
+        setParent(curNode->left);
+    }
+    
+    if(curNode->right){
+        setParent(curNode->right);
+    }
+
+    return true;
 }

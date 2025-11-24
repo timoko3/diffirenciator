@@ -295,3 +295,42 @@ treeNode_t* differentiateNode(treeNode_t* toDifferentiate){
     return createdNode;
 }
 
+bool optimizeDerivative(treeNode_t* subTreeRoot){
+    assert(subTreeRoot);
+
+    if(checkNoVariables(subTreeRoot)){
+        collapseConstant(subTreeRoot);
+    }
+}
+
+static bool checkNoVariables(treeNode_t* curNode){
+    assert(curNode);
+
+    if(curNode->nodeType == VARIABLE){
+        return false;
+    }
+
+    if(curNode->left){
+        if(!checkNoVariables(curNode->left)) return false;
+    }
+    if(curNode->right){
+        if(!checkNoVariables(curNode->right)) return false;
+    }
+
+    return true;
+}
+
+static bool collapseConstant(treeNode_t* subTreeRoot){
+    assert(subTreeRoot);
+
+    treeNode_t* remainNode;
+    calculateSubTree(subTreeRoot);
+
+    freeNode(subTreeRoot);
+}
+
+int calculateSubtree(treeNode_t* subTreeRoot){
+    assert(subTreeRoot);
+
+    
+}
