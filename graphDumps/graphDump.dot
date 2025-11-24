@@ -4,27 +4,19 @@ nodesep = 1;
 ranksep = 1
 	node [shape=Mrecord, style="filled", fillcolor="#70c07cff", fontcolor="#001effff", color="#035068ff", penwidth=4, fontname="Menlo", fontsize=30];
 
-	node1040 [label="{type = OPERATOR | parent = (nil) | address = 0x504000000410 | data = + | {left = 0x5040000003d0 | right = 0x504000000290}} ", fillcolor="#ffca2aff"];
-	node976 [label="{type = OPERATOR | parent = 0x504000000410 | address = 0x5040000003d0 | data = * | {left = 0x504000000390 | right = 0x5040000002d0}} ", fillcolor="#ffca2aff"];
-	node912 [label="{type = NUMBER | parent = 0x5040000003d0 | address = 0x504000000390 | data = 1 | {left = (nil) | right = (nil)}} ", fillcolor="#4ede8dff"];
+	node1040 [label="{type = OPERATOR | parent = (nil) | address = 0x504000000410 | data = + | {left = 0x5040000002d0 | right = 0x504000000290}} ", fillcolor="#ffca2aff"];
 	node720 [label="{type = OPERATOR | parent = 0x5040000003d0 | address = 0x5040000002d0 | data = + | {left = 0x504000000310 | right = 0x504000000350}} ", fillcolor="#ffca2aff"];
 	node784 [label="{type = VARIABLE | parent = 0x5040000002d0 | address = 0x504000000310 | data = x | {left = (nil) | right = (nil)}} ", fillcolor="#ff298dff"];
 	node848 [label="{type = NUMBER | parent = 0x5040000002d0 | address = 0x504000000350 | data = 6 | {left = (nil) | right = (nil)}} ", fillcolor="#4ede8dff"];
 	node656 [label="{type = OPERATOR | parent = 0x504000000410 | address = 0x504000000290 | data = * | {left = 0x504000000250 | right = 0x504000000210}} ", fillcolor="#ffca2aff"];
 	node592 [label="{type = VARIABLE | parent = 0x504000000290 | address = 0x504000000250 | data = x | {left = (nil) | right = (nil)}} ", fillcolor="#ff298dff"];
-	node528 [label="{type = OPERATOR | parent = 0x504000000290 | address = 0x504000000210 | data = + | {left = 0x5040000001d0 | right = 0x504000000190}} ", fillcolor="#ffca2aff"];
-	node464 [label="{type = NUMBER | parent = 0x504000000210 | address = 0x5040000001d0 | data = 1 | {left = (nil) | right = (nil)}} ", fillcolor="#4ede8dff"];
-	node400 [label="{type = NUMBER | parent = 0x504000000210 | address = 0x504000000190 | data = 0 | {left = (nil) | right = (nil)}} ", fillcolor="#4ede8dff"];
-node1040 ->node976 [color="#785946ff", arrowsize=1.5, penwidth=7, weight=1000];
-node976 ->node912 [color="#785946ff", arrowsize=1.5, penwidth=7, weight=1000];
-node976->node720 [color="#785946ff", arrowsize=1.5, penwidth=7, weight=1000];
+	node528 [label="{type = NUMBER | parent = 0x504000000290 | address = 0x504000000210 | data = 1 | {left = (nil) | right = (nil)}} ", fillcolor="#4ede8dff"];
+node1040 ->node720 [color="#785946ff", arrowsize=1.5, penwidth=7, weight=1000];
 node720 ->node784 [color="#785946ff", arrowsize=1.5, penwidth=7, weight=1000];
 node720->node848 [color="#785946ff", arrowsize=1.5, penwidth=7, weight=1000];
 node1040->node656 [color="#785946ff", arrowsize=1.5, penwidth=7, weight=1000];
 node656 ->node592 [color="#785946ff", arrowsize=1.5, penwidth=7, weight=1000];
 node656->node528 [color="#785946ff", arrowsize=1.5, penwidth=7, weight=1000];
-node528 ->node464 [color="#785946ff", arrowsize=1.5, penwidth=7, weight=1000];
-node528->node400 [color="#785946ff", arrowsize=1.5, penwidth=7, weight=1000];
 root_label [shape=box, width = 2.4, height = 1.4, label="ROOT", style="filled", fillcolor="#BBDDEE", color="#785946ff", penwidth = 6,  fontcolor="darkblue", fontsize = 40];
 root_label -> node1040 [color="#785946ff"  , arrowsize=2.5, penwidth=3];
 }

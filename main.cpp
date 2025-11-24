@@ -18,7 +18,8 @@ int main(void){
     differentiator_t derivative = differentiate(&differentiator);
     log(&derivative, "after differentiation");
 
-    texDumpTree(&derivative);
+    optimizeDerivative(derivative.root);
+    log(&derivative, "after optimization");
 
     differentiatorDtor(&differentiator);
     differentiatorDtor(&derivative);

@@ -4,6 +4,7 @@
 #include "DSL.h"
 #include "tableDerivative.h"
 #include "operations.h"
+#include "mathHandlers.h"
 
 #define DEBUG
 
@@ -19,7 +20,9 @@
 
 const char* DIFFERENTIATOR_DATA_FILE_NAME = "differentiatorData.txt";
 
-static void freeNode(treeNode_t* node);
+static void freeNode(treeNode_t* node, bool withoutRoot);
+static void freeLeftSubtree(treeNode_t* node);
+static void freeRightSubtree(treeNode_t* node);
 
 static curAnchorNode readNode(differentiator_t* differentiator, char* buffer, size_t* curBufferPos);
 static curAnchorNode readCreateNode(differentiator_t* differentiator, char* buffer, size_t* cuBufferPose);
@@ -28,8 +31,11 @@ static bool isNilNode(char* buffer, size_t* curBufferPos);
 static void skipSpaceAndCloseBracket(char* buffer, size_t* curBufferPos);
 static bool isSupportedOperation(char readSym);
 
-// static treeNode_t* differentiateNode(treeNode_t* toDifferentiate);
-
+static bool checkNoVariables(treeNode_t* curNode);
+static bool collapseConstant(treeNode_t* subTreeRoot);
+static int calculateSubTree(treeNode_t* subTreeRoot);
+static treeNode_t* createNumNode(int value, treeNode_t* parent);
+static treeNode_t* removeNeutralElements(treeNode_t* subTreeRoot);
 
 curAnchorNode differentiatorCtor(differentiator_t* differentiator){
     assert(differentiator);
@@ -51,7 +57,7 @@ curAnchorNode differentiatorCtor(differentiator_t* differentiator){
 curAnchorNode differentiatorDtor(differentiator_t* differentiator){
     assert(differentiator);
 
-    freeNode(differentiator->root);
+    freeNode(differentiator->root, false);
 
     poisonMemory(&differentiator->size, sizeof(differentiator->size));
 
@@ -92,29 +98,40 @@ differentiator_t differentiate(differentiator_t* differentiator){
     return derivativeTree;
 }
 
-static void freeNode(treeNode_t* node){
+static void freeNode(treeNode_t* node, bool withoutRoot = false){
     assert(node);
 
-    static int i = 1;
-    LPRINTF("%d) MEOW\n", i++);
-    LPRINTF("nodeAddr: %p\n", node);
+    static int depth = 1;
     
+
     if(node->left){
+        depth++;
         freeNode(node->left);
+        depth--;
     }
+    
 
     if(node->right){
+        depth++;
         freeNode(node->right);
+        depth--;
     }
-
+    
     
     if(node->nodeType != NUMBER){
         free(node->data.operatorVar);
     }
 
-    poisonMemory(node, sizeof(*node));
-    free(node);
-    node = NULL;
+    if(!withoutRoot || (withoutRoot && depth != 1)){
+        LPRINTF("free: %p", node);
+        LPRINTF("depth: %d", depth);
+        poisonMemory(node, sizeof(*node));
+        free(node);
+        node = NULL;
+        return;
+    }
+
+    LPRINTF("end freeing memory");
 }
 
 static curAnchorNode readNode(differentiator_t* differentiator, char* buffer, size_t* curBufferPos){
@@ -297,10 +314,22 @@ treeNode_t* differentiateNode(treeNode_t* toDifferentiate){
 
 bool optimizeDerivative(treeNode_t* subTreeRoot){
     assert(subTreeRoot);
-
+    
+    LPRINTF("\n\nstart optimization");
     if(checkNoVariables(subTreeRoot)){
+        LPRINTF("subTreeRoot addr: %p", subTreeRoot);
         collapseConstant(subTreeRoot);
     }
+    subTreeRoot = removeNeutralElements(subTreeRoot);
+
+    if(subTreeRoot->left){
+        optimizeDerivative(subTreeRoot->left);
+    }
+    if(subTreeRoot->right){
+        optimizeDerivative(subTreeRoot->right);
+    }
+
+    return true;
 }
 
 static bool checkNoVariables(treeNode_t* curNode){
@@ -323,14 +352,146 @@ static bool checkNoVariables(treeNode_t* curNode){
 static bool collapseConstant(treeNode_t* subTreeRoot){
     assert(subTreeRoot);
 
-    treeNode_t* remainNode;
-    calculateSubTree(subTreeRoot);
+    int calculatedVal = calculateSubTree(subTreeRoot);
+    LPRINTF("calculatedVal: %d", calculatedVal);
 
-    freeNode(subTreeRoot);
+    freeNode(subTreeRoot, true);
+
+    subTreeRoot = createNumNode(calculatedVal, subTreeRoot);
+    
+    return true;
 }
 
-int calculateSubtree(treeNode_t* subTreeRoot){
+static treeNode_t* removeNeutralElements(treeNode_t* subTreeRoot){
     assert(subTreeRoot);
+    LPRINTF("start removal neutral");
+    if(subTreeRoot->nodeType == OPERATOR){
+        if(subTreeRoot->data.operatorVar[0] == '*' && subTreeRoot->left->data.num == 0){
+            LPRINTF("zero division case");
 
+            freeNode(subTreeRoot, true);
+            subTreeRoot = createNumNode(0, subTreeRoot);
+            return subTreeRoot;
+        }
+        if((subTreeRoot->data.operatorVar[0] == '*' && subTreeRoot->left->data.num == 1) || 
+            (subTreeRoot->data.operatorVar[0] == '+' && subTreeRoot->left->data.num == 0)){
+                LPRINTF("keep only right subTree of %p", subTreeRoot);
+                if(subTreeRoot->parent->left == subTreeRoot){
+                    subTreeRoot->parent->left = subTreeRoot->right;
+                }
+                else{
+                    subTreeRoot->parent->right = subTreeRoot->right;
+                }
+
+                treeNode_t* result = subTreeRoot->right;
+
+                freeLeftSubtree(subTreeRoot);
+
+                return result;
+        }
+        if((subTreeRoot->data.operatorVar[0] == '*' && subTreeRoot->right->data.num == 1) || 
+            (subTreeRoot->data.operatorVar[0] == '+' && subTreeRoot->right->data.num == 0)){
+                LPRINTF("keep only left subTree of %p", subTreeRoot);
+                if(subTreeRoot->parent->left == subTreeRoot){
+                    subTreeRoot->parent->left = subTreeRoot->left;
+                }
+                else{
+                    subTreeRoot->parent->right = subTreeRoot->left;
+                }
+                treeNode_t* result = subTreeRoot->left;
+                
+                freeRightSubtree(subTreeRoot);
+
+                return result;
+        }
+    }
+
+    return subTreeRoot;
+}
+
+static void freeLeftSubtree(treeNode_t* node){
+    assert(node);
+
+    LPRINTF("start freeing leftSubtree %p", node);
+
+    static int depth = 1;
+
+    if(node->left){
+        depth++;
+        freeLeftSubtree(node->left);
+        depth--;
+    }
     
+
+    if(node->right && depth != 1){
+        depth++;
+        freeLeftSubtree(node->right);
+        depth--;
+    }
+    
+    
+    if(node->nodeType != NUMBER){
+        free(node->data.operatorVar);
+    }
+
+    poisonMemory(node, sizeof(*node));
+    free(node);
+    node = NULL;
+}
+
+static void freeRightSubtree(treeNode_t* node){
+    assert(node);
+
+    static int depth = 1;
+    
+
+    if(node->left && depth != 1){
+        depth++;
+        freeRightSubtree(node->left);
+        depth--;
+    }
+    
+
+    if(node->right){
+        depth++;
+        freeRightSubtree(node->right);
+        depth--;
+    }
+    
+    
+    if(node->nodeType != NUMBER){
+        free(node->data.operatorVar);
+    }
+
+    poisonMemory(node, sizeof(*node));
+    free(node);
+    node = NULL;
+}
+
+static treeNode_t* createNumNode(int value, treeNode_t* curNode){
+
+    LPRINTF("start creating calculated node");
+
+    curNode->nodeType = NUMBER;
+    curNode->data.num = value;
+
+    curNode->left   = NULL;
+    curNode->right  = NULL;
+
+    return curNode;
+}
+
+static int calculateSubTree(treeNode_t* subTreeRoot){
+    assert(subTreeRoot);
+    
+    if(subTreeRoot->nodeType == OPERATOR){
+        for(size_t curOper = 0; curOper < sizeof(operations) / sizeof(operation_t); curOper++){
+            if(operations[curOper].symbol[0] == subTreeRoot->data.operatorVar[0]){
+                return operations[curOper].calcHandler(calculateSubTree(subTreeRoot->left), calculateSubTree(subTreeRoot->right));
+            }
+        }
+    }
+    else{
+        return subTreeRoot->data.num;
+    }
 }

@@ -34,7 +34,7 @@ treeNode_t* operDiff(treeNode_t* toDifferentiate){
     for(size_t curOper = 0; curOper < sizeof(operations) / sizeof(operation_t); curOper++){
         if(toDifferentiate->data.operatorVar[0] == operations[curOper].symbol[0]){
             LPRINTF("Нашел нужную операцию");
-            return operations[curOper].handler(_L, _R);
+            return operations[curOper].diffHandler(_L, _R);
         }
     }
     LPRINTF("Не нашел нужную ноду");
