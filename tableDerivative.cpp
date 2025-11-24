@@ -3,6 +3,8 @@
 #include "differentiator.h"
 #include "operations.h"
 
+#define DEBUG 
+
 #include "general/debug.h"
 #include "general/strFunc.h"
 
@@ -15,22 +17,26 @@ static treeNode_t* createNewNodeOperator(char* name, treeNode_t* left, treeNode_
 static treeNode_t* copyNode(treeNode_t* toCopy);
 
 treeNode_t* numDiff(){
+    LPRINTF("Создаю ноду численную производной");
     return createNewNodeNumber(0);
 }
 
 treeNode_t* varDiff(){
+    LPRINTF("Создаю ноду переменной производной");
     return createNewNodeNumber(1);
 }
 
 treeNode_t* operDiff(treeNode_t* toDifferentiate){
     assert(toDifferentiate);
 
-    for(size_t curOper = 0; curOper < sizeof(operations) - sizeof(operation_t); curOper++){
-        if(toDifferentiate->data.operatorVar == operations[curOper].symbol){
+    LPRINTF("Создаю ноду операции производной");
+    for(size_t curOper = 0; curOper < sizeof(operations) / sizeof(operation_t); curOper++){
+        if(toDifferentiate->data.operatorVar[0] == operations[curOper].symbol[0]){
+            LPRINTF("Нашел нужную операцию");
             return operations[curOper].handler(_L, _R);
         }
     }
-
+    LPRINTF("Не нашел нужную ноду");
     return NULL;
 }
 
@@ -38,6 +44,7 @@ treeNode_t* addDiff(treeNode_t* left, treeNode_t* right){
     assert(right);
     assert(left);
 
+    LPRINTF("Производная суммы");
     return _ADD(_DIF(left), _DIF(right));
 }
 
@@ -45,6 +52,7 @@ treeNode_t* mulDiff(treeNode_t* left, treeNode_t* right){
     assert(right);
     assert(left);
 
+    LPRINTF("Производная произведения");
     return _ADD(_MUL(_DIF(left), _C(right)), _MUL(_C(left), _DIF(right)));
 }
 

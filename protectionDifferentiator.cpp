@@ -159,6 +159,7 @@ void treeGraphDump(differentiator_t* akinator){
 
     logCount++;    
 
+    LPRINTF("addr root: %p", akinator->root);
     fileDescription graphDump = {
         GRAPH_DUMP_DOT_FILE_NAME,
         "wb"

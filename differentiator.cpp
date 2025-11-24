@@ -23,12 +23,12 @@ static void freeNode(treeNode_t* node);
 
 static curAnchorNode readNode(differentiator_t* differentiator, char* buffer, size_t* curBufferPos);
 static curAnchorNode readCreateNode(differentiator_t* differentiator, char* buffer, size_t* cuBufferPose);
-static treeNode_t* readAllocateNodeIfNeed(differentiator_t* differentiator, treeNode_t* curNode, size_t countReadNodes);
+static treeNode_t* readAllocateNodeIfNeed(differentiator_t* differentiator, size_t countReadNodes);
 static bool isNilNode(char* buffer, size_t* curBufferPos);
 static void skipSpaceAndCloseBracket(char* buffer, size_t* curBufferPos);
 static bool isSupportedOperation(char readSym);
 
-static treeNode_t* differentiateNode(treeNode_t* toDifferentiate);
+// static treeNode_t* differentiateNode(treeNode_t* toDifferentiate);
 
 
 curAnchorNode differentiatorCtor(differentiator_t* differentiator){
@@ -86,7 +86,7 @@ differentiator_t differentiate(differentiator_t* differentiator){
 
     differentiatorCtor(&derivativeTree);
     free(derivativeTree.root);
-    
+
     derivativeTree.root = differentiateNode(differentiator->root);
 
     return derivativeTree;
@@ -122,7 +122,6 @@ static curAnchorNode readNode(differentiator_t* differentiator, char* buffer, si
     assert(buffer);
 
     // log(differentiator, "startReadNode with curBuffer: %s", &buffer[*curBufferPos]);
-
     static bool continueReading = true;
 
     if(!continueReading){
@@ -134,6 +133,7 @@ static curAnchorNode readNode(differentiator_t* differentiator, char* buffer, si
 
     treeNode_t* createdNode = NULL;
     
+    LPRINTF("buffer[*curBufferPos] = %c\n", buffer[*curBufferPos]);
     if((buffer[*curBufferPos] == '(') ){
         createdNode = readCreateNode(differentiator, buffer, curBufferPos);
     }
@@ -142,6 +142,7 @@ static curAnchorNode readNode(differentiator_t* differentiator, char* buffer, si
     }
     else{
         LPRINTF("readNode: неожиданный символ, не '(' и не nil. Позиция: %zu\n", *curBufferPos);
+        continueReading = false;
         return NULL; // <- важно: не продолжать с createdNode == NULL
     }
     LPRINTF("адрес текущей созданной ноды: %p", createdNode);
@@ -170,12 +171,12 @@ static curAnchorNode readCreateNode(differentiator_t* differentiator, char* buff
     assert(differentiator);
     assert(buffer);
     
-    treeNode_t* curNode;
+    
     static size_t countReadNodes = 1;
-    readAllocateNodeIfNeed(differentiator, curNode, countReadNodes);
+    treeNode_t* curNode = readAllocateNodeIfNeed(differentiator, countReadNodes);
     countReadNodes++;
 
-    skipSpaceAndCloseBracket(buffer, curBufferPos);
+    (*curBufferPos)++;
     
     LPRINTF("буфер перед чтением: %s", &buffer[*curBufferPos]);
     
@@ -193,8 +194,10 @@ static curAnchorNode readCreateNode(differentiator_t* differentiator, char* buff
         sscanf(curNodeData, "%d", &curNode->data.num);
     }
     else if(isSupportedOperation(curNodeData[0])){
+        LPRINTF("%p - addr curNode", curNode);
         curNode->nodeType = OPERATOR;
         curNode->data.operatorVar = myStrDup(curNodeData);
+        LPRINTF("curNode->data.operatorVar = %s", curNode->data.operatorVar);
     }
     else{
         curNode->nodeType = VARIABLE;
@@ -208,8 +211,9 @@ static curAnchorNode readCreateNode(differentiator_t* differentiator, char* buff
 }
 
 static bool isSupportedOperation(char readSym){
-    for(size_t curOper = 0; curOper < sizeof(operations) - sizeof(operation_t); curOper++){
+    for(size_t curOper = 0; curOper < sizeof(operations) / sizeof(operation_t); curOper++){
         if(readSym == operations[curOper].symbol[0]){
+            LPRINTF("Операция доступна");
             return true;
         }
     }
@@ -217,13 +221,16 @@ static bool isSupportedOperation(char readSym){
     return false;
 }
 
-static treeNode_t* readAllocateNodeIfNeed(differentiator_t* differentiator, treeNode_t* curNode, size_t countReadNodes){
+static treeNode_t* readAllocateNodeIfNeed(differentiator_t* differentiator, size_t countReadNodes){
     assert(differentiator);
     assert(curNode);
+
+    treeNode_t* curNode;
 
     if(countReadNodes == 1){
         curNode = differentiator->root;
         (differentiator->size)--;
+        LPRINTF("Получил addr: %p", curNode);
     }
     else{
         curNode = (treeNode_t*) calloc(1, sizeof(treeNode_t));
@@ -274,9 +281,10 @@ static void skipSpaceAndCloseBracket(char* buffer, size_t* curBufferPos){
 
 treeNode_t* differentiateNode(treeNode_t* toDifferentiate){
     assert(toDifferentiate);
- 
+    LPRINTF("differentiateNode start");
     treeNode_t* createdNode = NULL;
 
+    LPRINTF("toDifferentiate->nodeType = %d", toDifferentiate->nodeType);
     switch(toDifferentiate->nodeType){
         case NUMBER:   createdNode = numDiff();                 break;
         case VARIABLE: createdNode = varDiff();                 break;

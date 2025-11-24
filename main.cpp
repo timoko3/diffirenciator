@@ -1,6 +1,7 @@
 #include "generalDifferentiator.h"
 #include "protectionDifferentiator.h"
 #include "differentiator.h"
+#include "texDump.h"
 
 #include <stdio.h>
 #include <malloc.h>
@@ -17,6 +18,7 @@ int main(void){
     differentiator_t derivative = differentiate(&differentiator);
     log(&derivative, "after differentiation");
 
+    texDumpTree(&derivative);
 
     differentiatorDtor(&differentiator);
     differentiatorDtor(&derivative);

@@ -16,7 +16,7 @@ struct operation_t{
     size_t         paramCount;
 };
 
-operation_t operations[]{
+static operation_t operations[]{
     {"+", ADD,      3, addDiff, 2},
     {"*", MULTIPLY, 7, mulDiff, 2}
 };
