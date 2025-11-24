@@ -42,12 +42,15 @@ typedef char* (*handler_t)(treeNode_t* leftNode, treeNode_t* rightNode);
 
 enum operationNames{
     ADD,
+    // MINUS,
     MULTIPLY
+    // DIVIDE
 };
 
 struct operation_t{
     char* symbol;
     operationNames name;
+    size_t derivativeSize ;
     handler_t handler;
 };
 
