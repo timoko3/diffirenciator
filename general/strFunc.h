@@ -27,6 +27,7 @@ size_t countStrings(char* buf, size_t fileSize, char endStr);
 bool isEqualStrings(const char* str1, const char* str2);
 size_t myStrLen(const char* start, char endStr ='\0');
 char* myStrCpy(char* dest, const char* src);
+char* myStrDup(const char *str);
 char* myFGets(char* str, int count, FILE* stream);
 void clearBuffer();
 

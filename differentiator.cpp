@@ -2,6 +2,7 @@
 #include "generalDifferentiator.h"
 #include "protectionDifferentiator.h"
 #include "DSL.h"
+#include "tableDerivative.h"
 
 #define DEBUG
 
@@ -13,20 +14,19 @@
 #include <malloc.h>
 #include <assert.h>
 #include <string.h>
+#include <ctype.h>
 
 const char* DIFFERENTIATOR_DATA_FILE_NAME = "differentiatorData.txt";
 
 static void freeNode(treeNode_t* node);
-static curAnchorNode readNode(differentiator_t* differentiator, char* buffer, size_t* curBufferPos);
 
+static curAnchorNode readNode(differentiator_t* differentiator, char* buffer, size_t* curBufferPos);
 static curAnchorNode readCreateNode(differentiator_t* differentiator, char* buffer, size_t* cuBufferPose);
+static treeNode_t* readAllocateNodeIfNeed(differentiator_t* differentiator, treeNode_t* curNode, size_t countReadNodes);
 static bool isNilNode(char* buffer, size_t* curBufferPos);
 static void skipSpaceAndCloseBracket(char* buffer, size_t* curBufferPos);
-static treeNode_t* differentiateNode(treeNode_t* toDifferentiate);
 
-static treeNode_t* createNewNodeNumber(int value);
-static treeNode_t* createNewNodeOperator(char* name, treeNode_t* left, treeNode_t* right);
-static treeNode_t* copyNode(treeNode_t* toCopy);
+static treeNode_t* differentiateNode(treeNode_t* toDifferentiate);
 
 curAnchorNode differentiatorCtor(differentiator_t* differentiator){
     assert(differentiator);
@@ -136,10 +136,11 @@ static curAnchorNode readNode(differentiator_t* differentiator, char* buffer, si
         LPRINTF("readNode: неожиданный символ, не '(' и не nil. Позиция: %zu\n", *curBufferPos);
         return NULL; // <- важно: не продолжать с createdNode == NULL
     }
-    
 
     LPRINTF("адрес текущей созданной ноды: %p", createdNode);
     (*curBufferPos)++;
+
+
     LPRINTF("\n\nрекурсивный запуск");
     createdNode->left = readNode(differentiator, buffer, curBufferPos);
     if(createdNode->left){
@@ -158,14 +159,56 @@ static curAnchorNode readNode(differentiator_t* differentiator, char* buffer, si
     return createdNode;
 }
 
-static curAnchorNode readCreateNode(differentiator_t* differentiator, char* buffer, size_t* curBufferPose){
+static curAnchorNode readCreateNode(differentiator_t* differentiator, char* buffer, size_t* curBufferPos){
     assert(differentiator);
     assert(buffer);
     
     treeNode_t* curNode;
+    static size_t countReadNodes = 1;
+    readAllocateNodeIfNeed(differentiator, curNode, countReadNodes);
+    countReadNodes++;
 
-    static size_t countNodes = 1;
-    if(countNodes == 1){
+    (*curBufferPos)++;///
+    
+    LPRINTF("буфер перед чтением: %s", &buffer[*curBufferPos]);
+    
+    size_t lenName = 0;
+
+    char* curNodeData = (char*) calloc(MAX_ANSWER_SIZE, sizeof(char));
+    assert(curNodeData);
+
+    sscanf(&buffer[*curBufferPos], "\"%[^\"]\"%n", curNodeData, &lenName);
+    
+    LPRINTF("Получил размер строки %lu и саму строку %s", lenName, curNodeData);
+
+    if(isdigit(curNodeData[0])){
+        curNode->nodeType = NUMBER;
+        sscanf(curNodeData, "%d", &curNode->data.num);
+    }
+    else if(curNodeData[0] == '*' || curNodeData[0] == '+'){
+        curNode->nodeType = OPERATOR;
+        curNode->data.operatorVar = myStrDup(curNodeData);
+    }
+    else{
+        curNode->nodeType = VARIABLE;
+        curNode->data.operatorVar = myStrDup(curNodeData); 
+    }
+    *curBufferPos += lenName;
+    LPRINTF("\nбуфер после чтением: %s", &buffer[*curBufferPos]);
+
+    free(curNodeData);
+    return curNode;
+}
+
+bool isSupportedOperation(char readSym){
+    
+}
+
+static treeNode_t* readAllocateNodeIfNeed(differentiator_t* differentiator, treeNode_t* curNode, size_t countReadNodes){
+    assert(differentiator);
+    assert(curNode);
+
+    if(countReadNodes == 1){
         curNode = differentiator->root;
         (differentiator->size)--;
     }
@@ -174,50 +217,7 @@ static curAnchorNode readCreateNode(differentiator_t* differentiator, char* buff
         assert(curNode);
         LPRINTF("Выделил память");
     }
-    countNodes++;
 
-    (*curBufferPose)++;
-    
-    LPRINTF("записал указатель в data нового node");
-    size_t lenName = 0;
-
-    char* curNodeData = (char*) calloc(MAX_ANSWER_SIZE, sizeof(char));
-    assert(curNodeData);
-
-    LPRINTF("буфер перед чтением: %s", &buffer[*curBufferPose]);
-
-    sscanf(&buffer[*curBufferPose], "\"%[^\"]\"%n", curNodeData, &lenName);
-    LPRINTF("Получил размер строки %lu и саму строку %s", lenName, curNodeData);
-
-    if(curNodeData[0] >= (int) '0' && curNodeData[0] <= (int) '9'){
-        printf("зашел в NUMBER\n");
-        curNode->nodeType = NUMBER;
-
-        int dataNum = 0;
-        sscanf(curNodeData, "%d", &dataNum);
-        printf("Число dataNum: %d\n", dataNum);
-        curNode->data.num = dataNum;
-    }
-    else if(curNodeData[0] == '*' || curNodeData[0] == '+'){
-        curNode->nodeType = OPERATOR;
-
-        curNode->data.operatorVar = (char*) calloc(MAX_ANSWER_SIZE, sizeof(char));
-
-        strcpy(curNode->data.operatorVar, curNodeData);
-        *curBufferPose += lenName;
-        LPRINTF("\nбуфер после чтением: %s", &buffer[*curBufferPose]);
-    }
-    else{
-        curNode->nodeType = VARIABLE;
-
-        curNode->data.operatorVar = (char*) calloc(MAX_ANSWER_SIZE, sizeof(char));
-
-        strcpy(curNode->data.operatorVar, curNodeData);
-        *curBufferPose += lenName;
-        LPRINTF("\nбуфер после чтением: %s", &buffer[*curBufferPose]);
-    }
-
-    free(curNodeData);
     return curNode;
 }
 
@@ -260,88 +260,18 @@ static void skipSpaceAndCloseBracket(char* buffer, size_t* curBufferPos){
 }   
 
 
-static treeNode_t* differentiateNode(treeNode_t* toDifferentiate){
+treeNode_t* differentiateNode(treeNode_t* toDifferentiate){
     assert(toDifferentiate);
-
-
+ 
     treeNode_t* createdNode = NULL;
 
     switch(toDifferentiate->nodeType){
-        case NUMBER:   createdNode = createNewNodeNumber(0);  break;
-        case VARIABLE: createdNode = createNewNodeNumber(1); break;
-        case OPERATOR:
-            switch(toDifferentiate->data.operatorVar[0]){
-                case '+':
-                    createdNode = _ADD(_DIF(_L), _DIF(_R));
-                    break;
-                case '*': 
-                    createdNode = _ADD(_MUL(_DIF(_L), _C(_R)), _MUL(_C(_L), _DIF(_R)));
-                    // createdNode = createNewNodeOperator("+", createNewNodeOperator("*", differentiateNode(toDifferentiate->left), copyNode(toDifferentiate->right)), createNewNodeOperator("*", copyNode(toDifferentiate->left), differentiateNode(toDifferentiate->right)));
-                    break;
-                default: break;
-            }     
+        case NUMBER:   createdNode = numDiff();                 break;
+        case VARIABLE: createdNode = varDiff();                 break;
+        case OPERATOR: createdNode = operDiff(toDifferentiate); break;
         default: break;
     }
-
 
     return createdNode;
 }
 
-static treeNode_t* createNewNodeNumber(int value){
-    treeNode_t* curNode = (treeNode_t*) calloc(1, sizeof(treeNode_t));
-    assert(curNode);
-    LPRINTF("Выделил память");
-
-    curNode->nodeType  = NUMBER;
-    curNode->data.num  = value;
-
-    return curNode;
-}
-
-static treeNode_t* createNewNodeOperator(char* name, treeNode_t* left, treeNode_t* right){
-    assert(name);
-    assert(left);
-    assert(right);
-
-    treeNode_t* newNode = (treeNode_t*) calloc(1, sizeof(treeNode_t));
-    assert(newNode);
-    LPRINTF("Выделил память");
-
-    newNode->nodeType = OPERATOR;
-    newNode->left  = left;
-    newNode->right = right;
-
-    newNode->data.operatorVar = (char*) calloc(MAX_ANSWER_SIZE, sizeof(char));
-    assert(newNode->data.operatorVar);
-
-    strcpy(newNode->data.operatorVar, name);
-
-    return newNode;
-}
-
-static treeNode_t* copyNode(treeNode_t* toCopy){
-    assert(toCopy);
-
-    treeNode_t* copy = (treeNode_t*) calloc(1, sizeof(treeNode_t));
-    assert(copy);
-
-    copy->nodeType = toCopy->nodeType;
-    if(toCopy->nodeType == NUMBER){
-        copy->data.num = toCopy->data.num;
-    }
-    else{
-        copy->data.operatorVar = (char*) calloc(MAX_ANSWER_SIZE, sizeof(char));
-        assert(copy->data.operatorVar);
-
-        strcpy(copy->data.operatorVar, toCopy->data.operatorVar);
-    }
-
-    if(toCopy->left){
-        copy->left  = copyNode(toCopy->left);
-    }
-    if(toCopy->right){
-        copy->right = copyNode(toCopy->right);
-    }
-
-    return copy;
-}

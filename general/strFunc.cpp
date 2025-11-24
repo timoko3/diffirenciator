@@ -6,6 +6,7 @@
 
 #include <assert.h>
 #include <stdio.h>
+#include <malloc.h>
 
 size_t myStrLen(const char* start, char endStr){
     assert(start);
@@ -31,6 +32,17 @@ char* myStrCpy(char* dest, const char* src){
     dest[i] = '\0';
 
     return dest;
+}
+
+char* myStrDup(const char *str){
+    assert(str);
+
+    char* newStr = (char*)calloc(myStrLen(str) + 1, sizeof(char)); 
+    assert(newStr);
+    
+    myStrCpy(newStr, str);
+
+    return newStr;
 }
 
 char* myFGets(char* str, int count, FILE* stream){
