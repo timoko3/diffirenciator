@@ -1,6 +1,6 @@
 #include "generalDifferentiator.h"
 
-#include <assert.h>
+#include <assert.h> 
 
 
 treeVal_t* curData(differentiator_t* akinator){

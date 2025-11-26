@@ -1,6 +1,6 @@
 #include "generalDifferentiator.h"
 
-typedef treeNode_t* curAnchorNode;
+typedef treeNode_t* curAnchorNode; // ??? root
 
 curAnchorNode differentiatorCtor(differentiator_t* differentiator);
 curAnchorNode differentiatorDtor(differentiator_t* differentiator);

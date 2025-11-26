@@ -3193,3 +3193,431 @@ start optimization
 [DEBUG] differentiator.cpp:127:freeNode(): depth: 2
 [DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000410
 [DEBUG] differentiator.cpp:127:freeNode(): depth: 1
+[DEBUG] differentiator.cpp:75:differentiatorReadData(): akinator buffer: ("*" ("x" nil nil ) ("+" ("x" nil nil ) ("6" nil nil )))
+
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = (
+
+[DEBUG] differentiator.cpp:250:readAllocateNodeIfNeed(): Получил addr: 0x504000000010
+[DEBUG] differentiator.cpp:198:readCreateNode(): буфер перед чтением: "*" ("x" nil nil ) ("+" ("x" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:207:readCreateNode(): Получил размер строки 3 и саму строку *
+[DEBUG] differentiator.cpp:233:isSupportedOperation(): Операция доступна
+[DEBUG] differentiator.cpp:214:readCreateNode(): 0x504000000010 - addr curNode
+[DEBUG] differentiator.cpp:217:readCreateNode(): curNode->data.operatorVar = *
+[DEBUG] differentiator.cpp:224:readCreateNode(): 
+буфер после чтением:  ("x" nil nil ) ("+" ("x" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:165:readNode(): адрес текущей созданной ноды: 0x504000000010
+[DEBUG] differentiator.cpp:169:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = (
+
+[DEBUG] differentiator.cpp:255:readAllocateNodeIfNeed(): Выделил память
+[DEBUG] differentiator.cpp:198:readCreateNode(): буфер перед чтением: "x" nil nil ) ("+" ("x" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:207:readCreateNode(): Получил размер строки 3 и саму строку x
+[DEBUG] differentiator.cpp:224:readCreateNode(): 
+буфер после чтением:  nil nil ) ("+" ("x" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:165:readNode(): адрес текущей созданной ноды: 0x504000000050
+[DEBUG] differentiator.cpp:169:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = n
+
+[DEBUG] differentiator.cpp:268:isNilNode(): буфер перед чтением: nil nil ) ("+" ("x" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:271:isNilNode(): Прочиталось внутри случая nil: nil
+[DEBUG] general/strFunc.cpp:69:isEqualStrings(): hash answer nil, длина 4: 6385511880, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:273:isNilNode(): Зашел в nil
+[DEBUG] differentiator.cpp:275:isNilNode(): буфер после чтения:  nil ) ("+" ("x" nil nil ) ("6" nil nil )))
+
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = n
+
+[DEBUG] differentiator.cpp:268:isNilNode(): буфер перед чтением: nil ) ("+" ("x" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:271:isNilNode(): Прочиталось внутри случая nil: nil
+[DEBUG] general/strFunc.cpp:69:isEqualStrings(): hash answer nil, длина 4: 6385511880, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:273:isNilNode(): Зашел в nil
+[DEBUG] differentiator.cpp:275:isNilNode(): буфер после чтения:  ) ("+" ("x" nil nil ) ("6" nil nil )))
+
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = (
+
+[DEBUG] differentiator.cpp:255:readAllocateNodeIfNeed(): Выделил память
+[DEBUG] differentiator.cpp:198:readCreateNode(): буфер перед чтением: "+" ("x" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:207:readCreateNode(): Получил размер строки 3 и саму строку +
+[DEBUG] differentiator.cpp:233:isSupportedOperation(): Операция доступна
+[DEBUG] differentiator.cpp:214:readCreateNode(): 0x504000000090 - addr curNode
+[DEBUG] differentiator.cpp:217:readCreateNode(): curNode->data.operatorVar = +
+[DEBUG] differentiator.cpp:224:readCreateNode(): 
+буфер после чтением:  ("x" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:165:readNode(): адрес текущей созданной ноды: 0x504000000090
+[DEBUG] differentiator.cpp:169:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = (
+
+[DEBUG] differentiator.cpp:255:readAllocateNodeIfNeed(): Выделил память
+[DEBUG] differentiator.cpp:198:readCreateNode(): буфер перед чтением: "x" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:207:readCreateNode(): Получил размер строки 3 и саму строку x
+[DEBUG] differentiator.cpp:224:readCreateNode(): 
+буфер после чтением:  nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:165:readNode(): адрес текущей созданной ноды: 0x5040000000d0
+[DEBUG] differentiator.cpp:169:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = n
+
+[DEBUG] differentiator.cpp:268:isNilNode(): буфер перед чтением: nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:271:isNilNode(): Прочиталось внутри случая nil: nil
+[DEBUG] general/strFunc.cpp:69:isEqualStrings(): hash answer nil, длина 4: 6385511880, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:273:isNilNode(): Зашел в nil
+[DEBUG] differentiator.cpp:275:isNilNode(): буфер после чтения:  nil ) ("6" nil nil )))
+
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = n
+
+[DEBUG] differentiator.cpp:268:isNilNode(): буфер перед чтением: nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:271:isNilNode(): Прочиталось внутри случая nil: nil
+[DEBUG] general/strFunc.cpp:69:isEqualStrings(): hash answer nil, длина 4: 6385511880, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:273:isNilNode(): Зашел в nil
+[DEBUG] differentiator.cpp:275:isNilNode(): буфер после чтения:  ) ("6" nil nil )))
+
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = (
+
+[DEBUG] differentiator.cpp:255:readAllocateNodeIfNeed(): Выделил память
+[DEBUG] differentiator.cpp:198:readCreateNode(): буфер перед чтением: "6" nil nil )))
+[DEBUG] differentiator.cpp:207:readCreateNode(): Получил размер строки 3 и саму строку 6
+[DEBUG] differentiator.cpp:224:readCreateNode(): 
+буфер после чтением:  nil nil )))
+[DEBUG] differentiator.cpp:165:readNode(): адрес текущей созданной ноды: 0x504000000110
+[DEBUG] differentiator.cpp:169:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = n
+
+[DEBUG] differentiator.cpp:268:isNilNode(): буфер перед чтением: nil nil )))
+[DEBUG] differentiator.cpp:271:isNilNode(): Прочиталось внутри случая nil: nil
+[DEBUG] general/strFunc.cpp:69:isEqualStrings(): hash answer nil, длина 4: 6385511880, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:273:isNilNode(): Зашел в nil
+[DEBUG] differentiator.cpp:275:isNilNode(): буфер после чтения:  nil )))
+
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = n
+
+[DEBUG] differentiator.cpp:268:isNilNode(): буфер перед чтением: nil )))
+[DEBUG] differentiator.cpp:271:isNilNode(): Прочиталось внутри случая nil: nil
+[DEBUG] general/strFunc.cpp:69:isEqualStrings(): hash answer nil, длина 4: 6385511880, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:273:isNilNode(): Зашел в nil
+[DEBUG] differentiator.cpp:275:isNilNode(): буфер после чтения:  )))
+
+[DEBUG] differentiator.cpp:89:differentiate(): 
+
+ differentiation start
+
+[DEBUG] differentiator.cpp:301:differentiateNode(): differentiateNode start
+[DEBUG] differentiator.cpp:304:differentiateNode(): toDifferentiate->nodeType = 1
+[DEBUG] tableDerivative.cpp:33:operDiff(): Создаю ноду операции производной
+[DEBUG] tableDerivative.cpp:36:operDiff(): Нашел нужную операцию
+[DEBUG] tableDerivative.cpp:56:mulDiff(): Производная произведения
+[DEBUG] differentiator.cpp:301:differentiateNode(): differentiateNode start
+[DEBUG] differentiator.cpp:304:differentiateNode(): toDifferentiate->nodeType = 1
+[DEBUG] tableDerivative.cpp:33:operDiff(): Создаю ноду операции производной
+[DEBUG] tableDerivative.cpp:36:operDiff(): Нашел нужную операцию
+[DEBUG] tableDerivative.cpp:48:addDiff(): Производная суммы
+[DEBUG] differentiator.cpp:301:differentiateNode(): differentiateNode start
+[DEBUG] differentiator.cpp:304:differentiateNode(): toDifferentiate->nodeType = 3
+[DEBUG] tableDerivative.cpp:21:numDiff(): Создаю ноду численную производной
+[DEBUG] tableDerivative.cpp:63:createNewNodeNumber(): Выделил память
+[DEBUG] differentiator.cpp:301:differentiateNode(): differentiateNode start
+[DEBUG] differentiator.cpp:304:differentiateNode(): toDifferentiate->nodeType = 2
+[DEBUG] tableDerivative.cpp:26:varDiff(): Создаю ноду переменной производной
+[DEBUG] tableDerivative.cpp:63:createNewNodeNumber(): Выделил память
+[DEBUG] tableDerivative.cpp:78:createNewNodeOperator(): Выделил память
+[DEBUG] tableDerivative.cpp:78:createNewNodeOperator(): Выделил память
+[DEBUG] differentiator.cpp:301:differentiateNode(): differentiateNode start
+[DEBUG] differentiator.cpp:304:differentiateNode(): toDifferentiate->nodeType = 2
+[DEBUG] tableDerivative.cpp:26:varDiff(): Создаю ноду переменной производной
+[DEBUG] tableDerivative.cpp:63:createNewNodeNumber(): Выделил память
+[DEBUG] tableDerivative.cpp:78:createNewNodeOperator(): Выделил память
+[DEBUG] tableDerivative.cpp:78:createNewNodeOperator(): Выделил память
+[DEBUG] differentiator.cpp:318:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:367:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:318:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:367:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:378:removeNeutralElements(): keep only right subTree of 0x5040000003d0
+[DEBUG] differentiator.cpp:415:freeLeftSubtree(): start freeing leftSubtree 0x5040000003d0
+[DEBUG] differentiator.cpp:415:freeLeftSubtree(): start freeing leftSubtree 0x504000000390
+[DEBUG] differentiator.cpp:318:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:367:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:318:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:320:optimizeDerivative(): subTreeRoot addr: 0x504000000350
+[DEBUG] differentiator.cpp:356:collapseConstant(): calculatedVal: 6
+[DEBUG] differentiator.cpp:134:freeNode(): end freeing memory
+[DEBUG] differentiator.cpp:473:createNumNode(): start creating calculated node
+[DEBUG] differentiator.cpp:367:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:318:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:367:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:318:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:367:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:318:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:320:optimizeDerivative(): subTreeRoot addr: 0x504000000210
+[DEBUG] differentiator.cpp:356:collapseConstant(): calculatedVal: 1
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x5040000001d0
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 2
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000190
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 2
+[DEBUG] differentiator.cpp:134:freeNode(): end freeing memory
+[DEBUG] differentiator.cpp:473:createNumNode(): start creating calculated node
+[DEBUG] differentiator.cpp:367:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000050
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 2
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x5040000000d0
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 3
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000110
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 3
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000090
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 2
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000010
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 1
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000310
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 3
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000350
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 3
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x5040000002d0
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 2
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000250
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 3
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000210
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 3
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000290
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 2
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000410
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 1
+[DEBUG] differentiator.cpp:75:differentiatorReadData(): akinator buffer: ("*" ("x" nil nil ) ("+" ("x" nil nil ) ("6" nil nil )))
+
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = (
+
+[DEBUG] differentiator.cpp:250:readAllocateNodeIfNeed(): Получил addr: 0x504000000010
+[DEBUG] differentiator.cpp:198:readCreateNode(): буфер перед чтением: "*" ("x" nil nil ) ("+" ("x" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:207:readCreateNode(): Получил размер строки 3 и саму строку *
+[DEBUG] differentiator.cpp:233:isSupportedOperation(): Операция доступна
+[DEBUG] differentiator.cpp:214:readCreateNode(): 0x504000000010 - addr curNode
+[DEBUG] differentiator.cpp:217:readCreateNode(): curNode->data.operatorVar = *
+[DEBUG] differentiator.cpp:224:readCreateNode(): 
+буфер после чтением:  ("x" nil nil ) ("+" ("x" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:165:readNode(): адрес текущей созданной ноды: 0x504000000010
+[DEBUG] differentiator.cpp:169:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = (
+
+[DEBUG] differentiator.cpp:255:readAllocateNodeIfNeed(): Выделил память
+[DEBUG] differentiator.cpp:198:readCreateNode(): буфер перед чтением: "x" nil nil ) ("+" ("x" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:207:readCreateNode(): Получил размер строки 3 и саму строку x
+[DEBUG] differentiator.cpp:224:readCreateNode(): 
+буфер после чтением:  nil nil ) ("+" ("x" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:165:readNode(): адрес текущей созданной ноды: 0x504000000050
+[DEBUG] differentiator.cpp:169:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = n
+
+[DEBUG] differentiator.cpp:268:isNilNode(): буфер перед чтением: nil nil ) ("+" ("x" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:271:isNilNode(): Прочиталось внутри случая nil: nil
+[DEBUG] general/strFunc.cpp:69:isEqualStrings(): hash answer nil, длина 4: 6385511880, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:273:isNilNode(): Зашел в nil
+[DEBUG] differentiator.cpp:275:isNilNode(): буфер после чтения:  nil ) ("+" ("x" nil nil ) ("6" nil nil )))
+
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = n
+
+[DEBUG] differentiator.cpp:268:isNilNode(): буфер перед чтением: nil ) ("+" ("x" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:271:isNilNode(): Прочиталось внутри случая nil: nil
+[DEBUG] general/strFunc.cpp:69:isEqualStrings(): hash answer nil, длина 4: 6385511880, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:273:isNilNode(): Зашел в nil
+[DEBUG] differentiator.cpp:275:isNilNode(): буфер после чтения:  ) ("+" ("x" nil nil ) ("6" nil nil )))
+
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = (
+
+[DEBUG] differentiator.cpp:255:readAllocateNodeIfNeed(): Выделил память
+[DEBUG] differentiator.cpp:198:readCreateNode(): буфер перед чтением: "+" ("x" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:207:readCreateNode(): Получил размер строки 3 и саму строку +
+[DEBUG] differentiator.cpp:233:isSupportedOperation(): Операция доступна
+[DEBUG] differentiator.cpp:214:readCreateNode(): 0x504000000090 - addr curNode
+[DEBUG] differentiator.cpp:217:readCreateNode(): curNode->data.operatorVar = +
+[DEBUG] differentiator.cpp:224:readCreateNode(): 
+буфер после чтением:  ("x" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:165:readNode(): адрес текущей созданной ноды: 0x504000000090
+[DEBUG] differentiator.cpp:169:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = (
+
+[DEBUG] differentiator.cpp:255:readAllocateNodeIfNeed(): Выделил память
+[DEBUG] differentiator.cpp:198:readCreateNode(): буфер перед чтением: "x" nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:207:readCreateNode(): Получил размер строки 3 и саму строку x
+[DEBUG] differentiator.cpp:224:readCreateNode(): 
+буфер после чтением:  nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:165:readNode(): адрес текущей созданной ноды: 0x5040000000d0
+[DEBUG] differentiator.cpp:169:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = n
+
+[DEBUG] differentiator.cpp:268:isNilNode(): буфер перед чтением: nil nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:271:isNilNode(): Прочиталось внутри случая nil: nil
+[DEBUG] general/strFunc.cpp:69:isEqualStrings(): hash answer nil, длина 4: 6385511880, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:273:isNilNode(): Зашел в nil
+[DEBUG] differentiator.cpp:275:isNilNode(): буфер после чтения:  nil ) ("6" nil nil )))
+
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = n
+
+[DEBUG] differentiator.cpp:268:isNilNode(): буфер перед чтением: nil ) ("6" nil nil )))
+[DEBUG] differentiator.cpp:271:isNilNode(): Прочиталось внутри случая nil: nil
+[DEBUG] general/strFunc.cpp:69:isEqualStrings(): hash answer nil, длина 4: 6385511880, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:273:isNilNode(): Зашел в nil
+[DEBUG] differentiator.cpp:275:isNilNode(): буфер после чтения:  ) ("6" nil nil )))
+
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = (
+
+[DEBUG] differentiator.cpp:255:readAllocateNodeIfNeed(): Выделил память
+[DEBUG] differentiator.cpp:198:readCreateNode(): буфер перед чтением: "6" nil nil )))
+[DEBUG] differentiator.cpp:207:readCreateNode(): Получил размер строки 3 и саму строку 6
+[DEBUG] differentiator.cpp:224:readCreateNode(): 
+буфер после чтением:  nil nil )))
+[DEBUG] differentiator.cpp:165:readNode(): адрес текущей созданной ноды: 0x504000000110
+[DEBUG] differentiator.cpp:169:readNode(): 
+
+рекурсивный запуск
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = n
+
+[DEBUG] differentiator.cpp:268:isNilNode(): буфер перед чтением: nil nil )))
+[DEBUG] differentiator.cpp:271:isNilNode(): Прочиталось внутри случая nil: nil
+[DEBUG] general/strFunc.cpp:69:isEqualStrings(): hash answer nil, длина 4: 6385511880, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:273:isNilNode(): Зашел в nil
+[DEBUG] differentiator.cpp:275:isNilNode(): буфер после чтения:  nil )))
+
+[DEBUG] differentiator.cpp:153:readNode(): buffer[*curBufferPos] = n
+
+[DEBUG] differentiator.cpp:268:isNilNode(): буфер перед чтением: nil )))
+[DEBUG] differentiator.cpp:271:isNilNode(): Прочиталось внутри случая nil: nil
+[DEBUG] general/strFunc.cpp:69:isEqualStrings(): hash answer nil, длина 4: 6385511880, hash nil, длина 4: 6385511880
+
+[DEBUG] differentiator.cpp:273:isNilNode(): Зашел в nil
+[DEBUG] differentiator.cpp:275:isNilNode(): буфер после чтения:  )))
+
+[DEBUG] differentiator.cpp:89:differentiate(): 
+
+ differentiation start
+
+[DEBUG] differentiator.cpp:301:differentiateNode(): differentiateNode start
+[DEBUG] differentiator.cpp:304:differentiateNode(): toDifferentiate->nodeType = 1
+[DEBUG] tableDerivative.cpp:33:operDiff(): Создаю ноду операции производной
+[DEBUG] tableDerivative.cpp:36:operDiff(): Нашел нужную операцию
+[DEBUG] tableDerivative.cpp:56:mulDiff(): Производная произведения
+[DEBUG] differentiator.cpp:301:differentiateNode(): differentiateNode start
+[DEBUG] differentiator.cpp:304:differentiateNode(): toDifferentiate->nodeType = 1
+[DEBUG] tableDerivative.cpp:33:operDiff(): Создаю ноду операции производной
+[DEBUG] tableDerivative.cpp:36:operDiff(): Нашел нужную операцию
+[DEBUG] tableDerivative.cpp:48:addDiff(): Производная суммы
+[DEBUG] differentiator.cpp:301:differentiateNode(): differentiateNode start
+[DEBUG] differentiator.cpp:304:differentiateNode(): toDifferentiate->nodeType = 3
+[DEBUG] tableDerivative.cpp:21:numDiff(): Создаю ноду численную производной
+[DEBUG] tableDerivative.cpp:63:createNewNodeNumber(): Выделил память
+[DEBUG] differentiator.cpp:301:differentiateNode(): differentiateNode start
+[DEBUG] differentiator.cpp:304:differentiateNode(): toDifferentiate->nodeType = 2
+[DEBUG] tableDerivative.cpp:26:varDiff(): Создаю ноду переменной производной
+[DEBUG] tableDerivative.cpp:63:createNewNodeNumber(): Выделил память
+[DEBUG] tableDerivative.cpp:78:createNewNodeOperator(): Выделил память
+[DEBUG] tableDerivative.cpp:78:createNewNodeOperator(): Выделил память
+[DEBUG] differentiator.cpp:301:differentiateNode(): differentiateNode start
+[DEBUG] differentiator.cpp:304:differentiateNode(): toDifferentiate->nodeType = 2
+[DEBUG] tableDerivative.cpp:26:varDiff(): Создаю ноду переменной производной
+[DEBUG] tableDerivative.cpp:63:createNewNodeNumber(): Выделил память
+[DEBUG] tableDerivative.cpp:78:createNewNodeOperator(): Выделил память
+[DEBUG] tableDerivative.cpp:78:createNewNodeOperator(): Выделил память
+[DEBUG] differentiator.cpp:318:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:367:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:318:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:367:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:378:removeNeutralElements(): keep only right subTree of 0x5040000003d0
+[DEBUG] differentiator.cpp:415:freeLeftSubtree(): start freeing leftSubtree 0x5040000003d0
+[DEBUG] differentiator.cpp:415:freeLeftSubtree(): start freeing leftSubtree 0x504000000390
+[DEBUG] differentiator.cpp:318:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:367:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:318:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:320:optimizeDerivative(): subTreeRoot addr: 0x504000000350
+[DEBUG] differentiator.cpp:356:collapseConstant(): calculatedVal: 6
+[DEBUG] differentiator.cpp:134:freeNode(): end freeing memory
+[DEBUG] differentiator.cpp:473:createNumNode(): start creating calculated node
+[DEBUG] differentiator.cpp:367:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:318:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:367:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:318:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:367:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:318:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:320:optimizeDerivative(): subTreeRoot addr: 0x504000000210
+[DEBUG] differentiator.cpp:356:collapseConstant(): calculatedVal: 1
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x5040000001d0
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 2
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000190
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 2
+[DEBUG] differentiator.cpp:134:freeNode(): end freeing memory
+[DEBUG] differentiator.cpp:473:createNumNode(): start creating calculated node
+[DEBUG] differentiator.cpp:367:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000050
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 2
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x5040000000d0
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 3
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000110
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 3
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000090
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 2
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000010
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 1
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000310
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 3
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000350
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 3
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x5040000002d0
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 2
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000250
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 3
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000210
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 3
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000290
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 2
+[DEBUG] differentiator.cpp:126:freeNode(): free: 0x504000000410
+[DEBUG] differentiator.cpp:127:freeNode(): depth: 1

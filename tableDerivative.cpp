@@ -2,6 +2,7 @@
 #include "DSL.h"
 #include "differentiator.h"
 #include "operations.h"
+#include "tree.h"
 
 #define DEBUG 
 
@@ -12,8 +13,6 @@
 #include <malloc.h>
 #include <string.h>
 
-static treeNode_t* createNewNodeNumber(int value);
-static treeNode_t* createNewNodeOperator(char* name, treeNode_t* left, treeNode_t* right);
 static treeNode_t* copyNode(treeNode_t* toCopy);
 static bool setParent(treeNode_t* curNode);
 
@@ -57,39 +56,6 @@ treeNode_t* mulDiff(treeNode_t* left, treeNode_t* right){
     return _ADD(_MUL(_DIF(left), _C(right)), _MUL(_C(left), _DIF(right)));
 }
 
-static treeNode_t* createNewNodeNumber(int value){
-    treeNode_t* curNode = (treeNode_t*) calloc(1, sizeof(treeNode_t));
-    assert(curNode);
-    LPRINTF("Выделил память");
-
-    curNode->nodeType  = NUMBER;
-    curNode->data.num  = value;
-
-    return curNode;
-}
-
-static treeNode_t* createNewNodeOperator(char* name, treeNode_t* left, treeNode_t* right){
-    assert(name);
-    assert(left);
-    assert(right);
-
-    treeNode_t* newNode = (treeNode_t*) calloc(1, sizeof(treeNode_t));
-    assert(newNode);
-    LPRINTF("Выделил память");
-
-    newNode->nodeType = OPERATOR;
-
-    newNode->left  = left;
-    newNode->left->parent = newNode;
-
-    newNode->right = right;
-    newNode->right->parent = newNode;
-
-    newNode->data.operatorVar = myStrDup(name);
-
-    return newNode;
-}
-
 static treeNode_t* copyNode(treeNode_t* toCopy){
     assert(toCopy);
 
@@ -108,7 +74,7 @@ static treeNode_t* copyNode(treeNode_t* toCopy){
         copy->left  = copyNode(toCopy->left);
     }
     if(toCopy->right){
-        copy->right = copyNode(toCopy->right);
+        copy->right = copyNode(toCopy->right); 
     }
     
     setParent(copy);

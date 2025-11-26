@@ -6,4 +6,4 @@ int add(int left, int right){
 
 int mul(int left, int right){
     return left * right;
-}
+} 

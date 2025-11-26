@@ -7,6 +7,12 @@
 #include <malloc.h>
 #include <assert.h>
 
+// #include "superTree.h"
+
+// void ReadData() {
+//     ...
+// }
+
 int main(void){
 
     differentiator_t differentiator;
@@ -20,6 +26,8 @@ int main(void){
 
     optimizeDerivative(derivative.root);
     log(&derivative, "after optimization");
+
+    texDumpTree(&derivative);
 
     differentiatorDtor(&differentiator);
     differentiatorDtor(&derivative);

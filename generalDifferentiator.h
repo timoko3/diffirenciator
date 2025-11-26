@@ -6,18 +6,24 @@
 
 #define log(differentiator, text, ...) htmlLog(differentiator, __FILE__, __FUNCTION__, __LINE__, text, ##__VA_ARGS__)
 
+// var
+// op
+// num
 
-union treeVal_t {
-    char* operatorVar;
+union treeVal_t{
+    char* operatorVar; 
     int num;
 };
 
-enum infoType{
+enum infoType{ // node
     NO_TYPE,
     OPERATOR,
     VARIABLE,
     NUMBER
 };
+
+// data left right
+// data = {value + type}
 
 struct treeNode_t{
     infoType nodeType;
@@ -27,13 +33,13 @@ struct treeNode_t{
     treeNode_t* parent;
 };
 
-struct akinatorState_t{
+struct akinatorState_t{ //
     treeNode_t* Node;
 };
 
-struct differentiator_t{
+struct differentiator_t{ // expression ?
     treeNode_t*   root;
-    size_t        size;
+    size_t        size; // of ???
     akinatorState_t curState;
     // treeStatusDescription status;
 };

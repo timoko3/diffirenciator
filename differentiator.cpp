@@ -6,6 +6,18 @@
 #include "operations.h"
 #include "mathHandlers.h"
 
+// # tree.cpp
+// NodeData ReadData (const char* data);
+
+// ...
+// ...
+
+// # treeFunc.cpp // rename
+// NodeData ReadData (const char* data);
+// NodeData ReadData (const char* data) {
+
+// }
+
 #define DEBUG
 
 #include "general/poison.h"
@@ -18,7 +30,7 @@
 #include <string.h>
 #include <ctype.h>
 
-const char* DIFFERENTIATOR_DATA_FILE_NAME = "differentiatorData.txt";
+const char* DIFFERENTIATOR_DATA_FILE_NAME = "differentiatorData.txt"; //
 
 static void freeNode(treeNode_t* node, bool withoutRoot);
 static void freeLeftSubtree(treeNode_t* node);
@@ -42,7 +54,7 @@ curAnchorNode differentiatorCtor(differentiator_t* differentiator){
 
     differentiator->size = 1;
 
-    differentiator->root = (treeNode_t*) calloc(1, sizeof(treeNode_t));
+    differentiator->root = (treeNode_t*) calloc(1, sizeof(treeNode_t)); // 
     assert(differentiator->root);
 
     differentiator->root->left = NULL;
@@ -74,7 +86,7 @@ void differentiatorReadData(differentiator_t* differentiator){
 
     LPRINTF("akinator buffer: %s\n", differentiatorData.buffer);
 
-    static size_t curPose = 0;
+    static size_t curPose = 0; // pos
     readNode(differentiator, differentiatorData.buffer, &curPose);
     
     free(differentiatorData.buffer);
@@ -90,8 +102,8 @@ differentiator_t differentiate(differentiator_t* differentiator){
 
     differentiator_t derivativeTree;
 
-    differentiatorCtor(&derivativeTree);
-    free(derivativeTree.root);
+    differentiatorCtor(&derivativeTree);  //
+    free(derivativeTree.root); //
 
     derivativeTree.root = differentiateNode(differentiator->root);
 
@@ -103,20 +115,17 @@ static void freeNode(treeNode_t* node, bool withoutRoot = false){
 
     static int depth = 1;
     
-
     if(node->left){
         depth++;
         freeNode(node->left);
         depth--;
     }
     
-
     if(node->right){
         depth++;
         freeNode(node->right);
         depth--;
     }
-    
     
     if(node->nodeType != NUMBER){
         free(node->data.operatorVar);
@@ -140,7 +149,6 @@ static curAnchorNode readNode(differentiator_t* differentiator, char* buffer, si
 
     // log(differentiator, "startReadNode with curBuffer: %s", &buffer[*curBufferPos]);
     static bool continueReading = true;
-
     if(!continueReading){
         LPRINTF("Ошибка! Возвращаю NULL");
         return NULL;
@@ -184,6 +192,7 @@ static curAnchorNode readNode(differentiator_t* differentiator, char* buffer, si
     return createdNode;
 }
 
+// rename
 static curAnchorNode readCreateNode(differentiator_t* differentiator, char* buffer, size_t* curBufferPos){
     assert(differentiator);
     assert(buffer);
@@ -238,6 +247,7 @@ static bool isSupportedOperation(char readSym){
     return false;
 }
 
+// rename
 static treeNode_t* readAllocateNodeIfNeed(differentiator_t* differentiator, size_t countReadNodes){
     assert(differentiator);
     assert(curNode);
@@ -262,6 +272,7 @@ static bool isNilNode(char* buffer, size_t* curBufferPos){
     assert(buffer);
     assert(curBufferPos);
 
+    // char curNodeData[MAX_ANSWER_SIZE] = {};
     char* curNodeData = (char*) calloc(MAX_ANSWER_SIZE, sizeof(char));
     assert(curNodeData);
 
@@ -296,7 +307,10 @@ static void skipSpaceAndCloseBracket(char* buffer, size_t* curBufferPos){
     }
 }   
 
-treeNode_t* differentiateNode(treeNode_t* toDifferentiate){
+// open(file)
+// openFile(toOpen)
+
+treeNode_t* differentiateNode(treeNode_t* toDifferentiate){ // to - сущ. // node
     assert(toDifferentiate);
     LPRINTF("differentiateNode start");
     treeNode_t* createdNode = NULL;
@@ -311,6 +325,22 @@ treeNode_t* differentiateNode(treeNode_t* toDifferentiate){
 
     return createdNode;
 }
+
+// (5+3) - (7+1)
+
+//       -
+//   +       +
+// 5   3   7   1
+
+//       -
+//   8       +
+//         7   1
+
+//       -
+//   8       8
+  
+//       0
+  
 
 bool optimizeDerivative(treeNode_t* subTreeRoot){
     assert(subTreeRoot);
@@ -332,7 +362,7 @@ bool optimizeDerivative(treeNode_t* subTreeRoot){
     return true;
 }
 
-static bool checkNoVariables(treeNode_t* curNode){
+static bool checkNoVariables(treeNode_t* curNode){ // have has
     assert(curNode);
 
     if(curNode->nodeType == VARIABLE){
@@ -373,6 +403,7 @@ static treeNode_t* removeNeutralElements(treeNode_t* subTreeRoot){
             subTreeRoot = createNumNode(0, subTreeRoot);
             return subTreeRoot;
         }
+        // copypaste
         if((subTreeRoot->data.operatorVar[0] == '*' && subTreeRoot->left->data.num == 1) || 
             (subTreeRoot->data.operatorVar[0] == '+' && subTreeRoot->left->data.num == 0)){
                 LPRINTF("keep only right subTree of %p", subTreeRoot);
@@ -422,13 +453,11 @@ static void freeLeftSubtree(treeNode_t* node){
         depth--;
     }
     
-
     if(node->right && depth != 1){
         depth++;
         freeLeftSubtree(node->right);
         depth--;
     }
-    
     
     if(node->nodeType != NUMBER){
         free(node->data.operatorVar);
@@ -444,13 +473,11 @@ static void freeRightSubtree(treeNode_t* node){
 
     static int depth = 1;
     
-
     if(node->left && depth != 1){
         depth++;
         freeRightSubtree(node->left);
         depth--;
     }
-    
 
     if(node->right){
         depth++;
