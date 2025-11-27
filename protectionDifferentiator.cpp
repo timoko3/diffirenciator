@@ -34,9 +34,9 @@ const size_t SCALE_MIN              = 30;
 
 static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr);
 static void printGraphNode(const treeNode_t* node, FILE* graphFilePtr);
-// static void assignErrorStruct(expression_t* akinator, treeStatus type);
+// static void assignErrorStruct(tree_t* expression, treeStatus type);
 
-// treeStatus verifyTree(expression_t* tree, const char* function, const char* file, const int line){
+// treeStatus verifyTree(tree_t* tree, const char* function, const char* file, const int line){
 //     if(tree == NULL){
 //         LPRINTF("tree — нулевой указатель\n");  
 //     } 
@@ -56,7 +56,7 @@ static void printGraphNode(const treeNode_t* node, FILE* graphFilePtr);
 //     return tree->status.type;
 // }
 
-// static void assignErrorStruct(expression_t* tree, treeStatus type){
+// static void assignErrorStruct(tree_t* tree, treeStatus type){
 //     assert(tree);
 
 //     for(size_t curErrInd = 0; curErrInd < sizeof(treeStatuses) / sizeof(treeStatuses); curErrInd++){
@@ -66,9 +66,9 @@ static void printGraphNode(const treeNode_t* node, FILE* graphFilePtr);
 //     }
 // }
 
-void htmlLog(expression_t* akinator, const char* callFileName, const char* callFuncName, int callLine,
+void htmlLog(tree_t* expression, const char* callFileName, const char* callFuncName, int callLine,
                            const char* dumpDescription, ...){
-    assert(akinator);
+    assert(expression);
     assert(callFileName);
     assert(callFuncName);
 
@@ -131,14 +131,14 @@ void htmlLog(expression_t* akinator, const char* callFileName, const char* callF
                         "<tr><th>Root</th><td>%p</td></tr>"
                         "<tr><th>Size</th><td>%lu</td></tr>"
                         "</tbody></table>\n",
-                        akinator->root, akinator->amountNodes);
+                        expression->root, expression->amountNodes);
 
-    double widthPercent = START_SCALE_GRAPH_DUMP +  (double)akinator->amountNodes * SCALE_INCREASE_COEF;
+    double widthPercent = START_SCALE_GRAPH_DUMP +  (double)expression->amountNodes * SCALE_INCREASE_COEF;
     if (widthPercent > SCALE_MAX) widthPercent = SCALE_MAX;  
     if (widthPercent < SCALE_MIN) widthPercent = SCALE_MIN;  
 
     // Генерация картинки
-    treeGraphDump(akinator);
+    treeGraphDump(expression);
 
     fprintf(logFilePtr,
         "<div class=\"graph\">"
@@ -154,12 +154,14 @@ void htmlLog(expression_t* akinator, const char* callFileName, const char* callF
 }
 
 
-void treeGraphDump(expression_t* akinator){
-    assert(akinator);
+void treeGraphDump(tree_t* expression){
+    assert(expression);
+
+    if(!expression->root) return;
 
     logCount++;    
 
-    LPRINTF("addr root: %p", akinator->root);
+    LPRINTF("addr root: %p", expression->root);
     fileDescription graphDump = {
         GRAPH_DUMP_DOT_FILE_NAME,
         "wb"
@@ -176,12 +178,12 @@ void treeGraphDump(expression_t* akinator){
 
     fprintf(graphFilePtr, "\tnode [shape=Mrecord, style=\"filled\", fillcolor=\"%s\", fontcolor=\"%s\", color=\"%s\", penwidth=4, fontname=\"Menlo\", fontsize=30];\n\n", LEAF_COLOR, FONT_COLOR, LEAF_BORDER_COLOR);
 
-    initGraphNodes(akinator->root, graphFilePtr);
+    initGraphNodes(expression->root, graphFilePtr);
 
-    printGraphNode(akinator->root, graphFilePtr);
+    printGraphNode(expression->root, graphFilePtr);
 
     fprintf(graphFilePtr, "root_label [shape=box, width = 2.4, height = 1.4, label=\"ROOT\", style=\"filled\", fillcolor=\"#BBDDEE\", color=\"%s\", penwidth = 6,  fontcolor=\"darkblue\", fontsize = 40];\n", TREE_BRANCH_COLOR);
-    fprintf(graphFilePtr, "root_label -> node%d [color=\"%s\"  , arrowsize=2.5, penwidth=3];\n", (int)(uintptr_t) akinator->root, TREE_BRANCH_COLOR);
+    fprintf(graphFilePtr, "root_label -> node%d [color=\"%s\"  , arrowsize=2.5, penwidth=3];\n", (int)(uintptr_t) expression->root, TREE_BRANCH_COLOR);
 
     fprintf(graphFilePtr, "}\n");
 

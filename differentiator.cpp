@@ -32,73 +32,25 @@
 #include <string.h>
 #include <ctype.h>
 
-const char* DIFFERENTIATOR_DATA_FILE_NAME = "expression.txt"; //
-
-static treeNode_t* readNode(expression_t* expression, char* buffer, size_t* curBufferPos);
-static treeNode_t* readCreateNode(expression_t* expression, char* buffer, size_t* cuBufferPose);
-static treeNode_t* readAllocateNodeIfNeed(expression_t* expression, size_t countReadNodes);
+static treeNode_t* readCreateNode(tree_t* expression, char* buffer, size_t* cuBufferPose);
+static treeNode_t* readAllocateNodeIfNeed(tree_t* expression, size_t countReadNodes);
 static bool isNilNode(char* buffer, size_t* curBufferPos);
 static void skipSpaceAndCloseBracket(char* buffer, size_t* curBufferPos);
 static bool isSupportedOperation(char readSym);
 
-static bool checkNoVariables(treeNode_t* curNode);
+static bool checkHaveVariables(treeNode_t* curNode);
 static treeNode_t* collapseConstant(treeNode_t* subTreeRoot);
 static int calculateSubTree(treeNode_t* subTreeRoot);
 static treeNode_t* removeNeutralElements(treeNode_t* subTreeRoot);
 
-treeNode_t* differentiatorCtor(expression_t* expression){
-    assert(expression);
-
-    // expression->amountNodes = 1;
-    // expression->root        = NULL;
-
-    expression->root = (treeNode_t*) calloc(1, sizeof(treeNode_t)); // 
-    assert(expression->root);
-
-    expression->root->left = NULL;
-    expression->root->right = NULL;
-    expression->root->parent = NULL;
-
-    return expression->root;
-}
-
-treeNode_t* differentiatorDtor(expression_t* expression){
-    assert(expression);
-
-    freeNode(expression->root, false);
-
-    poisonMemory(&expression->amountNodes, sizeof(expression->amountNodes));
-
-    return NULL;
-}
-
-void differentiatorReadData(expression_t* expression){
-    assert(expression);
-
-    log(expression, "started reading");
-
-    data_t expressionData;
-    parseStringsFile(&expressionData, DIFFERENTIATOR_DATA_FILE_NAME);
-
-    LPRINTF("akinator buffer: %s\n", expressionData.buffer);
-
-    static size_t curPose = 0; // pos
-    readNode(expression, expressionData.buffer, &curPose);
-    
-    free(expressionData.buffer);
-    free(expressionData.strings);
-
-    log(expression, "ended reading");
-}
-
-expression_t differentiate(expression_t* expression){
+tree_t differentiate(tree_t* expression){
     assert(expression);
 
     LPRINTF("\n\n differentiation start\n");
 
-    expression_t derivativeTree;
+    tree_t derivativeTree;
 
-    differentiatorCtor(&derivativeTree);  //
+    treeCtor(&derivativeTree);  //
     free(derivativeTree.root); //
 
     derivativeTree.root = differentiateNode(expression->root);
@@ -106,57 +58,8 @@ expression_t differentiate(expression_t* expression){
     return derivativeTree;
 }
 
-static treeNode_t* readNode(expression_t* expression, char* buffer, size_t* curBufferPos){
-    assert(expression);
-    assert(buffer);
-
-    // log(expression, "startReadNode with curBuffer: %s", &buffer[*curBufferPos]);
-    static bool continueReading = true;
-    if(!continueReading){
-        LPRINTF("Ошибка! Возвращаю NULL");
-        return NULL;
-    }
-
-    skipSpaceAndCloseBracket(buffer, curBufferPos);
-
-    treeNode_t* createdNode = NULL;
-    
-    LPRINTF("buffer[*curBufferPos] = %c\n", buffer[*curBufferPos]);
-    if((buffer[*curBufferPos] == '(') ){
-        createdNode = readCreateNode(expression, buffer, curBufferPos);
-    }
-    else if(isNilNode(buffer, curBufferPos)){
-        return NULL;
-    }
-    else{
-        LPRINTF("readNode: неожиданный символ, не '(' и не nil. Позиция: %zu\n", *curBufferPos);
-        continueReading = false;
-        return NULL; // <- важно: не продолжать с createdNode == NULL
-    }
-    LPRINTF("адрес текущей созданной ноды: %p", createdNode);
-
-    skipSpaceAndCloseBracket(buffer, curBufferPos);
-
-    LPRINTF("\n\nрекурсивный запуск");
-    createdNode->left = readNode(expression, buffer, curBufferPos);
-    if(createdNode->left){
-        createdNode->left->parent = createdNode;
-    }
-
-    createdNode->right = readNode(expression, buffer, curBufferPos);
-    if(createdNode->right){
-        createdNode->right->parent = createdNode;
-    }
-    
-    (expression->amountNodes)++;
-
-    // log(expression, "endReadNode with curBuffer: %s", &buffer[*curBufferPos]);
-
-    return createdNode;
-}
-
 // rename
-static treeNode_t* readCreateNode(expression_t* expression, char* buffer, size_t* curBufferPos){
+static treeNode_t* readCreateNode(tree_t* expression, char* buffer, size_t* curBufferPos){
     assert(expression);
     assert(buffer);
     
@@ -210,7 +113,7 @@ static bool isSupportedOperation(char readSym){
 }
 
 // rename
-static treeNode_t* readAllocateNodeIfNeed(expression_t* expression, size_t countReadNodes){
+static treeNode_t* readAllocateNodeIfNeed(tree_t* expression, size_t countReadNodes){
     assert(expression);
 
     treeNode_t* curNode;
@@ -271,7 +174,7 @@ static void skipSpaceAndCloseBracket(char* buffer, size_t* curBufferPos){
 // open(file)
 // openFile(toOpen)
 
-treeNode_t* differentiateNode(treeNode_t* node){ // to - сущ. // node
+treeNode_t* differentiateNode(treeNode_t* node){
     assert(node);
     LPRINTF("differentiateNode start");
     treeNode_t* createdNode = NULL;
@@ -307,7 +210,7 @@ bool optimizeDerivative(treeNode_t* subTreeRoot){
     assert(subTreeRoot);
     
     LPRINTF("\n\nstart optimization");
-    if(checkNoVariables(subTreeRoot)){
+    if(checkHaveVariables(subTreeRoot)){
         LPRINTF("subTreeRoot addr: %p", subTreeRoot);
         subTreeRoot = collapseConstant(subTreeRoot);
     }
@@ -323,7 +226,7 @@ bool optimizeDerivative(treeNode_t* subTreeRoot){
     return true;
 }
 
-static bool checkNoVariables(treeNode_t* curNode){ // have has
+static bool checkHaveVariables(treeNode_t* curNode){ // have has
     assert(curNode);
 
     if(curNode->type == VARIABLE){
@@ -331,10 +234,10 @@ static bool checkNoVariables(treeNode_t* curNode){ // have has
     }
 
     if(curNode->left){
-        if(!checkNoVariables(curNode->left)) return false;
+        if(!checkHaveVariables(curNode->left)) return false;
     }
     if(curNode->right){
-        if(!checkNoVariables(curNode->right)) return false;
+        if(!checkHaveVariables(curNode->right)) return false;
     }
 
     return true;

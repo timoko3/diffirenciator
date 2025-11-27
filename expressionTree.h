@@ -1,5 +1,7 @@
 #include "generalDifferentiator.h"
 
+treeNode_t* readNode(tree_t* expression, char* buffer, size_t* curBufferPos);
+
 treeNode_t* createNewNodeNumber  (int value,  treeNode_t* left, treeNode_t* right);
 treeNode_t* createNewNodeVariable(char* name, treeNode_t* left, treeNode_t* right);
 treeNode_t* createNewNodeOperator(char* name, treeNode_t* left, treeNode_t* right);

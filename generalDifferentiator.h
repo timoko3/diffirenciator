@@ -30,7 +30,7 @@ struct treeNode_t{
     treeNode_t* parent;
 };
 
-struct expression_t{ 
+struct tree_t{ 
     treeNode_t*   root;
     size_t        amountNodes;
 };

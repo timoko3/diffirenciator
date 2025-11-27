@@ -12,20 +12,15 @@
 #include <malloc.h>
 #include <assert.h>
 
-// #include "superTree.h"
-
-// void ReadData() {
-//     ...
-// }
-
 int main(void){
-    expression_t expression;
-    differentiatorCtor(&expression);
-
-    differentiatorReadData(&expression);
+    tree_t expression;
+    treeCtor(&expression);
+    
+    treeRead(&expression);
+    assert(expression.root);
 
     log(&expression, "after reading");
-    expression_t derivative = differentiate(&expression);
+    tree_t derivative = differentiate(&expression);
     log(&derivative, "after differentiation");
 
     optimizeDerivative(derivative.root);
@@ -34,6 +29,6 @@ int main(void){
 
     // texDumpTree(&derivative);
     
-    differentiatorDtor(&expression);
-    differentiatorDtor(&derivative);
+    treeDtor(&expression);
+    treeDtor(&derivative);
 }

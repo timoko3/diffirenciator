@@ -10,7 +10,7 @@ static void texDumpNode(FILE* texFilePtr, treeNode_t* toDump);
 
 const char* texDumpFileName = "DumpDifferentiator.tex";
 
-void texDumpTree(expression_t* expression){
+void texDumpTree(tree_t* expression){
     assert(expression);
     printf("MEOW\n");
     fileDescription texDumpFile{

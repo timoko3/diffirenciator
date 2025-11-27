@@ -1,14 +1,56 @@
 #include "tree.h"
 #include "expressionTree.h"
+#include "protectionDifferentiator.h"
 
 #define DEBUG
 
 #include "general/strFunc.h"
 #include "general/debug.h"
 #include "general/poison.h"
+#include "general/file.h"
 
 #include <assert.h>
 #include <malloc.h>
+
+const char* DIFFERENTIATOR_DATA_FILE_NAME = "realExpression.txt"; 
+
+treeNode_t* treeCtor(tree_t* expression){
+    assert(expression);
+
+    expression->amountNodes = 1;
+    expression->root        = NULL;
+
+    return expression->root;
+}
+
+treeNode_t* treeDtor(tree_t* expression){
+    assert(expression);
+
+    freeNode(expression->root, false);
+
+    poisonMemory(&expression->amountNodes, sizeof(expression->amountNodes));
+
+    return NULL;
+}
+
+void treeRead(tree_t* expression){
+    assert(expression);
+
+    log(expression, "started reading");
+
+    data_t treeData;
+    parseStringsFile(&treeData, DIFFERENTIATOR_DATA_FILE_NAME);
+
+    LPRINTF("expression buffer: %s\n", treeData.buffer);
+
+    static size_t curPos = 0;
+    readNode(expression, treeData.buffer, &curPos);
+    
+    free(treeData.buffer);
+    free(treeData.strings);
+
+    log(expression, "ended reading");
+}
 
 treeNode_t* createNewNode(treeNode_t* left, treeNode_t* right){
 

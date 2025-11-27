@@ -1,4 +1,4 @@
 #include "generalDifferentiator.h"
 
 
-void texDumpTree(expression_t* expression);
+void texDumpTree(tree_t* expression);
