@@ -1,141 +1,34 @@
-[DEBUG] tree.cpp:44:treeRead(): expression buffer: 10*(30+20*10)+13$
+[DEBUG] tree.cpp:44:treeRead(): expression buffer: x*(x+6)
 
-[DEBUG] expressionTree.cpp:22:readNode(): begin reading root: (nil)
-[DEBUG] expressionTree.cpp:32:getG(): Зашел в G. Строка сейчас: 10*(30+20*10)+13$
-[DEBUG] expressionTree.cpp:47:getE(): Зашел в E. Строка сейчас: 10*(30+20*10)+13$
-[DEBUG] expressionTree.cpp:75:getT(): Зашел в T. Строка сейчас: 10*(30+20*10)+13$
-[DEBUG] expressionTree.cpp:104:getP(): Зашел в P. Строка сейчас: 10*(30+20*10)+13$
-[DEBUG] expressionTree.cpp:122:getN(): Зашел в N. Строка сейчас: 10*(30+20*10)+13$
-[DEBUG] expressionTree.cpp:128:getN(): Получаю число val = 0
-[DEBUG] expressionTree.cpp:132:getN(): Получаю число val = 1
-[DEBUG] expressionTree.cpp:136:getN(): Строка сейчас: 0*(30+20*10)+13$
-[DEBUG] expressionTree.cpp:128:getN(): Получаю число val = 1
-[DEBUG] expressionTree.cpp:132:getN(): Получаю число val = 10
-[DEBUG] expressionTree.cpp:136:getN(): Строка сейчас: *(30+20*10)+13$
+[DEBUG] expressionTree.cpp:26:readNode(): begin reading root: (nil)
+[DEBUG] expressionTree.cpp:36:getG(): Зашел в G. Строка сейчас: x*(x+6)
+[DEBUG] expressionTree.cpp:51:getE(): Зашел в E. Строка сейчас: x*(x+6)
+[DEBUG] expressionTree.cpp:79:getT(): Зашел в T. Строка сейчас: x*(x+6)
+[DEBUG] expressionTree.cpp:108:getP(): Зашел в P. Строка сейчас: x*(x+6)
+[DEBUG] expressionTree.cpp:157:getV(): Зашел в V. Строка сейчас: x*(x+6)
 [DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] expressionTree.cpp:80:getT(): Начинаю анализ на знак умножения/деления. s = *(30+20*10)+13$
-[DEBUG] expressionTree.cpp:83:getT(): Нашел знак: s = *
-[DEBUG] expressionTree.cpp:104:getP(): Зашел в P. Строка сейчас: (30+20*10)+13$
-[DEBUG] expressionTree.cpp:47:getE(): Зашел в E. Строка сейчас: 30+20*10)+13$
-[DEBUG] expressionTree.cpp:75:getT(): Зашел в T. Строка сейчас: 30+20*10)+13$
-[DEBUG] expressionTree.cpp:104:getP(): Зашел в P. Строка сейчас: 30+20*10)+13$
-[DEBUG] expressionTree.cpp:122:getN(): Зашел в N. Строка сейчас: 30+20*10)+13$
-[DEBUG] expressionTree.cpp:128:getN(): Получаю число val = 0
-[DEBUG] expressionTree.cpp:132:getN(): Получаю число val = 3
-[DEBUG] expressionTree.cpp:136:getN(): Строка сейчас: 0+20*10)+13$
-[DEBUG] expressionTree.cpp:128:getN(): Получаю число val = 3
-[DEBUG] expressionTree.cpp:132:getN(): Получаю число val = 30
-[DEBUG] expressionTree.cpp:136:getN(): Строка сейчас: +20*10)+13$
+[DEBUG] expressionTree.cpp:84:getT(): Начинаю анализ на знак умножения/деления. s = *(x+6)
+[DEBUG] expressionTree.cpp:87:getT(): Нашел знак: s = *
+[DEBUG] expressionTree.cpp:108:getP(): Зашел в P. Строка сейчас: (x+6)
+[DEBUG] expressionTree.cpp:51:getE(): Зашел в E. Строка сейчас: x+6)
+[DEBUG] expressionTree.cpp:79:getT(): Зашел в T. Строка сейчас: x+6)
+[DEBUG] expressionTree.cpp:108:getP(): Зашел в P. Строка сейчас: x+6)
+[DEBUG] expressionTree.cpp:157:getV(): Зашел в V. Строка сейчас: x+6)
 [DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] expressionTree.cpp:80:getT(): Начинаю анализ на знак умножения/деления. s = +20*10)+13$
-[DEBUG] expressionTree.cpp:52:getE(): Начинаю анализ на знак сложения/вычитания. s = +20*10)+13$
-[DEBUG] expressionTree.cpp:75:getT(): Зашел в T. Строка сейчас: 20*10)+13$
-[DEBUG] expressionTree.cpp:104:getP(): Зашел в P. Строка сейчас: 20*10)+13$
-[DEBUG] expressionTree.cpp:122:getN(): Зашел в N. Строка сейчас: 20*10)+13$
-[DEBUG] expressionTree.cpp:128:getN(): Получаю число val = 0
-[DEBUG] expressionTree.cpp:132:getN(): Получаю число val = 2
-[DEBUG] expressionTree.cpp:136:getN(): Строка сейчас: 0*10)+13$
-[DEBUG] expressionTree.cpp:128:getN(): Получаю число val = 2
-[DEBUG] expressionTree.cpp:132:getN(): Получаю число val = 20
-[DEBUG] expressionTree.cpp:136:getN(): Строка сейчас: *10)+13$
+[DEBUG] expressionTree.cpp:84:getT(): Начинаю анализ на знак умножения/деления. s = +6)
+[DEBUG] expressionTree.cpp:56:getE(): Начинаю анализ на знак сложения/вычитания. s = +6)
+[DEBUG] expressionTree.cpp:79:getT(): Зашел в T. Строка сейчас: 6)
+[DEBUG] expressionTree.cpp:108:getP(): Зашел в P. Строка сейчас: 6)
+[DEBUG] expressionTree.cpp:131:getN(): Зашел в N. Строка сейчас: 6)
+[DEBUG] expressionTree.cpp:137:getN(): Получаю число val = 0
+[DEBUG] expressionTree.cpp:141:getN(): Получаю число val = 6
+[DEBUG] expressionTree.cpp:145:getN(): Строка сейчас: )
 [DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] expressionTree.cpp:80:getT(): Начинаю анализ на знак умножения/деления. s = *10)+13$
-[DEBUG] expressionTree.cpp:83:getT(): Нашел знак: s = *
-[DEBUG] expressionTree.cpp:104:getP(): Зашел в P. Строка сейчас: 10)+13$
-[DEBUG] expressionTree.cpp:122:getN(): Зашел в N. Строка сейчас: 10)+13$
-[DEBUG] expressionTree.cpp:128:getN(): Получаю число val = 0
-[DEBUG] expressionTree.cpp:132:getN(): Получаю число val = 1
-[DEBUG] expressionTree.cpp:136:getN(): Строка сейчас: 0)+13$
-[DEBUG] expressionTree.cpp:128:getN(): Получаю число val = 1
-[DEBUG] expressionTree.cpp:132:getN(): Получаю число val = 10
-[DEBUG] expressionTree.cpp:136:getN(): Строка сейчас: )+13$
+[DEBUG] expressionTree.cpp:84:getT(): Начинаю анализ на знак умножения/деления. s = )
 [DEBUG] tree.cpp:59:createNewNode(): Выделил память
 [DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] expressionTree.cpp:52:getE(): Начинаю анализ на знак сложения/вычитания. s = +13$
-[DEBUG] expressionTree.cpp:75:getT(): Зашел в T. Строка сейчас: 13$
-[DEBUG] expressionTree.cpp:104:getP(): Зашел в P. Строка сейчас: 13$
-[DEBUG] expressionTree.cpp:122:getN(): Зашел в N. Строка сейчас: 13$
-[DEBUG] expressionTree.cpp:128:getN(): Получаю число val = 0
-[DEBUG] expressionTree.cpp:132:getN(): Получаю число val = 1
-[DEBUG] expressionTree.cpp:136:getN(): Строка сейчас: 3$
-[DEBUG] expressionTree.cpp:128:getN(): Получаю число val = 1
-[DEBUG] expressionTree.cpp:132:getN(): Получаю число val = 13
-[DEBUG] expressionTree.cpp:136:getN(): Строка сейчас: $
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] expressionTree.cpp:80:getT(): Начинаю анализ на знак умножения/деления. s = $
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] expressionTree.cpp:39:getG(): Завершаю чтение и возвращаю ноду: 0x504000000210
-[DEBUG] tree.cpp:44:treeRead(): expression buffer: 10*(30+20*10)+13$
-
-[DEBUG] expressionTree.cpp:22:readNode(): begin reading root: (nil)
-[DEBUG] expressionTree.cpp:32:getG(): Зашел в G. Строка сейчас: 10*(30+20*10)+13$
-[DEBUG] expressionTree.cpp:47:getE(): Зашел в E. Строка сейчас: 10*(30+20*10)+13$
-[DEBUG] expressionTree.cpp:75:getT(): Зашел в T. Строка сейчас: 10*(30+20*10)+13$
-[DEBUG] expressionTree.cpp:104:getP(): Зашел в P. Строка сейчас: 10*(30+20*10)+13$
-[DEBUG] expressionTree.cpp:122:getN(): Зашел в N. Строка сейчас: 10*(30+20*10)+13$
-[DEBUG] expressionTree.cpp:128:getN(): Получаю число val = 0
-[DEBUG] expressionTree.cpp:132:getN(): Получаю число val = 1
-[DEBUG] expressionTree.cpp:136:getN(): Строка сейчас: 0*(30+20*10)+13$
-[DEBUG] expressionTree.cpp:128:getN(): Получаю число val = 1
-[DEBUG] expressionTree.cpp:132:getN(): Получаю число val = 10
-[DEBUG] expressionTree.cpp:136:getN(): Строка сейчас: *(30+20*10)+13$
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] expressionTree.cpp:80:getT(): Начинаю анализ на знак умножения/деления. s = *(30+20*10)+13$
-[DEBUG] expressionTree.cpp:83:getT(): Нашел знак: s = *
-[DEBUG] expressionTree.cpp:104:getP(): Зашел в P. Строка сейчас: (30+20*10)+13$
-[DEBUG] expressionTree.cpp:47:getE(): Зашел в E. Строка сейчас: 30+20*10)+13$
-[DEBUG] expressionTree.cpp:75:getT(): Зашел в T. Строка сейчас: 30+20*10)+13$
-[DEBUG] expressionTree.cpp:104:getP(): Зашел в P. Строка сейчас: 30+20*10)+13$
-[DEBUG] expressionTree.cpp:122:getN(): Зашел в N. Строка сейчас: 30+20*10)+13$
-[DEBUG] expressionTree.cpp:128:getN(): Получаю число val = 0
-[DEBUG] expressionTree.cpp:132:getN(): Получаю число val = 3
-[DEBUG] expressionTree.cpp:136:getN(): Строка сейчас: 0+20*10)+13$
-[DEBUG] expressionTree.cpp:128:getN(): Получаю число val = 3
-[DEBUG] expressionTree.cpp:132:getN(): Получаю число val = 30
-[DEBUG] expressionTree.cpp:136:getN(): Строка сейчас: +20*10)+13$
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] expressionTree.cpp:80:getT(): Начинаю анализ на знак умножения/деления. s = +20*10)+13$
-[DEBUG] expressionTree.cpp:52:getE(): Начинаю анализ на знак сложения/вычитания. s = +20*10)+13$
-[DEBUG] expressionTree.cpp:75:getT(): Зашел в T. Строка сейчас: 20*10)+13$
-[DEBUG] expressionTree.cpp:104:getP(): Зашел в P. Строка сейчас: 20*10)+13$
-[DEBUG] expressionTree.cpp:122:getN(): Зашел в N. Строка сейчас: 20*10)+13$
-[DEBUG] expressionTree.cpp:128:getN(): Получаю число val = 0
-[DEBUG] expressionTree.cpp:132:getN(): Получаю число val = 2
-[DEBUG] expressionTree.cpp:136:getN(): Строка сейчас: 0*10)+13$
-[DEBUG] expressionTree.cpp:128:getN(): Получаю число val = 2
-[DEBUG] expressionTree.cpp:132:getN(): Получаю число val = 20
-[DEBUG] expressionTree.cpp:136:getN(): Строка сейчас: *10)+13$
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] expressionTree.cpp:80:getT(): Начинаю анализ на знак умножения/деления. s = *10)+13$
-[DEBUG] expressionTree.cpp:83:getT(): Нашел знак: s = *
-[DEBUG] expressionTree.cpp:104:getP(): Зашел в P. Строка сейчас: 10)+13$
-[DEBUG] expressionTree.cpp:122:getN(): Зашел в N. Строка сейчас: 10)+13$
-[DEBUG] expressionTree.cpp:128:getN(): Получаю число val = 0
-[DEBUG] expressionTree.cpp:132:getN(): Получаю число val = 1
-[DEBUG] expressionTree.cpp:136:getN(): Строка сейчас: 0)+13$
-[DEBUG] expressionTree.cpp:128:getN(): Получаю число val = 1
-[DEBUG] expressionTree.cpp:132:getN(): Получаю число val = 10
-[DEBUG] expressionTree.cpp:136:getN(): Строка сейчас: )+13$
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] expressionTree.cpp:52:getE(): Начинаю анализ на знак сложения/вычитания. s = +13$
-[DEBUG] expressionTree.cpp:75:getT(): Зашел в T. Строка сейчас: 13$
-[DEBUG] expressionTree.cpp:104:getP(): Зашел в P. Строка сейчас: 13$
-[DEBUG] expressionTree.cpp:122:getN(): Зашел в N. Строка сейчас: 13$
-[DEBUG] expressionTree.cpp:128:getN(): Получаю число val = 0
-[DEBUG] expressionTree.cpp:132:getN(): Получаю число val = 1
-[DEBUG] expressionTree.cpp:136:getN(): Строка сейчас: 3$
-[DEBUG] expressionTree.cpp:128:getN(): Получаю число val = 1
-[DEBUG] expressionTree.cpp:132:getN(): Получаю число val = 13
-[DEBUG] expressionTree.cpp:136:getN(): Строка сейчас: $
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] expressionTree.cpp:80:getT(): Начинаю анализ на знак умножения/деления. s = $
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] expressionTree.cpp:39:getG(): Завершаю чтение и возвращаю ноду: 0x504000000210
+[DEBUG] expressionTree.cpp:56:getE(): Начинаю анализ на знак сложения/вычитания. s = 
+[DEBUG] expressionTree.cpp:43:getG(): Завершаю чтение и возвращаю ноду: 0x504000000110
 [DEBUG] differentiator.cpp:49:differentiate(): 
 
  differentiation start
@@ -144,15 +37,6 @@
 [DEBUG] differentiator.cpp:182:differentiateNode(): node->type = 1
 [DEBUG] tableDerivative.cpp:30:operDiff(): Создаю ноду операции производной
 [DEBUG] tableDerivative.cpp:33:operDiff(): Нашел нужную операцию
-[DEBUG] tableDerivative.cpp:45:addDiff(): Производная суммы
-[DEBUG] differentiator.cpp:179:differentiateNode(): differentiateNode start
-[DEBUG] differentiator.cpp:182:differentiateNode(): node->type = 3
-[DEBUG] tableDerivative.cpp:18:numDiff(): Создаю ноду численную производной
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] differentiator.cpp:179:differentiateNode(): differentiateNode start
-[DEBUG] differentiator.cpp:182:differentiateNode(): node->type = 1
-[DEBUG] tableDerivative.cpp:30:operDiff(): Создаю ноду операции производной
-[DEBUG] tableDerivative.cpp:33:operDiff(): Нашел нужную операцию
 [DEBUG] tableDerivative.cpp:53:mulDiff(): Производная произведения
 [DEBUG] differentiator.cpp:179:differentiateNode(): differentiateNode start
 [DEBUG] differentiator.cpp:182:differentiateNode(): node->type = 1
@@ -160,28 +44,12 @@
 [DEBUG] tableDerivative.cpp:33:operDiff(): Нашел нужную операцию
 [DEBUG] tableDerivative.cpp:45:addDiff(): Производная суммы
 [DEBUG] differentiator.cpp:179:differentiateNode(): differentiateNode start
-[DEBUG] differentiator.cpp:182:differentiateNode(): node->type = 1
-[DEBUG] tableDerivative.cpp:30:operDiff(): Создаю ноду операции производной
-[DEBUG] tableDerivative.cpp:33:operDiff(): Нашел нужную операцию
-[DEBUG] tableDerivative.cpp:53:mulDiff(): Производная произведения
-[DEBUG] differentiator.cpp:179:differentiateNode(): differentiateNode start
 [DEBUG] differentiator.cpp:182:differentiateNode(): node->type = 3
 [DEBUG] tableDerivative.cpp:18:numDiff(): Создаю ноду численную производной
 [DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
 [DEBUG] differentiator.cpp:179:differentiateNode(): differentiateNode start
-[DEBUG] differentiator.cpp:182:differentiateNode(): node->type = 3
-[DEBUG] tableDerivative.cpp:18:numDiff(): Создаю ноду численную производной
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] differentiator.cpp:179:differentiateNode(): differentiateNode start
-[DEBUG] differentiator.cpp:182:differentiateNode(): node->type = 3
-[DEBUG] tableDerivative.cpp:18:numDiff(): Создаю ноду численную производной
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] differentiator.cpp:182:differentiateNode(): node->type = 2
+[DEBUG] tableDerivative.cpp:23:varDiff(): Создаю ноду переменной производной
 [DEBUG] tree.cpp:59:createNewNode(): Выделил память
 [DEBUG] tree.cpp:59:createNewNode(): Выделил память
 [DEBUG] tree.cpp:59:createNewNode(): Выделил память
@@ -190,76 +58,411 @@
 [DEBUG] tree.cpp:59:createNewNode(): Выделил память
 [DEBUG] tree.cpp:59:createNewNode(): Выделил память
 [DEBUG] differentiator.cpp:179:differentiateNode(): differentiateNode start
-[DEBUG] differentiator.cpp:182:differentiateNode(): node->type = 3
-[DEBUG] tableDerivative.cpp:18:numDiff(): Создаю ноду численную производной
-[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] differentiator.cpp:182:differentiateNode(): node->type = 2
+[DEBUG] tableDerivative.cpp:23:varDiff(): Создаю ноду переменной производной
 [DEBUG] tree.cpp:59:createNewNode(): Выделил память
 [DEBUG] tree.cpp:59:createNewNode(): Выделил память
 [DEBUG] tree.cpp:59:createNewNode(): Выделил память
 [DEBUG] differentiator.cpp:212:optimizeDerivative(): 
 
 start optimization
-[DEBUG] differentiator.cpp:214:optimizeDerivative(): subTreeRoot addr: 0x504000000750
-[DEBUG] differentiator.cpp:252:collapseConstant(): calculatedVal: 0
-[DEBUG] expressionTree.cpp:210:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000690, withoutRoot = 1, depth = 4
-[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000690
-[DEBUG] tree.cpp:132:freeNode(): end freeing memory
-[DEBUG] expressionTree.cpp:210:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000590, withoutRoot = 1, depth = 5
-[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000590
-[DEBUG] tree.cpp:132:freeNode(): end freeing memory
-[DEBUG] expressionTree.cpp:210:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000610, withoutRoot = 1, depth = 6
-[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000610
-[DEBUG] tree.cpp:132:freeNode(): end freeing memory
-[DEBUG] expressionTree.cpp:210:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000650, withoutRoot = 1, depth = 6
-[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000650
-[DEBUG] tree.cpp:132:freeNode(): end freeing memory
-[DEBUG] expressionTree.cpp:210:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5040000005d0, withoutRoot = 1, depth = 5
-[DEBUG] tree.cpp:127:freeNode(): free: 0x5040000005d0
-[DEBUG] tree.cpp:132:freeNode(): end freeing memory
-[DEBUG] expressionTree.cpp:210:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000550, withoutRoot = 1, depth = 4
-[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000550
-[DEBUG] tree.cpp:132:freeNode(): end freeing memory
-[DEBUG] expressionTree.cpp:210:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5040000006d0, withoutRoot = 1, depth = 3
-[DEBUG] tree.cpp:127:freeNode(): free: 0x5040000006d0
-[DEBUG] tree.cpp:132:freeNode(): end freeing memory
-[DEBUG] expressionTree.cpp:210:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5040000004d0, withoutRoot = 1, depth = 4
-[DEBUG] tree.cpp:127:freeNode(): free: 0x5040000004d0
-[DEBUG] tree.cpp:132:freeNode(): end freeing memory
-[DEBUG] expressionTree.cpp:210:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000450, withoutRoot = 1, depth = 5
-[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000450
-[DEBUG] tree.cpp:132:freeNode(): end freeing memory
-[DEBUG] expressionTree.cpp:210:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000390, withoutRoot = 1, depth = 7
-[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000390
-[DEBUG] tree.cpp:132:freeNode(): end freeing memory
-[DEBUG] expressionTree.cpp:210:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000350, withoutRoot = 1, depth = 7
+[DEBUG] differentiator.cpp:276:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:212:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:276:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:288:removeNeutralElements(): keep only right subTree of 0x504000000390
+[DEBUG] differentiator.cpp:298:removeNeutralElements(): during optimization freeing leftSubtree
+[DEBUG] tree.cpp:138:freeLeftSubtree(): start freeing leftSubtree 0x504000000390
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000350, withoutRoot = 0, depth = 1
 [DEBUG] tree.cpp:127:freeNode(): free: 0x504000000350
 [DEBUG] tree.cpp:132:freeNode(): end freeing memory
-[DEBUG] expressionTree.cpp:210:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5040000003d0, withoutRoot = 1, depth = 6
-[DEBUG] tree.cpp:127:freeNode(): free: 0x5040000003d0
+[DEBUG] tree.cpp:142:freeLeftSubtree(): end of freeLeftSubtree func
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000390, withoutRoot = 0, depth = 1
+[DEBUG] differentiator.cpp:212:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:276:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:212:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:214:optimizeDerivative(): subTreeRoot addr: 0x504000000310
+[DEBUG] differentiator.cpp:252:collapseConstant(): calculatedVal: 6
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000310, withoutRoot = 1, depth = 1
+[DEBUG] differentiator.cpp:256:collapseConstant(): freeed collapsingConst with no problems
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000310, withoutRoot = 0, depth = 1
+[DEBUG] differentiator.cpp:276:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:212:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:276:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:212:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:276:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:212:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:214:optimizeDerivative(): subTreeRoot addr: 0x5040000001d0
+[DEBUG] differentiator.cpp:252:collapseConstant(): calculatedVal: 1
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000190, withoutRoot = 1, depth = 2
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000190
 [DEBUG] tree.cpp:132:freeNode(): end freeing memory
-[DEBUG] expressionTree.cpp:210:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5040000002d0, withoutRoot = 1, depth = 7
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000150, withoutRoot = 1, depth = 2
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000150
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5040000001d0, withoutRoot = 1, depth = 1
+[DEBUG] differentiator.cpp:256:collapseConstant(): freeed collapsingConst with no problems
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5040000001d0, withoutRoot = 0, depth = 1
+[DEBUG] differentiator.cpp:276:removeNeutralElements(): start removal neutral
+[DEBUG] main.cpp:27:main(): Ended optimization
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000010, withoutRoot = 0, depth = 2
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000010
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000050, withoutRoot = 0, depth = 3
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000050
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000090, withoutRoot = 0, depth = 3
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000090
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5040000000d0, withoutRoot = 0, depth = 2
+[DEBUG] tree.cpp:127:freeNode(): free: 0x5040000000d0
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000110, withoutRoot = 0, depth = 1
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000110
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5040000002d0, withoutRoot = 0, depth = 3
 [DEBUG] tree.cpp:127:freeNode(): free: 0x5040000002d0
 [DEBUG] tree.cpp:132:freeNode(): end freeing memory
-[DEBUG] expressionTree.cpp:210:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000290, withoutRoot = 1, depth = 7
-[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000290
-[DEBUG] tree.cpp:132:freeNode(): end freeing memory
-[DEBUG] expressionTree.cpp:210:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000310, withoutRoot = 1, depth = 6
-[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000310
-[DEBUG] tree.cpp:132:freeNode(): end freeing memory
-[DEBUG] expressionTree.cpp:210:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000410, withoutRoot = 1, depth = 5
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000410, withoutRoot = 0, depth = 3
 [DEBUG] tree.cpp:127:freeNode(): free: 0x504000000410
 [DEBUG] tree.cpp:132:freeNode(): end freeing memory
-[DEBUG] expressionTree.cpp:210:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000490, withoutRoot = 1, depth = 4
-[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000490
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000290, withoutRoot = 0, depth = 2
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000290
 [DEBUG] tree.cpp:132:freeNode(): end freeing memory
-[DEBUG] expressionTree.cpp:210:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000510, withoutRoot = 1, depth = 3
-[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000510
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000210, withoutRoot = 0, depth = 3
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000210
 [DEBUG] tree.cpp:132:freeNode(): end freeing memory
-[DEBUG] expressionTree.cpp:210:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000710, withoutRoot = 1, depth = 2
-[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000710
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000450, withoutRoot = 0, depth = 3
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000450
 [DEBUG] tree.cpp:132:freeNode(): end freeing memory
-[DEBUG] expressionTree.cpp:210:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000250, withoutRoot = 1, depth = 2
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000250, withoutRoot = 0, depth = 2
 [DEBUG] tree.cpp:127:freeNode(): free: 0x504000000250
 [DEBUG] tree.cpp:132:freeNode(): end freeing memory
-[DEBUG] expressionTree.cpp:210:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000750, withoutRoot = 1, depth = 1
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5040000003d0, withoutRoot = 0, depth = 1
+[DEBUG] tree.cpp:127:freeNode(): free: 0x5040000003d0
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] tree.cpp:44:treeRead(): expression buffer: x*(x+6)
+
+[DEBUG] expressionTree.cpp:26:readNode(): begin reading root: (nil)
+[DEBUG] expressionTree.cpp:36:getG(): Зашел в G. Строка сейчас: x*(x+6)
+[DEBUG] expressionTree.cpp:52:getE(): Зашел в E. Строка сейчас: x*(x+6)
+[DEBUG] expressionTree.cpp:80:getT(): Зашел в T. Строка сейчас: x*(x+6)
+[DEBUG] expressionTree.cpp:109:getP(): Зашел в P. Строка сейчас: x*(x+6)
+[DEBUG] expressionTree.cpp:159:getV(): Зашел в V. Строка сейчас: x*(x+6)
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] expressionTree.cpp:85:getT(): Начинаю анализ на знак умножения/деления. s = *(x+6)
+[DEBUG] expressionTree.cpp:88:getT(): Нашел знак: s = *
+[DEBUG] expressionTree.cpp:109:getP(): Зашел в P. Строка сейчас: (x+6)
+[DEBUG] expressionTree.cpp:52:getE(): Зашел в E. Строка сейчас: x+6)
+[DEBUG] expressionTree.cpp:80:getT(): Зашел в T. Строка сейчас: x+6)
+[DEBUG] expressionTree.cpp:109:getP(): Зашел в P. Строка сейчас: x+6)
+[DEBUG] expressionTree.cpp:159:getV(): Зашел в V. Строка сейчас: x+6)
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] expressionTree.cpp:85:getT(): Начинаю анализ на знак умножения/деления. s = +6)
+[DEBUG] expressionTree.cpp:57:getE(): Начинаю анализ на знак сложения/вычитания. s = +6)
+[DEBUG] expressionTree.cpp:80:getT(): Зашел в T. Строка сейчас: 6)
+[DEBUG] expressionTree.cpp:109:getP(): Зашел в P. Строка сейчас: 6)
+[DEBUG] expressionTree.cpp:132:getN(): Зашел в N. Строка сейчас: 6)
+[DEBUG] expressionTree.cpp:138:getN(): Получаю число val = 0
+[DEBUG] expressionTree.cpp:142:getN(): Получаю число val = 6
+[DEBUG] expressionTree.cpp:146:getN(): Строка сейчас: )
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] expressionTree.cpp:85:getT(): Начинаю анализ на знак умножения/деления. s = )
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] expressionTree.cpp:57:getE(): Начинаю анализ на знак сложения/вычитания. s = 
+[DEBUG] expressionTree.cpp:44:getG(): Завершаю чтение и возвращаю ноду: 0x504000000110
+[DEBUG] differentiator.cpp:49:differentiate(): 
+
+ differentiation start
+
+[DEBUG] differentiator.cpp:179:differentiateNode(): differentiateNode start
+[DEBUG] differentiator.cpp:182:differentiateNode(): node->type = 1
+[DEBUG] tableDerivative.cpp:30:operDiff(): Создаю ноду операции производной
+[DEBUG] tableDerivative.cpp:33:operDiff(): Нашел нужную операцию
+[DEBUG] tableDerivative.cpp:53:mulDiff(): Производная произведения
+[DEBUG] differentiator.cpp:179:differentiateNode(): differentiateNode start
+[DEBUG] differentiator.cpp:182:differentiateNode(): node->type = 1
+[DEBUG] tableDerivative.cpp:30:operDiff(): Создаю ноду операции производной
+[DEBUG] tableDerivative.cpp:33:operDiff(): Нашел нужную операцию
+[DEBUG] tableDerivative.cpp:45:addDiff(): Производная суммы
+[DEBUG] differentiator.cpp:179:differentiateNode(): differentiateNode start
+[DEBUG] differentiator.cpp:182:differentiateNode(): node->type = 3
+[DEBUG] tableDerivative.cpp:18:numDiff(): Создаю ноду численную производной
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] differentiator.cpp:179:differentiateNode(): differentiateNode start
+[DEBUG] differentiator.cpp:182:differentiateNode(): node->type = 2
+[DEBUG] tableDerivative.cpp:23:varDiff(): Создаю ноду переменной производной
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] differentiator.cpp:179:differentiateNode(): differentiateNode start
+[DEBUG] differentiator.cpp:182:differentiateNode(): node->type = 2
+[DEBUG] tableDerivative.cpp:23:varDiff(): Создаю ноду переменной производной
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] differentiator.cpp:212:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:276:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:212:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:276:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:288:removeNeutralElements(): keep only right subTree of 0x504000000390
+[DEBUG] differentiator.cpp:298:removeNeutralElements(): during optimization freeing leftSubtree
+[DEBUG] tree.cpp:138:freeLeftSubtree(): start freeing leftSubtree 0x504000000390
+[DEBUG] expressionTree.cpp:241:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000350, withoutRoot = 0, depth = 1
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000350
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] tree.cpp:142:freeLeftSubtree(): end of freeLeftSubtree func
+[DEBUG] expressionTree.cpp:241:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000390, withoutRoot = 0, depth = 1
+[DEBUG] differentiator.cpp:212:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:276:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:212:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:214:optimizeDerivative(): subTreeRoot addr: 0x504000000310
+[DEBUG] differentiator.cpp:252:collapseConstant(): calculatedVal: 6
+[DEBUG] expressionTree.cpp:241:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000310, withoutRoot = 1, depth = 1
 [DEBUG] differentiator.cpp:256:collapseConstant(): freeed collapsingConst with no problems
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] expressionTree.cpp:241:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000310, withoutRoot = 0, depth = 1
+[DEBUG] differentiator.cpp:276:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:212:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:276:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:212:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:276:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:212:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:214:optimizeDerivative(): subTreeRoot addr: 0x5040000001d0
+[DEBUG] differentiator.cpp:252:collapseConstant(): calculatedVal: 1
+[DEBUG] expressionTree.cpp:241:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000190, withoutRoot = 1, depth = 2
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000190
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:241:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000150, withoutRoot = 1, depth = 2
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000150
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:241:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5040000001d0, withoutRoot = 1, depth = 1
+[DEBUG] differentiator.cpp:256:collapseConstant(): freeed collapsingConst with no problems
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] expressionTree.cpp:241:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5040000001d0, withoutRoot = 0, depth = 1
+[DEBUG] differentiator.cpp:276:removeNeutralElements(): start removal neutral
+[DEBUG] main.cpp:27:main(): Ended optimization
+[DEBUG] expressionTree.cpp:241:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000010, withoutRoot = 0, depth = 2
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000010
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:241:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000050, withoutRoot = 0, depth = 3
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000050
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:241:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000090, withoutRoot = 0, depth = 3
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000090
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:241:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5040000000d0, withoutRoot = 0, depth = 2
+[DEBUG] tree.cpp:127:freeNode(): free: 0x5040000000d0
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:241:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000110, withoutRoot = 0, depth = 1
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000110
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:241:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5040000002d0, withoutRoot = 0, depth = 3
+[DEBUG] tree.cpp:127:freeNode(): free: 0x5040000002d0
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:241:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000410, withoutRoot = 0, depth = 3
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000410
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:241:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000290, withoutRoot = 0, depth = 2
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000290
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:241:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000210, withoutRoot = 0, depth = 3
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000210
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:241:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000450, withoutRoot = 0, depth = 3
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000450
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:241:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000250, withoutRoot = 0, depth = 2
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000250
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:241:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5040000003d0, withoutRoot = 0, depth = 1
+[DEBUG] tree.cpp:127:freeNode(): free: 0x5040000003d0
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] tree.cpp:44:treeRead(): expression buffer: x*(x+6)$
+
+[DEBUG] expressionTree.cpp:26:readNode(): begin reading root: (nil)
+[DEBUG] expressionTree.cpp:36:getG(): Зашел в G. Строка сейчас: x*(x+6)$
+[DEBUG] expressionTree.cpp:51:getE(): Зашел в E. Строка сейчас: x*(x+6)$
+[DEBUG] expressionTree.cpp:79:getT(): Зашел в T. Строка сейчас: x*(x+6)$
+[DEBUG] expressionTree.cpp:108:getP(): Зашел в P. Строка сейчас: x*(x+6)$
+[DEBUG] expressionTree.cpp:157:getV(): Зашел в V. Строка сейчас: x*(x+6)$
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] expressionTree.cpp:84:getT(): Начинаю анализ на знак умножения/деления. s = *(x+6)$
+[DEBUG] expressionTree.cpp:87:getT(): Нашел знак: s = *
+[DEBUG] expressionTree.cpp:108:getP(): Зашел в P. Строка сейчас: (x+6)$
+[DEBUG] expressionTree.cpp:51:getE(): Зашел в E. Строка сейчас: x+6)$
+[DEBUG] expressionTree.cpp:79:getT(): Зашел в T. Строка сейчас: x+6)$
+[DEBUG] expressionTree.cpp:108:getP(): Зашел в P. Строка сейчас: x+6)$
+[DEBUG] expressionTree.cpp:157:getV(): Зашел в V. Строка сейчас: x+6)$
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] expressionTree.cpp:84:getT(): Начинаю анализ на знак умножения/деления. s = +6)$
+[DEBUG] expressionTree.cpp:56:getE(): Начинаю анализ на знак сложения/вычитания. s = +6)$
+[DEBUG] expressionTree.cpp:79:getT(): Зашел в T. Строка сейчас: 6)$
+[DEBUG] expressionTree.cpp:108:getP(): Зашел в P. Строка сейчас: 6)$
+[DEBUG] expressionTree.cpp:131:getN(): Зашел в N. Строка сейчас: 6)$
+[DEBUG] expressionTree.cpp:137:getN(): Получаю число val = 0
+[DEBUG] expressionTree.cpp:141:getN(): Получаю число val = 6
+[DEBUG] expressionTree.cpp:145:getN(): Строка сейчас: )$
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] expressionTree.cpp:84:getT(): Начинаю анализ на знак умножения/деления. s = )$
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] expressionTree.cpp:56:getE(): Начинаю анализ на знак сложения/вычитания. s = $
+[DEBUG] expressionTree.cpp:43:getG(): Завершаю чтение и возвращаю ноду: 0x504000000110
+[DEBUG] differentiator.cpp:49:differentiate(): 
+
+ differentiation start
+
+[DEBUG] differentiator.cpp:179:differentiateNode(): differentiateNode start
+[DEBUG] differentiator.cpp:182:differentiateNode(): node->type = 1
+[DEBUG] tableDerivative.cpp:30:operDiff(): Создаю ноду операции производной
+[DEBUG] tableDerivative.cpp:33:operDiff(): Нашел нужную операцию
+[DEBUG] tableDerivative.cpp:53:mulDiff(): Производная произведения
+[DEBUG] differentiator.cpp:179:differentiateNode(): differentiateNode start
+[DEBUG] differentiator.cpp:182:differentiateNode(): node->type = 1
+[DEBUG] tableDerivative.cpp:30:operDiff(): Создаю ноду операции производной
+[DEBUG] tableDerivative.cpp:33:operDiff(): Нашел нужную операцию
+[DEBUG] tableDerivative.cpp:45:addDiff(): Производная суммы
+[DEBUG] differentiator.cpp:179:differentiateNode(): differentiateNode start
+[DEBUG] differentiator.cpp:182:differentiateNode(): node->type = 3
+[DEBUG] tableDerivative.cpp:18:numDiff(): Создаю ноду численную производной
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] differentiator.cpp:179:differentiateNode(): differentiateNode start
+[DEBUG] differentiator.cpp:182:differentiateNode(): node->type = 2
+[DEBUG] tableDerivative.cpp:23:varDiff(): Создаю ноду переменной производной
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] differentiator.cpp:179:differentiateNode(): differentiateNode start
+[DEBUG] differentiator.cpp:182:differentiateNode(): node->type = 2
+[DEBUG] tableDerivative.cpp:23:varDiff(): Создаю ноду переменной производной
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] differentiator.cpp:212:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:276:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:212:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:276:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:288:removeNeutralElements(): keep only right subTree of 0x504000000390
+[DEBUG] differentiator.cpp:298:removeNeutralElements(): during optimization freeing leftSubtree
+[DEBUG] tree.cpp:138:freeLeftSubtree(): start freeing leftSubtree 0x504000000390
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000350, withoutRoot = 0, depth = 1
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000350
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] tree.cpp:142:freeLeftSubtree(): end of freeLeftSubtree func
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000390, withoutRoot = 0, depth = 1
+[DEBUG] differentiator.cpp:212:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:276:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:212:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:214:optimizeDerivative(): subTreeRoot addr: 0x504000000310
+[DEBUG] differentiator.cpp:252:collapseConstant(): calculatedVal: 6
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000310, withoutRoot = 1, depth = 1
+[DEBUG] differentiator.cpp:256:collapseConstant(): freeed collapsingConst with no problems
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000310, withoutRoot = 0, depth = 1
+[DEBUG] differentiator.cpp:276:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:212:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:276:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:212:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:276:removeNeutralElements(): start removal neutral
+[DEBUG] differentiator.cpp:212:optimizeDerivative(): 
+
+start optimization
+[DEBUG] differentiator.cpp:214:optimizeDerivative(): subTreeRoot addr: 0x5040000001d0
+[DEBUG] differentiator.cpp:252:collapseConstant(): calculatedVal: 1
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000190, withoutRoot = 1, depth = 2
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000190
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000150, withoutRoot = 1, depth = 2
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000150
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5040000001d0, withoutRoot = 1, depth = 1
+[DEBUG] differentiator.cpp:256:collapseConstant(): freeed collapsingConst with no problems
+[DEBUG] tree.cpp:59:createNewNode(): Выделил память
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5040000001d0, withoutRoot = 0, depth = 1
+[DEBUG] differentiator.cpp:276:removeNeutralElements(): start removal neutral
+[DEBUG] main.cpp:27:main(): Ended optimization
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000010, withoutRoot = 0, depth = 2
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000010
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000050, withoutRoot = 0, depth = 3
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000050
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000090, withoutRoot = 0, depth = 3
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000090
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5040000000d0, withoutRoot = 0, depth = 2
+[DEBUG] tree.cpp:127:freeNode(): free: 0x5040000000d0
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000110, withoutRoot = 0, depth = 1
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000110
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5040000002d0, withoutRoot = 0, depth = 3
+[DEBUG] tree.cpp:127:freeNode(): free: 0x5040000002d0
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000410, withoutRoot = 0, depth = 3
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000410
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000290, withoutRoot = 0, depth = 2
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000290
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000210, withoutRoot = 0, depth = 3
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000210
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000450, withoutRoot = 0, depth = 3
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000450
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x504000000250, withoutRoot = 0, depth = 2
+[DEBUG] tree.cpp:127:freeNode(): free: 0x504000000250
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory
+[DEBUG] expressionTree.cpp:238:freeExpressionNodeData(): entered freeExpressionNodeData func with node 0x5040000003d0, withoutRoot = 0, depth = 1
+[DEBUG] tree.cpp:127:freeNode(): free: 0x5040000003d0
+[DEBUG] tree.cpp:132:freeNode(): end freeing memory

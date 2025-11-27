@@ -9,12 +9,16 @@
 
 #include <assert.h>
 #include <malloc.h>
+#include <ctype.h>
+
+const size_t MAX_VARIABLE_SIZE = 64;
 
 static treeNode_t* getG(treeNode_t* node, char* buffer, char* curBufferPos);
 static treeNode_t* getE(treeNode_t* node, char* buffer, char** curBufferPos);
 static treeNode_t* getT(treeNode_t* node, char* buffer, char** curBufferPos);
 static treeNode_t* getP(treeNode_t* node, char* buffer, char** curBufferPos);
 static treeNode_t* getN(treeNode_t* node, char* buffer, char** curBufferPos);
+static treeNode_t* getV(treeNode_t* node, char* buffer, char** curBufferPos);
 
 void SyntaxError();
 
@@ -112,7 +116,12 @@ static treeNode_t* getP(treeNode_t* node, char* buffer, char** curBufferPos){
         return val;
     }
     else{
-        return getN(node, buffer, curBufferPos);
+        if('0' <= **curBufferPos && **curBufferPos <= '9'){
+            return getN(node, buffer, curBufferPos);
+        }
+        else if(**curBufferPos != '*' && **curBufferPos != '/' && **curBufferPos != '+' && **curBufferPos != '-'){
+            return getV(node, buffer, curBufferPos);
+        }
     }
 }
 
@@ -138,8 +147,30 @@ static treeNode_t* getN(treeNode_t* node, char* buffer, char** curBufferPos){
     if(*curBufferPos == startS){
         SyntaxError();
     }
+
+    return createNewNodeNumber(val, NULL, NULL);;
+}
+
+static treeNode_t* getV(treeNode_t* node, char* buffer, char** curBufferPos){
+    assert(buffer);
+
+    LPRINTF("Зашел в V. Строка сейчас: %s", *curBufferPos);   
+    char* startS = *curBufferPos;
     
-    treeNode_t* result = createNewNodeNumber(val, NULL, NULL);
+    char* variable = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
+
+    size_t curVarPos = 0;
+    while(isalpha(**curBufferPos)){
+        variable[curVarPos] = **curBufferPos;
+
+        (*curBufferPos)++;
+    }
+    if(*curBufferPos == startS){
+        SyntaxError();
+    }
+
+    treeNode_t* result = createNewNodeVariable(variable, NULL, NULL);
+    free(variable);
 
     return result;
 }
@@ -160,9 +191,6 @@ treeNode_t* createNewNodeNumber(int value, treeNode_t* left, treeNode_t* right){
 
 treeNode_t* createNewNodeVariable(char* name, treeNode_t* left, treeNode_t* right){
     assert(name);
-    assert(left);
-    assert(right);
-
     treeNode_t* newNode = createNewNode(left, right);
 
     newNode->type = VARIABLE;
