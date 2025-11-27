@@ -44,12 +44,12 @@ static void texDumpNode(FILE* texFilePtr, treeNode_t* toDump){
         fprintf(texFilePtr, "%d", toDump->data.num);
     }
     else if(toDump->type == VARIABLE){
-        fprintf(texFilePtr, "%s", toDump->data.operatorVar);
+        fprintf(texFilePtr, "%s", toDump->data.var);
     }
     else if(toDump->type == OPERATOR){
         fprintf(texFilePtr, "(");
         texDumpNode(texFilePtr, toDump->left);
-        fprintf(texFilePtr, "%s", toDump->data.operatorVar);
+        fprintf(texFilePtr, "%s", toDump->data.op);
         texDumpNode(texFilePtr, toDump->right);
         fprintf(texFilePtr, ")");
     }

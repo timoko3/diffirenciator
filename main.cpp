@@ -4,6 +4,10 @@
 #include "tree.h"
 // #include "texDump.h"
 
+#define DEBUG
+
+#include "general/debug.h"
+
 #include <stdio.h>
 #include <malloc.h>
 #include <assert.h>
@@ -15,7 +19,6 @@
 // }
 
 int main(void){
-
     expression_t expression;
     differentiatorCtor(&expression);
 
@@ -26,10 +29,11 @@ int main(void){
     log(&derivative, "after differentiation");
 
     optimizeDerivative(derivative.root);
+    LPRINTF("Ended optimization");
     log(&derivative, "after optimization");
 
     // texDumpTree(&derivative);
-
+    
     differentiatorDtor(&expression);
     differentiatorDtor(&derivative);
 }

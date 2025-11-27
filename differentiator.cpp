@@ -5,6 +5,8 @@
 #include "tableDerivative.h"
 #include "operations.h"
 #include "mathHandlers.h"
+#include "expressionTree.h"
+#include "tree.h"
 
 // # tree.cpp
 // NodeData ReadData (const char* data);
@@ -30,11 +32,7 @@
 #include <string.h>
 #include <ctype.h>
 
-const char* DIFFERENTIATOR_DATA_FILE_NAME = "differentiatorData.txt"; //
-
-static void freeNode(treeNode_t* node, bool withoutRoot);
-static void freeLeftSubtree(treeNode_t* node);
-static void freeRightSubtree(treeNode_t* node);
+const char* DIFFERENTIATOR_DATA_FILE_NAME = "expression.txt"; //
 
 static subTreeRoot readNode(expression_t* expression, char* buffer, size_t* curBufferPos);
 static subTreeRoot readCreateNode(expression_t* expression, char* buffer, size_t* cuBufferPose);
@@ -44,7 +42,7 @@ static void skipSpaceAndCloseBracket(char* buffer, size_t* curBufferPos);
 static bool isSupportedOperation(char readSym);
 
 static bool checkNoVariables(treeNode_t* curNode);
-static bool collapseConstant(treeNode_t* subTreeRoot);
+static treeNode_t* collapseConstant(treeNode_t* subTreeRoot);
 static int calculateSubTree(treeNode_t* subTreeRoot);
 static treeNode_t* createNumNode(int value, treeNode_t* parent);
 static treeNode_t* removeNeutralElements(treeNode_t* subTreeRoot);
@@ -79,16 +77,16 @@ void differentiatorReadData(expression_t* expression){
 
     log(expression, "started reading");
 
-    data_t differentiatorData;
-    parseStringsFile(&differentiatorData, DIFFERENTIATOR_DATA_FILE_NAME);
+    data_t expressionData;
+    parseStringsFile(&expressionData, DIFFERENTIATOR_DATA_FILE_NAME);
 
-    LPRINTF("akinator buffer: %s\n", differentiatorData.buffer);
+    LPRINTF("akinator buffer: %s\n", expressionData.buffer);
 
     static size_t curPose = 0; // pos
-    readNode(expression, differentiatorData.buffer, &curPose);
+    readNode(expression, expressionData.buffer, &curPose);
     
-    free(differentiatorData.buffer);
-    free(differentiatorData.strings);
+    free(expressionData.buffer);
+    free(expressionData.strings);
 
     log(expression, "ended reading");
 }
@@ -106,39 +104,6 @@ expression_t differentiate(expression_t* expression){
     derivativeTree.root = differentiateNode(expression->root);
 
     return derivativeTree;
-}
-
-static void freeNode(treeNode_t* node, bool withoutRoot = false){
-    assert(node);
-
-    static int depth = 1;
-    
-    if(node->left){
-        depth++;
-        freeNode(node->left);
-        depth--;
-    }
-    
-    if(node->right){
-        depth++;
-        freeNode(node->right);
-        depth--;
-    }
-    
-    if(node->type != NUMBER){
-        free(node->data.operatorVar);
-    }
-
-    if(!withoutRoot || (withoutRoot && depth != 1)){
-        LPRINTF("free: %p", node);
-        LPRINTF("depth: %d", depth);
-        poisonMemory(node, sizeof(*node));
-        free(node);
-        node = NULL;
-        return;
-    }
-
-    LPRINTF("end freeing memory");
 }
 
 static subTreeRoot readNode(expression_t* expression, char* buffer, size_t* curBufferPos){
@@ -195,7 +160,6 @@ static subTreeRoot readCreateNode(expression_t* expression, char* buffer, size_t
     assert(expression);
     assert(buffer);
     
-    
     static size_t countReadNodes = 1;
     treeNode_t* curNode = readAllocateNodeIfNeed(expression, countReadNodes);
     countReadNodes++;
@@ -220,12 +184,12 @@ static subTreeRoot readCreateNode(expression_t* expression, char* buffer, size_t
     else if(isSupportedOperation(curNodeData[0])){
         LPRINTF("%p - addr curNode", curNode);
         curNode->type = OPERATOR;
-        curNode->data.operatorVar = myStrDup(curNodeData);
-        LPRINTF("curNode->data.operatorVar = %s", curNode->data.operatorVar);
+        curNode->data.op = myStrDup(curNodeData);
+        LPRINTF("curNode->data.op = %s", curNode->data.op);
     }
     else{
         curNode->type = VARIABLE;
-        curNode->data.operatorVar = myStrDup(curNodeData); 
+        curNode->data.var = myStrDup(curNodeData); 
     }
     *curBufferPos += lenName;
     LPRINTF("\nбуфер после чтением: %s", &buffer[*curBufferPos]);
@@ -314,8 +278,8 @@ treeNode_t* differentiateNode(treeNode_t* node){ // to - сущ. // node
 
     LPRINTF("node->type = %d", node->type);
     switch(node->type){
-        case NUMBER:   createdNode = numDiff();                 break;
-        case VARIABLE: createdNode = varDiff();                 break;
+        case NUMBER:   createdNode = numDiff();      break;
+        case VARIABLE: createdNode = varDiff();      break;
         case OPERATOR: createdNode = operDiff(node); break;
         default: break;
     }
@@ -345,7 +309,7 @@ bool optimizeDerivative(treeNode_t* subTreeRoot){
     LPRINTF("\n\nstart optimization");
     if(checkNoVariables(subTreeRoot)){
         LPRINTF("subTreeRoot addr: %p", subTreeRoot);
-        collapseConstant(subTreeRoot);
+        subTreeRoot = collapseConstant(subTreeRoot);
     }
     subTreeRoot = removeNeutralElements(subTreeRoot);
 
@@ -376,24 +340,38 @@ static bool checkNoVariables(treeNode_t* curNode){ // have has
     return true;
 }
 
-static bool collapseConstant(treeNode_t* subTreeRoot){
+static treeNode_t* collapseConstant(treeNode_t* subTreeRoot){
     assert(subTreeRoot);
+
+    treeNode_t* result = NULL;
 
     int calculatedVal = calculateSubTree(subTreeRoot);
     LPRINTF("calculatedVal: %d", calculatedVal);
 
     freeNode(subTreeRoot, true);
-
-    subTreeRoot = createNumNode(calculatedVal, subTreeRoot);
     
-    return true;
+    LPRINTF("freeed collapsingConst with no problems");
+
+    if(subTreeRoot->parent->left == subTreeRoot){
+        subTreeRoot->parent->left = createNewNodeNumber(calculatedVal, NULL, NULL);
+        result = subTreeRoot->parent->right;
+    }
+    else{
+        subTreeRoot->parent->right = createNewNodeNumber(calculatedVal, NULL, NULL);
+        result = subTreeRoot->parent->right;
+    }
+    setParent(subTreeRoot->parent);
+
+    freeExpressionNode(subTreeRoot, false, 1);
+
+    return result;
 }
 
 static treeNode_t* removeNeutralElements(treeNode_t* subTreeRoot){
     assert(subTreeRoot);
     LPRINTF("start removal neutral");
     if(subTreeRoot->type == OPERATOR){
-        if(subTreeRoot->data.operatorVar[0] == '*' && subTreeRoot->left->data.num == 0){
+        if(subTreeRoot->data.op[0] == '*' && subTreeRoot->left->data.num == 0){
             LPRINTF("zero division case");
 
             freeNode(subTreeRoot, true);
@@ -401,8 +379,8 @@ static treeNode_t* removeNeutralElements(treeNode_t* subTreeRoot){
             return subTreeRoot;
         }
         // copypaste
-        if((subTreeRoot->data.operatorVar[0] == '*' && subTreeRoot->left->data.num == 1) || 
-            (subTreeRoot->data.operatorVar[0] == '+' && subTreeRoot->left->data.num == 0)){
+        if((subTreeRoot->data.op[0] == '*' && subTreeRoot->left->data.num == 1) || 
+            (subTreeRoot->data.op[0] == '+' && subTreeRoot->left->data.num == 0)){
                 LPRINTF("keep only right subTree of %p", subTreeRoot);
                 if(subTreeRoot->parent->left == subTreeRoot){
                     subTreeRoot->parent->left = subTreeRoot->right;
@@ -413,13 +391,14 @@ static treeNode_t* removeNeutralElements(treeNode_t* subTreeRoot){
                 }
 
                 treeNode_t* result = subTreeRoot->right;
-
-                freeLeftSubtree(subTreeRoot);
+                LPRINTF("during optimization freeing leftSubtree");
+                freeLeftSubtree(subTreeRoot, false);
+                freeExpressionNode(subTreeRoot, false, 1);
 
                 return result;
         }
-        if((subTreeRoot->data.operatorVar[0] == '*' && subTreeRoot->right->data.num == 1) || 
-            (subTreeRoot->data.operatorVar[0] == '+' && subTreeRoot->right->data.num == 0)){
+        if((subTreeRoot->data.op[0] == '*' && subTreeRoot->right->data.num == 1) || 
+            (subTreeRoot->data.op[0] == '+' && subTreeRoot->right->data.num == 0)){
                 LPRINTF("keep only left subTree of %p", subTreeRoot);
                 if(subTreeRoot->parent->left == subTreeRoot){
                     subTreeRoot->parent->left = subTreeRoot->left;
@@ -429,68 +408,15 @@ static treeNode_t* removeNeutralElements(treeNode_t* subTreeRoot){
                 }
                 treeNode_t* result = subTreeRoot->left;
                 
-                freeRightSubtree(subTreeRoot);
+                LPRINTF("during optimization freeing rightSubtree");
+                freeRightSubtree(subTreeRoot, false);
+                freeExpressionNode(subTreeRoot, false, 1);
 
                 return result;
         }
     }
 
     return subTreeRoot;
-}
-
-static void freeLeftSubtree(treeNode_t* node){
-    assert(node);
-
-    LPRINTF("start freeing leftSubtree %p", node);
-
-    static int depth = 1;
-
-    if(node->left){
-        depth++;
-        freeLeftSubtree(node->left);
-        depth--;
-    }
-    
-    if(node->right && depth != 1){
-        depth++;
-        freeLeftSubtree(node->right);
-        depth--;
-    }
-    
-    if(node->type != NUMBER){
-        free(node->data.operatorVar);
-    }
-
-    poisonMemory(node, sizeof(*node));
-    free(node);
-    node = NULL;
-}
-
-static void freeRightSubtree(treeNode_t* node){
-    assert(node);
-
-    static int depth = 1;
-    
-    if(node->left && depth != 1){
-        depth++;
-        freeRightSubtree(node->left);
-        depth--;
-    }
-
-    if(node->right){
-        depth++;
-        freeRightSubtree(node->right);
-        depth--;
-    }
-    
-    
-    if(node->type != NUMBER){
-        free(node->data.operatorVar);
-    }
-
-    poisonMemory(node, sizeof(*node));
-    free(node);
-    node = NULL;
 }
 
 static treeNode_t* createNumNode(int value, treeNode_t* curNode){
@@ -511,7 +437,7 @@ static int calculateSubTree(treeNode_t* subTreeRoot){
     
     if(subTreeRoot->type == OPERATOR){
         for(size_t curOper = 0; curOper < sizeof(operations) / sizeof(operation_t); curOper++){
-            if(operations[curOper].symbol[0] == subTreeRoot->data.operatorVar[0]){
+            if(operations[curOper].symbol[0] == subTreeRoot->data.op[0]){
                 return operations[curOper].calcHandler(calculateSubTree(subTreeRoot->left), calculateSubTree(subTreeRoot->right));
             }
         }

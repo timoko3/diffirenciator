@@ -11,7 +11,8 @@
 // num
 
 union treeVal_t{
-    char* operatorVar; 
+    char* op;
+    char* var;
     int num;
 };
 

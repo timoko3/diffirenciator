@@ -4,7 +4,6 @@ treeNode_t* createNewNode(treeNode_t* left, treeNode_t* right);
 treeNode_t* copyNode(treeNode_t* toCopy);
 bool setParent(treeNode_t* curNode);
 
-treeNode_t* createNewNodeNumber  (int value,  treeNode_t* left, treeNode_t* right);
-treeNode_t* createNewNodeVariable(char* name, treeNode_t* left, treeNode_t* right);
-treeNode_t* createNewNodeOperator(char* name, treeNode_t* left, treeNode_t* right);
-
+void freeNode(treeNode_t* node, bool withoutRoot);
+void freeLeftSubtree(treeNode_t* node,  bool withoutRoot);
+void freeRightSubtree(treeNode_t* node, bool withoutRoot);

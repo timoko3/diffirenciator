@@ -1,9 +1,11 @@
 #include "tree.h"
+#include "expressionTree.h"
 
 #define DEBUG
 
 #include "general/strFunc.h"
 #include "general/debug.h"
+#include "general/poison.h"
 
 #include <assert.h>
 #include <malloc.h>
@@ -25,13 +27,7 @@ treeNode_t* copyNode(treeNode_t* toCopy){
 
     treeNode_t* copy = createNewNode(NULL, NULL);
 
-    copy->type = toCopy->type;
-    if(toCopy->type == NUMBER){
-        copy->data.num = toCopy->data.num;
-    }
-    else{
-        copy->data.operatorVar = myStrDup(toCopy->data.operatorVar);
-    }
+    copyExpressionNode(copy, toCopy);
 
     if(toCopy->left){
         copy->left  = copyNode(toCopy->left);
@@ -67,43 +63,44 @@ bool setParent(treeNode_t* curNode){
     return true;
 }
 
-treeNode_t* createNewNodeNumber(int value, treeNode_t* left, treeNode_t* right){
-    treeNode_t* newNode = createNewNode(left, right);
-
-    newNode->type = NUMBER;
-
-    newNode->data.num = value;
-
-    return newNode;
-}
-
-treeNode_t* createNewNodeVariable(char* name, treeNode_t* left, treeNode_t* right){
-    assert(name);
-    assert(left);
-    assert(right);
-
-    treeNode_t* newNode = createNewNode(left, right);
-
-    newNode->type = VARIABLE;
-    newNode->data.operatorVar = myStrDup(name);
+void freeNode(treeNode_t* node, bool withoutRoot = false){
+    assert(node);
     
-    setParent(newNode);
+    static int depth = 1;
+
+    if(node->left){
+        depth++;
+        freeNode(node->left, withoutRoot);
+        depth--;
+    }
     
-    return newNode;
+    if(node->right){
+        depth++;
+        freeNode(node->right, withoutRoot);
+        depth--;
+    }
+
+    if(!freeExpressionNode(node, withoutRoot, depth)) return;
+
+    LPRINTF("end freeing memory");
 }
 
-treeNode_t* createNewNodeOperator(char* name, treeNode_t* left, treeNode_t* right){
-    assert(name);
-    assert(left);
-    assert(right);
+void freeLeftSubtree(treeNode_t* node, bool withoutRoot){
+    assert(node);
 
-    treeNode_t* newNode = createNewNode(left, right);
+    LPRINTF("start freeing leftSubtree %p", node);
 
-    newNode->type = OPERATOR;
-    newNode->data.operatorVar = myStrDup(name);
+    freeNode(node->left, withoutRoot);
 
-    setParent(newNode);
-
-    return newNode;
+    LPRINTF("end of freeLeftSubtree func");
 }
 
+void freeRightSubtree(treeNode_t* node, bool withoutRoot){
+    assert(node);
+
+    LPRINTF("start freeing rightSubtree %p", node);
+
+    freeNode(node->right, withoutRoot);
+
+    LPRINTF("end of freeRightSubtree func");
+}

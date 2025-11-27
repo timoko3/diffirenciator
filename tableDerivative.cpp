@@ -3,6 +3,7 @@
 #include "differentiator.h"
 #include "operations.h"
 #include "tree.h"
+#include "expressionTree.h"
 
 #define DEBUG 
 
@@ -28,7 +29,7 @@ treeNode_t* operDiff(treeNode_t* node){
 
     LPRINTF("Создаю ноду операции производной");
     for(size_t curOper = 0; curOper < sizeof(operations) / sizeof(operation_t); curOper++){
-        if(node->data.operatorVar[0] == operations[curOper].symbol[0]){
+        if(node->data.op[0] == operations[curOper].symbol[0]){
             LPRINTF("Нашел нужную операцию");
             return operations[curOper].diffHandler(_L, _R);
         }
