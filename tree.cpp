@@ -44,7 +44,7 @@ void treeRead(tree_t* expression){
     LPRINTF("expression buffer: %s\n", treeData.buffer);
 
     static size_t curPos = 0;
-    readNode(expression, treeData.buffer, &curPos);
+    readExpression(expression, treeData.buffer, &curPos);
     
     free(treeData.buffer);
     free(treeData.strings);

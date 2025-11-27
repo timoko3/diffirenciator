@@ -11,15 +11,16 @@ enum operationNames{
 };
 
 struct operation_t{
-    char*          symbol; // sin // string name
-    operationNames name; // type?
+    char*          nameString; 
+    operationNames type;
     size_t         derivativeSize; // no used
     calcHandler_t  calcHandler;
     diffHandler_t  diffHandler; 
     size_t         paramCount;
+    int            priorityRank;
 };
 
 static operation_t operations[]{
-    {"+", ADD,      3, add, addDiff, 2},
-    {"*", MULTIPLY, 7, mul, mulDiff, 2}
+    {"+", ADD,      3, add, addDiff, 2, 2},
+    {"*", MULTIPLY, 7, mul, mulDiff, 2, 1}
 };

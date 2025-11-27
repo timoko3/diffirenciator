@@ -9,7 +9,7 @@ ranksep = 1
 	node720 [label="{type = VARIABLE | parent = 0x504000000290 | address = 0x5040000002d0 | data = x | {left = (nil) | right = (nil)}} ", fillcolor="#ff298dff"];
 	node1040 [label="{type = NUMBER | parent = 0x504000000290 | address = 0x504000000410 | data = 6 | {left = (nil) | right = (nil)}} ", fillcolor="#4ede8dff"];
 	node592 [label="{type = OPERATOR | parent = 0x5040000003d0 | address = 0x504000000250 | data = * | {left = 0x504000000210 | right = 0x504000000450}} ", fillcolor="#ffca2aff"];
-	node528 [label="{type = VARIABLE | parent = 0x504000000250 | address = 0x504000000210 | data = x | {left = (nil) | right = (nil)}} ", fillcolor="#ff298dff"];
+	node528 [label="{type = VARIABLE | parent = 0x504000000250 | address = 0x504000000210 | data = sinx | {left = (nil) | right = (nil)}} ", fillcolor="#ff298dff"];
 	node1104 [label="{type = NUMBER | parent = 0x504000000250 | address = 0x504000000450 | data = 1 | {left = (nil) | right = (nil)}} ", fillcolor="#4ede8dff"];
 node976 ->node656 [color="#785946ff", arrowsize=1.5, penwidth=7, weight=1000];
 node656 ->node720 [color="#785946ff", arrowsize=1.5, penwidth=7, weight=1000];

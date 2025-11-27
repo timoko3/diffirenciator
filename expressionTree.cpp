@@ -1,5 +1,6 @@
 #include "expressionTree.h"
 #include "tree.h"
+#include "operations.h"
 
 #define DEBUG
 
@@ -10,6 +11,7 @@
 #include <assert.h>
 #include <malloc.h>
 #include <ctype.h>
+#include <string.h>
 
 const size_t MAX_VARIABLE_SIZE = 64;
 
@@ -20,14 +22,89 @@ static treeNode_t* getP(treeNode_t* node, char* buffer, char** curBufferPos);
 static treeNode_t* getN(treeNode_t* node, char* buffer, char** curBufferPos);
 static treeNode_t* getV(treeNode_t* node, char* buffer, char** curBufferPos);
 
-void SyntaxError();
+static bool isSupportedOperation(char* readOpName);
+static bool tryParseLongNameOp(char* opName, char** curBufferPos);
+static bool stringNameOpHaveBracket(char* opName, char nextChar);
 
-treeNode_t* readNode(tree_t* expression, char* buffer, size_t* curBufferPos){
+static void SyntaxError();
+
+treeNode_t* readExpression(tree_t* expression, char* buffer, size_t* curBufferPos){
     LPRINTF("begin reading root: %p", expression->root);
 
     expression->root = getG(expression->root, buffer, &buffer[*curBufferPos]);
 
     return expression->root;
+}
+
+treeNode_t* createNewNodeNumber(int value, treeNode_t* left, treeNode_t* right){
+    treeNode_t* newNode = createNewNode(left, right);
+
+    newNode->type = NUMBER;
+
+    newNode->data.num = value;
+
+    return newNode;
+}
+
+treeNode_t* createNewNodeVariable(char* type, treeNode_t* left, treeNode_t* right){
+    assert(type);
+    treeNode_t* newNode = createNewNode(left, right);
+
+    newNode->type = VARIABLE;
+    newNode->data.var = myStrDup(type);
+    
+    setParent(newNode);
+    
+    return newNode;
+}
+
+treeNode_t* createNewNodeOperator(char* type, treeNode_t* left, treeNode_t* right){
+    assert(type);
+    assert(left);
+    assert(right);
+
+    treeNode_t* newNode = createNewNode(left, right);
+
+    newNode->type = OPERATOR;
+    newNode->data.op = myStrDup(type);
+
+    setParent(newNode);
+
+    return newNode;
+}
+
+void copyExpressionNode(treeNode_t* copy, treeNode_t* toCopy){
+    assert(copy);
+    assert(toCopy);
+
+    copy->type = toCopy->type;
+    if(toCopy->type == NUMBER){
+        copy->data.num = toCopy->data.num;
+    }
+    else if(toCopy->type == VARIABLE){
+        copy->data.var = myStrDup(toCopy->data.var);
+    }
+    else if(toCopy->type == OPERATOR){
+        copy->data.op = myStrDup(toCopy->data.op);
+    }
+}
+
+bool freeExpressionNodeData(treeNode_t* node, bool withoutRoot, int depth){
+    assert(node);
+    
+    LPRINTF("entered freeExpressionNodeData func with node %p, withoutRoot = %d, depth = %d", node, withoutRoot, depth);
+
+    if(!withoutRoot || (withoutRoot && depth != 1)){
+        if(node->type == VARIABLE){
+            free(node->data.var);
+        }
+        if(node->type == OPERATOR){
+            free(node->data.op);
+        }
+        return true;
+    }
+
+    return false;
 }
 
 static treeNode_t* getG(treeNode_t* node, char* buffer, char* curBufferPos){
@@ -55,20 +132,25 @@ static treeNode_t* getE(treeNode_t* node, char* buffer, char** curBufferPos){
 
     LPRINTF("Начинаю анализ на знак сложения/вычитания. s = %s", *curBufferPos);
 
-    while(**curBufferPos == '+' || **curBufferPos == '-'){
-        int op = **curBufferPos;
-        (*curBufferPos)++;
+    char* opName = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
+    while(true){
+        if (**curBufferPos == '+' || **curBufferPos == '-') {
+                opName[0] = **curBufferPos;
+                opName[1] = '\0';
+                (*curBufferPos)++;
+        }
+        else{
+            if(!tryParseLongNameOp(opName, curBufferPos)) break;
+        }
+    
+
         treeNode_t* val2 = getT(node, buffer, curBufferPos);
         assert(val2);
 
-        if(op == '+'){
-            val1 = createNewNodeOperator("+", val1, val2);
-        }
-        else if(op == '-'){
-            val1 = createNewNodeOperator("-", val1, val2);
-        }
+        val1 = createNewNodeOperator(opName, val1, val2);
+    
     }
-
+    free(opName);
 
     return val1;
 }
@@ -83,21 +165,25 @@ static treeNode_t* getT(treeNode_t* node, char* buffer, char** curBufferPos){
     
     LPRINTF("Начинаю анализ на знак умножения/деления. s = %s", *curBufferPos);
 
-    while(**curBufferPos == '*' || **curBufferPos == '/'){
-        LPRINTF("Нашел знак: s = %c", **curBufferPos);
+    char* opName = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
+    while(true){
+        if (**curBufferPos == '*' || **curBufferPos == '/') {
+                opName[0] = **curBufferPos;
+                opName[1] = '\0';
+                (*curBufferPos)++;
+        }
+        else{
+            break;
+        }
 
-        int op = **curBufferPos;
-        (*curBufferPos)++;
         treeNode_t* val2 = getP(node, buffer, curBufferPos);
         assert(val2);
 
-        if(op == '*'){
-            val1 = createNewNodeOperator("*", val1, val2);
-        }
-        else{
-            val1 = createNewNodeOperator("\\", val1, val2);
-        }
+        val1 = createNewNodeOperator(opName, val1, val2);
+
     }
+
+    free(opName);
 
     return val1;
 }
@@ -164,7 +250,10 @@ static treeNode_t* getV(treeNode_t* node, char* buffer, char** curBufferPos){
         variable[curVarPos] = **curBufferPos;
 
         (*curBufferPos)++;
+        curVarPos++;
     }
+    variable[curVarPos] = '\0';
+
     if(*curBufferPos == startS){
         SyntaxError();
     }
@@ -175,78 +264,69 @@ static treeNode_t* getV(treeNode_t* node, char* buffer, char** curBufferPos){
     return result;
 }
 
-void SyntaxError(){
+static void SyntaxError(){
     printf("Синтаксическая ошибка!!");
 }
 
-treeNode_t* createNewNodeNumber(int value, treeNode_t* left, treeNode_t* right){
-    treeNode_t* newNode = createNewNode(left, right);
+static bool isSupportedOperation(char* readOpName){
+    assert(readOpName);
 
-    newNode->type = NUMBER;
-
-    newNode->data.num = value;
-
-    return newNode;
-}
-
-treeNode_t* createNewNodeVariable(char* name, treeNode_t* left, treeNode_t* right){
-    assert(name);
-    treeNode_t* newNode = createNewNode(left, right);
-
-    newNode->type = VARIABLE;
-    newNode->data.var = myStrDup(name);
-    
-    setParent(newNode);
-    
-    return newNode;
-}
-
-treeNode_t* createNewNodeOperator(char* name, treeNode_t* left, treeNode_t* right){
-    assert(name);
-    assert(left);
-    assert(right);
-
-    treeNode_t* newNode = createNewNode(left, right);
-
-    newNode->type = OPERATOR;
-    newNode->data.op = myStrDup(name);
-
-    setParent(newNode);
-
-    return newNode;
-}
-
-void copyExpressionNode(treeNode_t* copy, treeNode_t* toCopy){
-    assert(copy);
-    assert(toCopy);
-
-    copy->type = toCopy->type;
-    if(toCopy->type == NUMBER){
-        copy->data.num = toCopy->data.num;
-    }
-    else if(toCopy->type == VARIABLE){
-        copy->data.var = myStrDup(toCopy->data.var);
-    }
-    else if(toCopy->type == OPERATOR){
-        copy->data.op = myStrDup(toCopy->data.op);
-    }
-}
-
-bool freeExpressionNodeData(treeNode_t* node, bool withoutRoot, int depth){
-    assert(node);
-    
-    LPRINTF("entered freeExpressionNodeData func with node %p, withoutRoot = %d, depth = %d", node, withoutRoot, depth);
-
-    if(!withoutRoot || (withoutRoot && depth != 1)){
-        if(node->type == VARIABLE){
-            free(node->data.var);
+    for(size_t curOper = 0; curOper < sizeof(operations) / sizeof(operation_t); curOper++){
+        if(isEqualStrings(readOpName, operations[curOper].nameString)){
+            LPRINTF("Операция доступна");
+            return true;
         }
-        if(node->type == OPERATOR){
-            free(node->data.op);
-        }
-        return true;
     }
 
     return false;
 }
 
+static bool isOperationPrefix(const char* prefix) {
+    for (size_t curOper = 0; curOper < sizeof(operations)/sizeof(operation_t); curOper++) {
+        const char* op = operations[curOper].nameString;
+        if (strncmp(prefix, op, strlen(prefix)) == 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+static bool tryParseLongNameOp(char* opName, char** curBufferPos){
+    assert(opName);
+    assert(curBufferPos);
+
+    size_t curOpNamePos = 0;
+
+    char* saveStartPos = *curBufferPos;
+
+    while (isalpha(**curBufferPos)) {
+        opName[curOpNamePos++] = **curBufferPos;
+        opName[curOpNamePos] = '\0';
+
+        if (!isOperationPrefix(opName)) {
+            opName[--curOpNamePos] = '\0';
+            return false;
+        }
+
+        (*curBufferPos)++;
+    }
+
+    if (curOpNamePos == 0) {
+        *curBufferPos = saveStartPos;  
+        return false;
+    }
+
+    if (!stringNameOpHaveBracket(opName, **curBufferPos)) {
+        *curBufferPos = saveStartPos;
+        return false;
+    }
+
+    return true;
+}
+
+static bool stringNameOpHaveBracket(char* opName, char nextChar){
+    assert(opName);
+
+    if (isSupportedOperation(opName) && nextChar == '(') return true;
+    return false;
+}

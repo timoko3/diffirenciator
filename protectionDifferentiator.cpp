@@ -205,7 +205,7 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
             (int)(uintptr_t) node,
             node->parent, 
             node, 
-            node->data, 
+            node->data.num, 
             node->left, 
             node->right,
             NUMBER_NODE_COLOR);
@@ -215,7 +215,7 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
             (int)(uintptr_t) node,
             node->parent, 
             node, 
-            node->data, 
+            node->data.var, 
             node->left, 
             node->right,
             VARIABLE_NODE_COLOR);
@@ -225,7 +225,7 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
             (int)(uintptr_t) node,
             node->parent, 
             node, 
-            node->data, 
+            node->data.op, 
             node->left, 
             node->right,
             OPERATOR_NODE_COLOR);

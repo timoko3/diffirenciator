@@ -2,7 +2,7 @@
 #include "protectionDifferentiator.h"
 #include "differentiator.h"
 #include "tree.h"
-// #include "texDump.h"
+#include "texDump.h"
 
 #define DEBUG
 
@@ -27,7 +27,7 @@ int main(void){
     LPRINTF("Ended optimization");
     log(&derivative, "after optimization");
 
-    // texDumpTree(&derivative);
+    texDumpTree(&derivative);
     
     treeDtor(&expression);
     treeDtor(&derivative);

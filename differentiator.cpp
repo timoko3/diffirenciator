@@ -32,12 +32,6 @@
 #include <string.h>
 #include <ctype.h>
 
-static treeNode_t* readCreateNode(tree_t* expression, char* buffer, size_t* cuBufferPose);
-static treeNode_t* readAllocateNodeIfNeed(tree_t* expression, size_t countReadNodes);
-static bool isNilNode(char* buffer, size_t* curBufferPos);
-static void skipSpaceAndCloseBracket(char* buffer, size_t* curBufferPos);
-static bool isSupportedOperation(char readSym);
-
 static bool checkHaveVariables(treeNode_t* curNode);
 static treeNode_t* collapseConstant(treeNode_t* subTreeRoot);
 static int calculateSubTree(treeNode_t* subTreeRoot);
@@ -50,129 +44,14 @@ tree_t differentiate(tree_t* expression){
 
     tree_t derivativeTree;
 
-    treeCtor(&derivativeTree);  //
-    free(derivativeTree.root); //
+    treeCtor(&derivativeTree);
 
     derivativeTree.root = differentiateNode(expression->root);
 
     return derivativeTree;
 }
 
-// rename
-static treeNode_t* readCreateNode(tree_t* expression, char* buffer, size_t* curBufferPos){
-    assert(expression);
-    assert(buffer);
-    
-    static size_t countReadNodes = 1;
-    treeNode_t* curNode = readAllocateNodeIfNeed(expression, countReadNodes);
-    countReadNodes++;
 
-    (*curBufferPos)++;
-    
-    LPRINTF("буфер перед чтением: %s", &buffer[*curBufferPos]);
-    
-    size_t lenName = 0;
-
-    char* curNodeData = (char*) calloc(MAX_ANSWER_SIZE, sizeof(char));
-    assert(curNodeData);
-
-    sscanf(&buffer[*curBufferPos], "\"%[^\"]\"%n", curNodeData, &lenName);
-    
-    LPRINTF("Получил размер строки %lu и саму строку %s", lenName, curNodeData);
-
-    if(isdigit(curNodeData[0])){
-        curNode->type = NUMBER;
-        sscanf(curNodeData, "%d", &curNode->data.num);
-    }
-    else if(isSupportedOperation(curNodeData[0])){
-        LPRINTF("%p - addr curNode", curNode);
-        curNode->type = OPERATOR;
-        curNode->data.op = myStrDup(curNodeData);
-        LPRINTF("curNode->data.op = %s", curNode->data.op);
-    }
-    else{
-        curNode->type = VARIABLE;
-        curNode->data.var = myStrDup(curNodeData); 
-    }
-    *curBufferPos += lenName;
-    LPRINTF("\nбуфер после чтением: %s", &buffer[*curBufferPos]);
-
-    free(curNodeData);
-    return curNode;
-}
-
-static bool isSupportedOperation(char readSym){
-    for(size_t curOper = 0; curOper < sizeof(operations) / sizeof(operation_t); curOper++){
-        if(readSym == operations[curOper].symbol[0]){
-            LPRINTF("Операция доступна");
-            return true;
-        }
-    }
-
-    return false;
-}
-
-// rename
-static treeNode_t* readAllocateNodeIfNeed(tree_t* expression, size_t countReadNodes){
-    assert(expression);
-
-    treeNode_t* curNode;
-
-    if(countReadNodes == 1){
-        curNode = expression->root;
-        (expression->amountNodes)--;
-        LPRINTF("Получил addr: %p", curNode);
-    }
-    else{
-        curNode = (treeNode_t*) calloc(1, sizeof(treeNode_t));
-        assert(curNode);
-        LPRINTF("Выделил память");
-    }
-
-    return curNode;
-}
-
-static bool isNilNode(char* buffer, size_t* curBufferPos){
-    assert(buffer);
-    assert(curBufferPos);
-
-    // char curNodeData[MAX_ANSWER_SIZE] = {};
-    char* curNodeData = (char*) calloc(MAX_ANSWER_SIZE, sizeof(char));
-    assert(curNodeData);
-
-    LPRINTF("буфер перед чтением: %s", &buffer[*curBufferPos]);
-    size_t lenName = 0;
-    sscanf(&buffer[*curBufferPos], "%s%n", curNodeData, &lenName);
-    LPRINTF("Прочиталось внутри случая nil: %s", curNodeData);
-    if(isEqualStrings(curNodeData, "nil")){
-        LPRINTF("Зашел в nil");
-        *curBufferPos += lenName;
-        LPRINTF("буфер после чтения: %s\n", &buffer[*curBufferPos]);
-        free(curNodeData);
-        return true;
-    }
-
-    free(curNodeData);
-
-    return false;
-}
-
-static void skipSpaceAndCloseBracket(char* buffer, size_t* curBufferPos){
-    assert(buffer);
-    assert(curBufferPos);
-
-    while(true){
-        if((buffer[*curBufferPos] == ')') || (buffer[*curBufferPos] == ' ')){
-            (*curBufferPos)++;
-        }
-        else{
-            break;
-        }
-    }
-}   
-
-// open(file)
-// openFile(toOpen)
 
 treeNode_t* differentiateNode(treeNode_t* node){
     assert(node);
@@ -330,7 +209,7 @@ static int calculateSubTree(treeNode_t* subTreeRoot){
     
     if(subTreeRoot->type == OPERATOR){
         for(size_t curOper = 0; curOper < sizeof(operations) / sizeof(operation_t); curOper++){
-            if(operations[curOper].symbol[0] == subTreeRoot->data.op[0]){
+            if(operations[curOper].nameString[0] == subTreeRoot->data.op[0]){
                 return operations[curOper].calcHandler(calculateSubTree(subTreeRoot->left), calculateSubTree(subTreeRoot->right));
             }
         }
