@@ -66,10 +66,10 @@ void copyExpressionNode(treeNode_t* copy, treeNode_t* toCopy){
     }
 }
 
-bool freeExpressionNode(treeNode_t* node, bool withoutRoot, int depth){
+bool freeExpressionNodeData(treeNode_t* node, bool withoutRoot, int depth){
     assert(node);
     
-    LPRINTF("entered freeExpressionNode func with node %p, withoutRoot = %d, depth = %d", node, withoutRoot, depth);
+    LPRINTF("entered freeExpressionNodeData func with node %p, withoutRoot = %d, depth = %d", node, withoutRoot, depth);
 
     if(!withoutRoot || (withoutRoot && depth != 1)){
         if(node->type == VARIABLE){
@@ -78,10 +78,6 @@ bool freeExpressionNode(treeNode_t* node, bool withoutRoot, int depth){
         if(node->type == OPERATOR){
             free(node->data.op);
         }
-        LPRINTF("free: %p", node);
-        poisonMemory(node, sizeof(*node));
-        free(node);
-        node = NULL;
         return true;
     }
 

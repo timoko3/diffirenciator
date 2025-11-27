@@ -5,5 +5,5 @@ treeNode_t* createNewNodeVariable(char* name, treeNode_t* left, treeNode_t* righ
 treeNode_t* createNewNodeOperator(char* name, treeNode_t* left, treeNode_t* right);
 
 void copyExpressionNode(treeNode_t* copy, treeNode_t* toCopy);
-bool freeExpressionNode(treeNode_t* node, bool withoutRoot, int depth);
+bool freeExpressionNodeData(treeNode_t* node, bool withoutRoot, int depth);
 

@@ -34,8 +34,8 @@
 
 const char* DIFFERENTIATOR_DATA_FILE_NAME = "expression.txt"; //
 
-static subTreeRoot readNode(expression_t* expression, char* buffer, size_t* curBufferPos);
-static subTreeRoot readCreateNode(expression_t* expression, char* buffer, size_t* cuBufferPose);
+static treeNode_t* readNode(expression_t* expression, char* buffer, size_t* curBufferPos);
+static treeNode_t* readCreateNode(expression_t* expression, char* buffer, size_t* cuBufferPose);
 static treeNode_t* readAllocateNodeIfNeed(expression_t* expression, size_t countReadNodes);
 static bool isNilNode(char* buffer, size_t* curBufferPos);
 static void skipSpaceAndCloseBracket(char* buffer, size_t* curBufferPos);
@@ -44,13 +44,13 @@ static bool isSupportedOperation(char readSym);
 static bool checkNoVariables(treeNode_t* curNode);
 static treeNode_t* collapseConstant(treeNode_t* subTreeRoot);
 static int calculateSubTree(treeNode_t* subTreeRoot);
-static treeNode_t* createNumNode(int value, treeNode_t* parent);
 static treeNode_t* removeNeutralElements(treeNode_t* subTreeRoot);
 
-subTreeRoot differentiatorCtor(expression_t* expression){
+treeNode_t* differentiatorCtor(expression_t* expression){
     assert(expression);
 
-    expression->amountNodes = 1;
+    // expression->amountNodes = 1;
+    // expression->root        = NULL;
 
     expression->root = (treeNode_t*) calloc(1, sizeof(treeNode_t)); // 
     assert(expression->root);
@@ -62,7 +62,7 @@ subTreeRoot differentiatorCtor(expression_t* expression){
     return expression->root;
 }
 
-subTreeRoot differentiatorDtor(expression_t* expression){
+treeNode_t* differentiatorDtor(expression_t* expression){
     assert(expression);
 
     freeNode(expression->root, false);
@@ -106,7 +106,7 @@ expression_t differentiate(expression_t* expression){
     return derivativeTree;
 }
 
-static subTreeRoot readNode(expression_t* expression, char* buffer, size_t* curBufferPos){
+static treeNode_t* readNode(expression_t* expression, char* buffer, size_t* curBufferPos){
     assert(expression);
     assert(buffer);
 
@@ -156,7 +156,7 @@ static subTreeRoot readNode(expression_t* expression, char* buffer, size_t* curB
 }
 
 // rename
-static subTreeRoot readCreateNode(expression_t* expression, char* buffer, size_t* curBufferPos){
+static treeNode_t* readCreateNode(expression_t* expression, char* buffer, size_t* curBufferPos){
     assert(expression);
     assert(buffer);
     
@@ -362,7 +362,8 @@ static treeNode_t* collapseConstant(treeNode_t* subTreeRoot){
     }
     setParent(subTreeRoot->parent);
 
-    freeExpressionNode(subTreeRoot, false, 1);
+    freeExpressionNodeData(subTreeRoot, false, 1);
+    free(subTreeRoot);
 
     return result;
 }
@@ -375,7 +376,7 @@ static treeNode_t* removeNeutralElements(treeNode_t* subTreeRoot){
             LPRINTF("zero division case");
 
             freeNode(subTreeRoot, true);
-            subTreeRoot = createNumNode(0, subTreeRoot);
+            subTreeRoot = createNewNodeNumber(0, NULL, NULL);
             return subTreeRoot;
         }
         // copypaste
@@ -393,7 +394,8 @@ static treeNode_t* removeNeutralElements(treeNode_t* subTreeRoot){
                 treeNode_t* result = subTreeRoot->right;
                 LPRINTF("during optimization freeing leftSubtree");
                 freeLeftSubtree(subTreeRoot, false);
-                freeExpressionNode(subTreeRoot, false, 1);
+                freeExpressionNodeData(subTreeRoot, false, 1);
+                free(subTreeRoot);
 
                 return result;
         }
@@ -410,26 +412,14 @@ static treeNode_t* removeNeutralElements(treeNode_t* subTreeRoot){
                 
                 LPRINTF("during optimization freeing rightSubtree");
                 freeRightSubtree(subTreeRoot, false);
-                freeExpressionNode(subTreeRoot, false, 1);
+                freeExpressionNodeData(subTreeRoot, false, 1);
+                free(subTreeRoot);
 
                 return result;
         }
     }
 
     return subTreeRoot;
-}
-
-static treeNode_t* createNumNode(int value, treeNode_t* curNode){
-
-    LPRINTF("start creating calculated node");
-
-    curNode->type = NUMBER;
-    curNode->data.num = value;
-
-    curNode->left   = NULL;
-    curNode->right  = NULL;
-
-    return curNode;
 }
 
 static int calculateSubTree(treeNode_t* subTreeRoot){

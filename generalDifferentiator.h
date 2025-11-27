@@ -6,10 +6,6 @@
 
 #define log(expression, text, ...) htmlLog(expression, __FILE__, __FUNCTION__, __LINE__, text, ##__VA_ARGS__)
 
-// var
-// op
-// num
-
 union treeVal_t{
     char* op;
     char* var;

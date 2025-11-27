@@ -1,9 +1,9 @@
 #include "generalDifferentiator.h"
 
-typedef treeNode_t* subTreeRoot;
+typedef treeNode_t* subTreeRoot; // ??? root
 
-subTreeRoot differentiatorCtor(expression_t* expression);
-subTreeRoot differentiatorDtor(expression_t* expression);
+treeNode_t* differentiatorCtor(expression_t* expression);
+treeNode_t* differentiatorDtor(expression_t* expression);
 
 void differentiatorReadData(expression_t* expression);
 

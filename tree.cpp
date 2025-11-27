@@ -80,7 +80,12 @@ void freeNode(treeNode_t* node, bool withoutRoot = false){
         depth--;
     }
 
-    if(!freeExpressionNode(node, withoutRoot, depth)) return;
+    if(!freeExpressionNodeData(node, withoutRoot, depth)) return;
+
+    LPRINTF("free: %p", node);
+    poisonMemory(node, sizeof(*node));
+    free(node);
+    node = NULL;
 
     LPRINTF("end freeing memory");
 }
