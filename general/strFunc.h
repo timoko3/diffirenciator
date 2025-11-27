@@ -13,7 +13,7 @@ struct string {
 
 struct buffer_t{
     int* ptr;
-    size_t size;
+    size_t amountNodes;
 };
 
 const int UPPER_SYM_MIN        = (int) 'A'; 

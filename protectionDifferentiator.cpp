@@ -34,9 +34,9 @@ const size_t SCALE_MIN              = 30;
 
 static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr);
 static void printGraphNode(const treeNode_t* node, FILE* graphFilePtr);
-// static void assignErrorStruct(differentiator_t* akinator, treeStatus type);
+// static void assignErrorStruct(expression_t* akinator, treeStatus type);
 
-// treeStatus verifyTree(differentiator_t* tree, const char* function, const char* file, const int line){
+// treeStatus verifyTree(expression_t* tree, const char* function, const char* file, const int line){
 //     if(tree == NULL){
 //         LPRINTF("tree — нулевой указатель\n");  
 //     } 
@@ -56,7 +56,7 @@ static void printGraphNode(const treeNode_t* node, FILE* graphFilePtr);
 //     return tree->status.type;
 // }
 
-// static void assignErrorStruct(differentiator_t* tree, treeStatus type){
+// static void assignErrorStruct(expression_t* tree, treeStatus type){
 //     assert(tree);
 
 //     for(size_t curErrInd = 0; curErrInd < sizeof(treeStatuses) / sizeof(treeStatuses); curErrInd++){
@@ -66,7 +66,7 @@ static void printGraphNode(const treeNode_t* node, FILE* graphFilePtr);
 //     }
 // }
 
-void htmlLog(differentiator_t* akinator, const char* callFileName, const char* callFuncName, int callLine,
+void htmlLog(expression_t* akinator, const char* callFileName, const char* callFuncName, int callLine,
                            const char* dumpDescription, ...){
     assert(akinator);
     assert(callFileName);
@@ -89,26 +89,26 @@ void htmlLog(differentiator_t* akinator, const char* callFileName, const char* c
             "<title>Tree Dump</title>"
             "<style>"
             "body{font-family:'Consolas','Menlo',monospace;background:#f7f9fb;color:#222;"
-            "margin:16px;font-size:15px;line-height:1.4;}"
+            "margin:16px;font-amountNodes:15px;line-height:1.4;}"
             ".dump{border-left:6px solid #007cad;background:#fff;border-radius:8px;"
             "padding:10px 14px;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,0.06);}"
-            ".header{font-size:1.1rem;margin-bottom:6px;font-weight:bold;color:#007cad;}"
-            ".meta{font-size:0.9rem;color:#555;margin-bottom:8px;}"
-            "table{border-collapse:collapse;width:auto;min-width:10%%;font-size:0.9rem;}"
+            ".header{font-amountNodes:1.1rem;margin-bottom:6px;font-weight:bold;color:#007cad;}"
+            ".meta{font-amountNodes:0.9rem;color:#555;margin-bottom:8px;}"
+            "table{border-collapse:collapse;width:auto;min-width:10%%;font-amountNodes:0.9rem;}"
             "th,td{border:1px solid #ccc;padding:4px 8px;text-align:left;}"
             "th{background:#eef3f7;font-weight:bold;}"
             "tr:nth-child(even){background:#fafafa;}"
             ".graph{text-align:center;margin-top:10px;}"
             "img{border-radius:6px;max-width:95%%;height:auto;}"
             ".badge{display:inline-block;background:#007cad;color:#fff;"
-            "padding:2px 8px;border-radius:4px;font-size:0.85rem;margin-left:6px;}"
+            "padding:2px 8px;border-radius:4px;font-amountNodes:0.85rem;margin-left:6px;}"
             "</style></head><body>\n");
     }
     fprintf(logFilePtr, "<div class=\"dump\">\n");
 
     fprintf(logFilePtr, "<div class=\"dump-header\">"
                         "<div>"
-                        "<h2 style=\"margin:0; font-size:1.8rem;\"> DUMP — <span style=\"margin-left:10px; color:#333;\"> ");
+                        "<h2 style=\"margin:0; font-amountNodes:1.8rem;\"> DUMP — <span style=\"margin-left:10px; color:#333;\"> ");
 
     va_list args;
     va_start(args, dumpDescription);
@@ -131,9 +131,9 @@ void htmlLog(differentiator_t* akinator, const char* callFileName, const char* c
                         "<tr><th>Root</th><td>%p</td></tr>"
                         "<tr><th>Size</th><td>%lu</td></tr>"
                         "</tbody></table>\n",
-                        akinator->root, akinator->size);
+                        akinator->root, akinator->amountNodes);
 
-    double widthPercent = START_SCALE_GRAPH_DUMP +  (double)akinator->size * SCALE_INCREASE_COEF;
+    double widthPercent = START_SCALE_GRAPH_DUMP +  (double)akinator->amountNodes * SCALE_INCREASE_COEF;
     if (widthPercent > SCALE_MAX) widthPercent = SCALE_MAX;  
     if (widthPercent < SCALE_MIN) widthPercent = SCALE_MIN;  
 
@@ -154,7 +154,7 @@ void htmlLog(differentiator_t* akinator, const char* callFileName, const char* c
 }
 
 
-void treeGraphDump(differentiator_t* akinator){
+void treeGraphDump(expression_t* akinator){
     assert(akinator);
 
     logCount++;    
@@ -198,7 +198,7 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
     assert(node);
     assert(graphFilePtr);
 
-    if(node->nodeType == NUMBER){
+    if(node->type == NUMBER){
         fprintf(graphFilePtr, "\tnode%d [label=\"{type = NUMBER | parent = %p | address = %p | data = %d | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
             (int)(uintptr_t) node,
             node->parent, 
@@ -208,7 +208,7 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
             node->right,
             NUMBER_NODE_COLOR);
     }
-    else if(node->nodeType == VARIABLE){
+    else if(node->type == VARIABLE){
         fprintf(graphFilePtr, "\tnode%d [label=\"{type = VARIABLE | parent = %p | address = %p | data = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
             (int)(uintptr_t) node,
             node->parent, 
@@ -218,7 +218,7 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
             node->right,
             VARIABLE_NODE_COLOR);
     }
-    else if(node->nodeType == OPERATOR){
+    else if(node->type == OPERATOR){
         fprintf(graphFilePtr, "\tnode%d [label=\"{type = OPERATOR | parent = %p | address = %p | data = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
             (int)(uintptr_t) node,
             node->parent, 
@@ -228,7 +228,7 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
             node->right,
             OPERATOR_NODE_COLOR);
     }
-    else if(node->nodeType == NO_TYPE){
+    else if(node->type == NO_TYPE){
         fprintf(graphFilePtr, "\tnode%d [label=\"{type = NO | parent = %p | address = %p | data = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
             (int)(uintptr_t) node,
             node->parent, 

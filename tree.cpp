@@ -8,20 +8,69 @@
 #include <assert.h>
 #include <malloc.h>
 
-treeNode_t* createNewNode(){
+treeNode_t* createNewNode(treeNode_t* left, treeNode_t* right){
 
-    treeNode_t* curNode = (treeNode_t*) calloc(1, sizeof(treeNode_t));
-    assert(curNode);
+    treeNode_t* newNode = (treeNode_t*) calloc(1, sizeof(treeNode_t));
+    assert(newNode);
     LPRINTF("Выделил память");
 
-    return curNode;
+    newNode->left  = left;
+    newNode->right = right;
+
+    return newNode;
 }
 
-treeNode_t* createNewNodeNumber(int value){
+treeNode_t* copyNode(treeNode_t* toCopy){
+    assert(toCopy);
 
-    treeNode_t* newNode = createNewNode();
+    treeNode_t* copy = createNewNode(NULL, NULL);
 
-    newNode->nodeType = NUMBER;
+    copy->type = toCopy->type;
+    if(toCopy->type == NUMBER){
+        copy->data.num = toCopy->data.num;
+    }
+    else{
+        copy->data.operatorVar = myStrDup(toCopy->data.operatorVar);
+    }
+
+    if(toCopy->left){
+        copy->left  = copyNode(toCopy->left);
+    }
+    if(toCopy->right){
+        copy->right = copyNode(toCopy->right); 
+    }
+    
+    setParent(copy);
+
+    return copy;
+}
+
+
+bool setParent(treeNode_t* curNode){
+    assert(curNode);
+    
+    if(curNode->left){
+        curNode->left->parent = curNode;
+    }
+    if(curNode->right){
+        curNode->right->parent = curNode;
+    }
+
+    if(curNode->left){
+        setParent(curNode->left);
+    }
+    
+    if(curNode->right){
+        setParent(curNode->right);
+    }
+
+    return true;
+}
+
+treeNode_t* createNewNodeNumber(int value, treeNode_t* left, treeNode_t* right){
+    treeNode_t* newNode = createNewNode(left, right);
+
+    newNode->type = NUMBER;
 
     newNode->data.num = value;
 
@@ -33,18 +82,13 @@ treeNode_t* createNewNodeVariable(char* name, treeNode_t* left, treeNode_t* righ
     assert(left);
     assert(right);
 
-    treeNode_t* newNode = createNewNode();
+    treeNode_t* newNode = createNewNode(left, right);
 
-    newNode->nodeType = VARIABLE;
-
+    newNode->type = VARIABLE;
     newNode->data.operatorVar = myStrDup(name);
-
-    newNode->left         = left;
-    newNode->left->parent = newNode;
-
-    newNode->right = right;
-    newNode->right->parent = newNode;
-
+    
+    setParent(newNode);
+    
     return newNode;
 }
 
@@ -53,18 +97,13 @@ treeNode_t* createNewNodeOperator(char* name, treeNode_t* left, treeNode_t* righ
     assert(left);
     assert(right);
 
-    treeNode_t* newNode = createNewNode();
+    treeNode_t* newNode = createNewNode(left, right);
 
-    newNode->nodeType = OPERATOR;
+    newNode->type = OPERATOR;
     newNode->data.operatorVar = myStrDup(name);
 
-    newNode->left         = left;
-    newNode->left->parent = newNode;
-
-    newNode->right = right;
-    newNode->right->parent = newNode;
-
-
+    setParent(newNode);
 
     return newNode;
 }
+

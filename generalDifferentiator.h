@@ -4,7 +4,7 @@
 #include <stddef.h>
 #include <limits.h>
 
-#define log(differentiator, text, ...) htmlLog(differentiator, __FILE__, __FUNCTION__, __LINE__, text, ##__VA_ARGS__)
+#define log(expression, text, ...) htmlLog(expression, __FILE__, __FUNCTION__, __LINE__, text, ##__VA_ARGS__)
 
 // var
 // op
@@ -15,7 +15,7 @@ union treeVal_t{
     int num;
 };
 
-enum infoType{ // node
+enum nodeType{
     NO_TYPE,
     OPERATOR,
     VARIABLE,
@@ -26,25 +26,16 @@ enum infoType{ // node
 // data = {value + type}
 
 struct treeNode_t{
-    infoType nodeType;
+    nodeType    type;
     treeVal_t   data;
     treeNode_t* right;
     treeNode_t* left;
     treeNode_t* parent;
 };
 
-struct akinatorState_t{ //
-    treeNode_t* Node;
-};
-
-struct differentiator_t{ // expression ?
+struct expression_t{ 
     treeNode_t*   root;
-    size_t        size; // of ???
-    akinatorState_t curState;
-    // treeStatusDescription status;
+    size_t        amountNodes;
 };
-
-treeVal_t* curData(differentiator_t* akinator);
-treeNode_t** curNode(differentiator_t* akinator);
 
 #endif /* GENERAL_AKINATOR_H */ 

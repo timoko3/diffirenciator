@@ -1,13 +1,13 @@
 #include "generalDifferentiator.h"
 
-typedef treeNode_t* curAnchorNode; // ??? root
+typedef treeNode_t* subTreeRoot;
 
-curAnchorNode differentiatorCtor(differentiator_t* differentiator);
-curAnchorNode differentiatorDtor(differentiator_t* differentiator);
+subTreeRoot differentiatorCtor(expression_t* expression);
+subTreeRoot differentiatorDtor(expression_t* expression);
 
-void differentiatorReadData(differentiator_t* differentiator);
+void differentiatorReadData(expression_t* expression);
 
-differentiator_t differentiate(differentiator_t* differentiator);
-treeNode_t* differentiateNode(treeNode_t* toDifferentiate);
+expression_t differentiate(expression_t* expression);
+treeNode_t* differentiateNode(treeNode_t* node);
 
 bool optimizeDerivative(treeNode_t* subTreeRoot);

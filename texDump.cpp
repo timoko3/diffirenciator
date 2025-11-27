@@ -10,8 +10,8 @@ static void texDumpNode(FILE* texFilePtr, treeNode_t* toDump);
 
 const char* texDumpFileName = "DumpDifferentiator.tex";
 
-void texDumpTree(differentiator_t* differentiator){
-    assert(differentiator);
+void texDumpTree(expression_t* expression){
+    assert(expression);
     printf("MEOW\n");
     fileDescription texDumpFile{
         texDumpFileName,
@@ -31,7 +31,7 @@ void texDumpTree(differentiator_t* differentiator){
 
     fprintf(texFilePtr, "\\begin{document}\n");
     
-    texDumpNode(texFilePtr, differentiator->root);
+    texDumpNode(texFilePtr, expression->root);
     fprintf(texFilePtr, "\n");
 
     fprintf(texFilePtr, "\\end{document}\n");
@@ -40,13 +40,13 @@ void texDumpTree(differentiator_t* differentiator){
 static void texDumpNode(FILE* texFilePtr, treeNode_t* toDump){
     assert(toDump);
 
-    if(toDump->nodeType == NUMBER){
+    if(toDump->type == NUMBER){
         fprintf(texFilePtr, "%d", toDump->data.num);
     }
-    else if(toDump->nodeType == VARIABLE){
+    else if(toDump->type == VARIABLE){
         fprintf(texFilePtr, "%s", toDump->data.operatorVar);
     }
-    else if(toDump->nodeType == OPERATOR){
+    else if(toDump->type == OPERATOR){
         fprintf(texFilePtr, "(");
         texDumpNode(texFilePtr, toDump->left);
         fprintf(texFilePtr, "%s", toDump->data.operatorVar);

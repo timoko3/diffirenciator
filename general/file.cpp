@@ -130,8 +130,8 @@ void writeOpcode(buffer_t* buffer, const char* fileName){
     FILE* byteCodeFile = myOpenFile(&byteCode);
     assert(byteCodeFile);
 
-    size_t written = fwrite(buffer->ptr, sizeof(int), buffer->size, byteCodeFile);
-    if(written != buffer->size){
+    size_t written = fwrite(buffer->ptr, sizeof(int), buffer->amountNodes, byteCodeFile);
+    if(written != buffer->amountNodes){
         perror("fwrite error");
     }
 
