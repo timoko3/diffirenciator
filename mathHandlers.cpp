@@ -1,9 +1,22 @@
 #include "mathHandlers.h"
 
-int add(int left, int right){
-    return left + right;
+#include <math.h>
+#include <assert.h>
+
+int addH(int* params, size_t amountParam){
+    assert(params);
+
+    return params[0] + params[1];
 }
 
-int mul(int left, int right){
-    return left * right;
+int mulH(int* params, size_t amountParam){
+    assert(params);
+
+    return params[0] * params[1];
+} 
+
+int sinH(int* params, size_t amountParam){
+    assert(params);
+
+    return sin(params[0]);
 } 

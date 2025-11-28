@@ -19,13 +19,13 @@ int main(void){
     treeRead(&expression);
     assert(expression.root);
 
-    log(&expression, "after reading");
+    logTree(&expression, "after reading");
     tree_t derivative = differentiate(&expression);
-    log(&derivative, "after differentiation");
+    logTree(&derivative, "after differentiation");
 
     optimizeDerivative(derivative.root);
     LPRINTF("Ended optimization");
-    log(&derivative, "after optimization");
+    logTree(&derivative, "after optimization");
 
     texDumpTree(&derivative);
     

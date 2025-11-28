@@ -38,7 +38,6 @@ void texDumpTree(tree_t* expression){
 }
 
 static void texDumpNode(FILE* texFilePtr, treeNode_t* toDump){
-    assert(toDump);
 
     if(toDump->type == NUMBER){
         fprintf(texFilePtr, "%d", toDump->data.num);
@@ -47,11 +46,17 @@ static void texDumpNode(FILE* texFilePtr, treeNode_t* toDump){
         fprintf(texFilePtr, "%s", toDump->data.var);
     }
     else if(toDump->type == OPERATOR){
-        fprintf(texFilePtr, "(");
-        texDumpNode(texFilePtr, toDump->left);
+        if(toDump->left){
+            fprintf(texFilePtr, "(");
+            texDumpNode(texFilePtr, toDump->left);
+        }
+
         fprintf(texFilePtr, "%s", toDump->data.op);
-        texDumpNode(texFilePtr, toDump->right);
-        fprintf(texFilePtr, ")");
+
+        if(toDump->right){
+            texDumpNode(texFilePtr, toDump->right);
+            fprintf(texFilePtr, ")");
+        }
     }
     
 

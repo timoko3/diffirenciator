@@ -36,7 +36,7 @@ treeNode_t* treeDtor(tree_t* expression){
 void treeRead(tree_t* expression){
     assert(expression);
 
-    log(expression, "started reading");
+    logTree(expression, "started reading");
 
     data_t treeData;
     parseStringsFile(&treeData, DIFFERENTIATOR_DATA_FILE_NAME);
@@ -49,7 +49,7 @@ void treeRead(tree_t* expression){
     free(treeData.buffer);
     free(treeData.strings);
 
-    log(expression, "ended reading");
+    logTree(expression, "ended reading");
 }
 
 treeNode_t* createNewNode(treeNode_t* left, treeNode_t* right){

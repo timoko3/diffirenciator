@@ -36,6 +36,9 @@ static bool checkHaveVariables(treeNode_t* curNode);
 static treeNode_t* collapseConstant(treeNode_t* subTreeRoot);
 static int calculateSubTree(treeNode_t* subTreeRoot);
 static treeNode_t* removeNeutralElements(treeNode_t* subTreeRoot);
+static treeNode_t* removeNeutralSubtree(treeNode_t* subTreeRoot, treeNode_t* remainSubTreeRoot);
+static treeNode_t* removeLeftNeutralSubtree(treeNode_t* subTreeRoot);
+static treeNode_t* removeRightNeutralSubtree(treeNode_t* subTreeRoot);
 
 tree_t differentiate(tree_t* expression){
     assert(expression);
@@ -50,8 +53,6 @@ tree_t differentiate(tree_t* expression){
 
     return derivativeTree;
 }
-
-
 
 treeNode_t* differentiateNode(treeNode_t* node){
     assert(node);
@@ -69,31 +70,10 @@ treeNode_t* differentiateNode(treeNode_t* node){
     return createdNode;
 }
 
-// (5+3) - (7+1)
-
-//       -
-//   +       +
-// 5   3   7   1
-
-//       -
-//   8       +
-//         7   1
-
-//       -
-//   8       8
-  
-//       0
-  
-
 bool optimizeDerivative(treeNode_t* subTreeRoot){
     assert(subTreeRoot);
     
     LPRINTF("\n\nstart optimization");
-    if(checkHaveVariables(subTreeRoot)){
-        LPRINTF("subTreeRoot addr: %p", subTreeRoot);
-        subTreeRoot = collapseConstant(subTreeRoot);
-    }
-    subTreeRoot = removeNeutralElements(subTreeRoot);
 
     if(subTreeRoot->left){
         optimizeDerivative(subTreeRoot->left);
@@ -101,6 +81,12 @@ bool optimizeDerivative(treeNode_t* subTreeRoot){
     if(subTreeRoot->right){
         optimizeDerivative(subTreeRoot->right);
     }
+
+    if(checkHaveVariables(subTreeRoot)){
+        LPRINTF("subTreeRoot addr: %p", subTreeRoot);
+        subTreeRoot = collapseConstant(subTreeRoot);
+    }
+    subTreeRoot = removeNeutralElements(subTreeRoot);
 
     return true;
 }
@@ -161,60 +147,97 @@ static treeNode_t* removeNeutralElements(treeNode_t* subTreeRoot){
             subTreeRoot = createNewNodeNumber(0, NULL, NULL);
             return subTreeRoot;
         }
-        // copypaste
-        if((subTreeRoot->data.op[0] == '*' && subTreeRoot->left->data.num == 1) || 
-            (subTreeRoot->data.op[0] == '+' && subTreeRoot->left->data.num == 0)){
-                LPRINTF("keep only right subTree of %p", subTreeRoot);
-                if(subTreeRoot->parent->left == subTreeRoot){
-                    subTreeRoot->parent->left = subTreeRoot->right;
-                    subTreeRoot->right->parent = subTreeRoot->parent;
-                }
-                else{
-                    subTreeRoot->parent->right = subTreeRoot->right;
-                }
-
-                treeNode_t* result = subTreeRoot->right;
-                LPRINTF("during optimization freeing leftSubtree");
-                freeLeftSubtree(subTreeRoot, false);
-                freeExpressionNodeData(subTreeRoot, false, 1);
-                free(subTreeRoot);
-
-                return result;
-        }
-        if((subTreeRoot->data.op[0] == '*' && subTreeRoot->right->data.num == 1) || 
-            (subTreeRoot->data.op[0] == '+' && subTreeRoot->right->data.num == 0)){
-                LPRINTF("keep only left subTree of %p", subTreeRoot);
-                if(subTreeRoot->parent->left == subTreeRoot){
-                    subTreeRoot->parent->left = subTreeRoot->left;
-                }
-                else{
-                    subTreeRoot->parent->right = subTreeRoot->left;
-                }
-                treeNode_t* result = subTreeRoot->left;
-                
-                LPRINTF("during optimization freeing rightSubtree");
-                freeRightSubtree(subTreeRoot, false);
-                freeExpressionNodeData(subTreeRoot, false, 1);
-                free(subTreeRoot);
-
-                return result;
-        }
+        removeLeftNeutralSubtree (subTreeRoot);
+        removeRightNeutralSubtree(subTreeRoot);
     }
 
     return subTreeRoot;
 }
+
+static treeNode_t* removeNeutralSubtree(treeNode_t* subTreeRoot, treeNode_t* remainSubTreeRoot){
+    assert(subTreeRoot);
+    assert(remainSubTreeRoot);
+
+    if(subTreeRoot->type == OPERATOR){
+        if((subTreeRoot->data.op[0] == '*' && subTreeRoot->data.num == 1) || 
+            (subTreeRoot->data.op[0] == '+' && subTreeRoot->data.num == 0)){
+            LPRINTF("keep only right subTree of %p", subTreeRoot);
+            if(subTreeRoot->parent->parent->left == subTreeRoot->parent){
+                subTreeRoot->parent->parent->left = remainSubTreeRoot;
+                remainSubTreeRoot->parent = subTreeRoot->parent->parent;
+            }
+            else{
+                subTreeRoot->parent->parent->right = remainSubTreeRoot;
+            }
+
+            return remainSubTreeRoot;
+        }   
+    }
+    
+    return NULL;
+}
+
+static treeNode_t* removeLeftNeutralSubtree(treeNode_t* subTreeRoot){
+    assert(subTreeRoot);
+
+    if(subTreeRoot->left && subTreeRoot->right){
+        if(removeNeutralSubtree(subTreeRoot->left, subTreeRoot->right)){
+            treeNode_t* result = subTreeRoot->right;
+            LPRINTF("during optimization freeing leftSubtree");
+            freeLeftSubtree(subTreeRoot, false);
+            freeExpressionNodeData(subTreeRoot, false, 1);
+            free(subTreeRoot);
+
+            return result;
+        }
+    }
+    return NULL;
+}
+
+static treeNode_t* removeRightNeutralSubtree(treeNode_t* subTreeRoot){
+    assert(subTreeRoot);
+
+    if(subTreeRoot->left && subTreeRoot->right){
+        if(removeNeutralSubtree(subTreeRoot->right, subTreeRoot->left)){
+            treeNode_t* result = subTreeRoot->left;
+            LPRINTF("during optimization freeing RightSubtree");
+            freeRightSubtree(subTreeRoot, false);
+            freeExpressionNodeData(subTreeRoot, false, 1);
+            free(subTreeRoot);
+
+            return result;
+        }
+    }
+
+    return NULL;
+}
+
 
 static int calculateSubTree(treeNode_t* subTreeRoot){
     assert(subTreeRoot);
     
     if(subTreeRoot->type == OPERATOR){
         for(size_t curOper = 0; curOper < sizeof(operations) / sizeof(operation_t); curOper++){
-            if(operations[curOper].nameString[0] == subTreeRoot->data.op[0]){
-                return operations[curOper].calcHandler(calculateSubTree(subTreeRoot->left), calculateSubTree(subTreeRoot->right));
+            if(isEqualStrings(operations[curOper].nameString, subTreeRoot->data.op)){
+                int* params = (int*) calloc(operations[curOper].paramCount, sizeof(int));
+                assert(params);
+
+                switch(operations[curOper].paramCount){
+                    case 1: params[0] = calculateSubTree(subTreeRoot->left); break;
+                    case 2: params[0] = calculateSubTree(subTreeRoot->left); params[1] = calculateSubTree(subTreeRoot->right); break;
+                }
+
+                int result = operations[curOper].calcHandler(params, operations[curOper].paramCount);
+
+                free(params);
+                return result;
             }
         }
     }
     else{
         return subTreeRoot->data.num;
     }
+
+    LPRINTF("calculation failure");
+    return 0;
 }

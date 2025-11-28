@@ -3,7 +3,8 @@
 
 #include "generalDifferentiator.h" 
 
-int add(int left, int right);
-int mul(int left, int right);
+int addH(int* params, size_t amountParam);
+int mulH(int* params, size_t amountParam);
+int sinH(int* params, size_t amountParam);
 
 #endif /* MATH_HANDLERS_H */

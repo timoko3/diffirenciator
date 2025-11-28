@@ -60,9 +60,7 @@ treeNode_t* createNewNodeVariable(char* type, treeNode_t* left, treeNode_t* righ
 
 treeNode_t* createNewNodeOperator(char* type, treeNode_t* left, treeNode_t* right){
     assert(type);
-    assert(left);
-    assert(right);
-
+    
     treeNode_t* newNode = createNewNode(left, right);
 
     newNode->type = OPERATOR;
@@ -133,22 +131,15 @@ static treeNode_t* getE(treeNode_t* node, char* buffer, char** curBufferPos){
     LPRINTF("Начинаю анализ на знак сложения/вычитания. s = %s", *curBufferPos);
 
     char* opName = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
-    while(true){
-        if (**curBufferPos == '+' || **curBufferPos == '-') {
-                opName[0] = **curBufferPos;
-                opName[1] = '\0';
-                (*curBufferPos)++;
-        }
-        else{
-            if(!tryParseLongNameOp(opName, curBufferPos)) break;
-        }
-    
+    while(**curBufferPos == '+' || **curBufferPos == '-') {
+        opName[0] = **curBufferPos;
+        opName[1] = '\0';
+        (*curBufferPos)++;
 
         treeNode_t* val2 = getT(node, buffer, curBufferPos);
         assert(val2);
 
         val1 = createNewNodeOperator(opName, val1, val2);
-    
     }
     free(opName);
 
@@ -166,23 +157,16 @@ static treeNode_t* getT(treeNode_t* node, char* buffer, char** curBufferPos){
     LPRINTF("Начинаю анализ на знак умножения/деления. s = %s", *curBufferPos);
 
     char* opName = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
-    while(true){
-        if (**curBufferPos == '*' || **curBufferPos == '/') {
-                opName[0] = **curBufferPos;
-                opName[1] = '\0';
-                (*curBufferPos)++;
-        }
-        else{
-            break;
-        }
+    while(**curBufferPos == '*' || **curBufferPos == '/') {
+        opName[0] = **curBufferPos;
+        opName[1] = '\0';
+        (*curBufferPos)++;
 
         treeNode_t* val2 = getP(node, buffer, curBufferPos);
         assert(val2);
 
         val1 = createNewNodeOperator(opName, val1, val2);
-
     }
-
     free(opName);
 
     return val1;
@@ -205,9 +189,26 @@ static treeNode_t* getP(treeNode_t* node, char* buffer, char** curBufferPos){
         if('0' <= **curBufferPos && **curBufferPos <= '9'){
             return getN(node, buffer, curBufferPos);
         }
-        else if(**curBufferPos != '*' && **curBufferPos != '/' && **curBufferPos != '+' && **curBufferPos != '-'){
-            return getV(node, buffer, curBufferPos);
+        
+        char* opName = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
+        assert(opName);
+
+        treeNode_t* result = NULL;
+        if(tryParseLongNameOp(opName, curBufferPos)){
+            (*curBufferPos)++;
+
+            treeNode_t* param = getE(node, buffer, curBufferPos);
+
+            (*curBufferPos)++;
+
+            result = createNewNodeOperator(opName, param, NULL);
         }
+        else{
+            result = getV(node, buffer, curBufferPos);
+        }
+
+        free(opName);
+        return result;
     }
 }
 

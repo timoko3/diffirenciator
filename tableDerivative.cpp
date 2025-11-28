@@ -31,26 +31,41 @@ treeNode_t* operDiff(treeNode_t* node){
     for(size_t curOper = 0; curOper < sizeof(operations) / sizeof(operation_t); curOper++){
         if(node->data.op[0] == operations[curOper].nameString[0]){
             LPRINTF("Нашел нужную операцию");
-            return operations[curOper].diffHandler(_L, _R);
+
+            treeNode_t** params = (treeNode_t**) calloc(operations[curOper].paramCount, sizeof(treeNode_t*));
+            switch(operations[curOper].paramCount){
+                case 1: params[0] = _L; break;
+                case 2: params[0] = _L; params[1] = _R; break;
+            }
+
+            treeNode_t* result = operations[curOper].diffHandler(params, operations[curOper].paramCount);
+
+            free(params);
+            return result;
         }
     }
     LPRINTF("Не нашел нужную ноду");
     return NULL;
 }
 
-treeNode_t* addDiff(treeNode_t* left, treeNode_t* right){
-    assert(right);
-    assert(left);
+treeNode_t* addDiff(treeNode_t** params, size_t amountParam){
+    assert(params);
 
     LPRINTF("Производная суммы");
-    return _ADD(_DIF(left), _DIF(right));
+    return _ADD(_DIF(params[0]), _DIF(params[1]));
 }
 
-treeNode_t* mulDiff(treeNode_t* left, treeNode_t* right){
-    assert(right);
-    assert(left);
+treeNode_t* mulDiff(treeNode_t** params, size_t amountParam){
+    assert(params);
 
     LPRINTF("Производная произведения");
-    return _ADD(_MUL(_DIF(left), _C(right)), _MUL(_C(left), _DIF(right)));
+    return _ADD(_MUL(_DIF(params[0]), _C(params[1])), _MUL(_C(params[0]), _DIF(params[1])));
+}
+
+treeNode_t* sinDiff(treeNode_t** params, size_t amountParam){
+    assert(params);
+
+    LPRINTF("Производная произведения");
+    return _COS(_V("x"), NULL);
 }
 
