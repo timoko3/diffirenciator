@@ -29,10 +29,18 @@ void texDumpTree(tree_t* expression){
                         "\\usepackage[utf8]{inputenc}\n"
                         "\\usepackage[english,russian]{babel}\n");
 
+    fprintf(texFilePtr, "\n\\newcommand{\\plus}[2]{#1 + #2}\n"
+                        "\\newcommand{\\minus}[2]{#1 - #2}\n"
+                        "\\newcommand{\\mul}[2]{#1 \\cdot #2}\n");
+
     fprintf(texFilePtr, "\\begin{document}\n");
     
+    fprintf(texFilePtr, "\\[\n");
+
     texDumpNode(texFilePtr, expression->root);
     fprintf(texFilePtr, "\n");
+
+    fprintf(texFilePtr, "\\]\n");
 
     fprintf(texFilePtr, "\\end{document}\n");
 }
@@ -46,16 +54,26 @@ static void texDumpNode(FILE* texFilePtr, treeNode_t* toDump){
         fprintf(texFilePtr, "%s", toDump->data.var);
     }
     else if(toDump->type == OPERATOR){
+        operation_t curOp = getCurrentOperation(toDump->data.op);
+
+        fprintf(texFilePtr, "%s", curOp.texCode);
+
         if(toDump->left){
-            fprintf(texFilePtr, "(");
+            fprintf(texFilePtr, "{");
+
             texDumpNode(texFilePtr, toDump->left);
+
+            fprintf(texFilePtr, "}");
         }
 
-        fprintf(texFilePtr, "%s", toDump->data.op);
+
 
         if(toDump->right){
+            fprintf(texFilePtr, "{");
+
             texDumpNode(texFilePtr, toDump->right);
-            fprintf(texFilePtr, ")");
+
+            fprintf(texFilePtr, "}");
         }
     }
     
