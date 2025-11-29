@@ -23,7 +23,7 @@ int main(void){
     tree_t derivative = differentiate(&expression);
     logTree(&derivative, "after differentiation");
 
-    optimizeDerivative(derivative.root);
+    optimizeDerivative(&derivative, derivative.root);
     LPRINTF("Ended optimization");
     logTree(&derivative, "after optimization");
 

@@ -1,12 +1,12 @@
 #include "expressionTree.h"
-#include "tree.h"
 #include "operations.h"
 
 #define DEBUG
 
-#include "general/strFunc.h"
-#include "general/debug.h"
-#include "general/poison.h"
+#include "../general/tree.h"
+#include "../general/strFunc.h"
+#include "../general/debug.h"
+#include "../general/poison.h"
 
 #include <assert.h>
 #include <malloc.h>

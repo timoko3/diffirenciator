@@ -1,5 +1,5 @@
 #include "texDump.h"
-#include "operations.h"
+#include "derivative/operations.h"
 
 #include "general/file.h"
 

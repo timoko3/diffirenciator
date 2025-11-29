@@ -2,13 +2,13 @@
 #include "DSL.h"
 #include "differentiator.h"
 #include "operations.h"
-#include "tree.h"
 #include "expressionTree.h"
 
 #define DEBUG 
 
-#include "general/debug.h"
-#include "general/strFunc.h"
+#include "../general/tree.h"
+#include "../general/debug.h"
+#include "../general/strFunc.h"
 
 #include <assert.h>
 #include <malloc.h>
@@ -55,6 +55,13 @@ treeNode_t* addDiff(treeNode_t** params, size_t amountParam){
     return _ADD(_DIF(params[0]), _DIF(params[1]));
 }
 
+treeNode_t* subDiff(treeNode_t** params, size_t amountParam){
+    assert(params);
+
+    LPRINTF("Производная суммы");
+    return _SUB(_DIF(params[0]), _DIF(params[1]));
+}
+
 treeNode_t* mulDiff(treeNode_t** params, size_t amountParam){
     assert(params);
 
@@ -62,10 +69,23 @@ treeNode_t* mulDiff(treeNode_t** params, size_t amountParam){
     return _ADD(_MUL(_DIF(params[0]), _C(params[1])), _MUL(_C(params[0]), _DIF(params[1])));
 }
 
+treeNode_t* divDiff(treeNode_t** params, size_t amountParam){
+    assert(params);
+
+    LPRINTF("Производная частного");
+    return _DIV(_SUB(_MUL(_DIF(params[0]), _C(params[1])), _MUL(_C(params[0]), _DIF(params[1]))), _MUL(_C(params[1]), _C(params[1])));
+}
+
 treeNode_t* sinDiff(treeNode_t** params, size_t amountParam){
     assert(params);
 
-    LPRINTF("Производная произведения");
+    LPRINTF("Производная синуса");
     return _COS(_V("x"), NULL);
 }
 
+treeNode_t* cosDiff(treeNode_t** params, size_t amountParam){
+    assert(params);
+
+    LPRINTF("Производная косинуса");
+    return _MUL(_SIN(_V("x"), NULL), _N(-1));
+}

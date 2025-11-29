@@ -22,10 +22,10 @@
 
 #define DEBUG
 
-#include "general/poison.h"
-#include "general/debug.h"
-#include "general/file.h" 
-#include "general/strFunc.h"
+#include "../general/poison.h"
+#include "../general/debug.h"
+#include "../general/file.h" 
+#include "../general/strFunc.h"
 
 #include <malloc.h>
 #include <assert.h>
@@ -33,12 +33,12 @@
 #include <ctype.h>
 
 static bool checkHaveVariables(treeNode_t* curNode);
-static treeNode_t* collapseConstant(treeNode_t* subTreeRoot);
+static treeNode_t* collapseConstant(tree_t* derivative, treeNode_t* subTreeRoot);
 static int calculateSubTree(treeNode_t* subTreeRoot);
-static treeNode_t* removeNeutralElements(treeNode_t* subTreeRoot);
-static treeNode_t* removeNeutralSubtree(treeNode_t* subTreeRoot, treeNode_t* remainSubTreeRoot);
-static treeNode_t* removeLeftNeutralSubtree(treeNode_t* subTreeRoot);
-static treeNode_t* removeRightNeutralSubtree(treeNode_t* subTreeRoot);
+static treeNode_t* removeNeutralElements    (tree_t* derivative, treeNode_t* subTreeRoot);
+static treeNode_t* removeNeutralSubtree     (tree_t* derivative, treeNode_t* subTreeRoot, treeNode_t* remainSubTreeRoot);
+static treeNode_t* removeLeftNeutralSubtree (tree_t* derivative, treeNode_t* subTreeRoot);
+static treeNode_t* removeRightNeutralSubtree(tree_t* derivative, treeNode_t* subTreeRoot);
 
 tree_t differentiate(tree_t* expression){
     assert(expression);
@@ -70,23 +70,28 @@ treeNode_t* differentiateNode(treeNode_t* node){
     return createdNode;
 }
 
-bool optimizeDerivative(treeNode_t* subTreeRoot){
+bool optimizeDerivative(tree_t* derivative, treeNode_t* subTreeRoot){
+    assert(derivative);
     assert(subTreeRoot);
-    
+
     LPRINTF("\n\nstart optimization");
 
     if(subTreeRoot->left){
-        optimizeDerivative(subTreeRoot->left);
+        optimizeDerivative(derivative, subTreeRoot->left);
     }
     if(subTreeRoot->right){
-        optimizeDerivative(subTreeRoot->right);
+        optimizeDerivative(derivative, subTreeRoot->right);
     }
 
     if(checkHaveVariables(subTreeRoot)){
         LPRINTF("subTreeRoot addr: %p", subTreeRoot);
-        subTreeRoot = collapseConstant(subTreeRoot);
+        subTreeRoot = collapseConstant(derivative, subTreeRoot);
+
+        if(subTreeRoot == derivative->root){
+            return true;
+        }
     }
-    subTreeRoot = removeNeutralElements(subTreeRoot);
+    subTreeRoot = removeNeutralElements(derivative, subTreeRoot);
 
     return true;
 }
@@ -108,8 +113,14 @@ static bool checkHaveVariables(treeNode_t* curNode){ // have has
     return true;
 }
 
-static treeNode_t* collapseConstant(treeNode_t* subTreeRoot){
+static treeNode_t* collapseConstant(tree_t* derivative, treeNode_t* subTreeRoot){
     assert(subTreeRoot);
+
+    static size_t collapseConstantCount = 1;
+    logTree(derivative, "collapseConst number %lu. CurSubTreeRoot = %p", collapseConstantCount, subTreeRoot);
+    collapseConstantCount++;
+
+    LPRINTF("start collapsing constant");
 
     treeNode_t* result = NULL;
 
@@ -118,7 +129,17 @@ static treeNode_t* collapseConstant(treeNode_t* subTreeRoot){
 
     freeNode(subTreeRoot, true);
     
-    LPRINTF("freeed collapsingConst with no problems");
+    LPRINTF("freed collapsingConst with no problems");
+
+    if(subTreeRoot == derivative->root){
+        LPRINTF("subTreeRoot == derivative->root");
+        derivative->root = createNewNodeNumber(calculatedVal, NULL, NULL);
+        
+        freeExpressionNodeData(subTreeRoot, false, 1);
+        free(subTreeRoot);
+
+        return derivative->root;
+    }
 
     if(subTreeRoot->parent->left == subTreeRoot){
         subTreeRoot->parent->left = createNewNodeNumber(calculatedVal, NULL, NULL);
@@ -130,31 +151,60 @@ static treeNode_t* collapseConstant(treeNode_t* subTreeRoot){
     }
     setParent(subTreeRoot->parent);
 
+    LPRINTF("setParent succeed in collapseConstant func");
+
     freeExpressionNodeData(subTreeRoot, false, 1);
     free(subTreeRoot);
 
+    LPRINTF("ended collapsing constant and free root");
     return result;
 }
 
-static treeNode_t* removeNeutralElements(treeNode_t* subTreeRoot){
+static treeNode_t* removeNeutralElements(tree_t* derivative, treeNode_t* subTreeRoot){
     assert(subTreeRoot);
+    assert(derivative);
+
+    static size_t removeNeutralCount = 1;
+    logTree(derivative, "removeNeutral number %lu. CurSubTreeRoot = %p", removeNeutralCount, subTreeRoot);
+    removeNeutralCount++;
+
     LPRINTF("start removal neutral");
     if(subTreeRoot->type == OPERATOR){
         if(subTreeRoot->data.op[0] == '*' && subTreeRoot->left->data.num == 0){
-            LPRINTF("zero division case");
+            LPRINTF("zero multiply case");
 
             freeNode(subTreeRoot, true);
-            subTreeRoot = createNewNodeNumber(0, NULL, NULL);
-            return subTreeRoot;
+
+            treeNode_t* newNode = NULL;
+            if(subTreeRoot->parent->left == subTreeRoot){
+                subTreeRoot->parent->left = createNewNodeNumber(0, NULL, NULL);
+                newNode = subTreeRoot->parent->left;
+            }
+            else{
+                subTreeRoot->parent->right = createNewNodeNumber(0, NULL, NULL);
+                newNode = subTreeRoot->parent->right;
+            }
+
+            freeExpressionNodeData(subTreeRoot, false, 1);
+            free(subTreeRoot);
+
+            LPRINTF("after removing zero multiply subTreeRoot = %p", newNode);
+
+            static size_t removeNeutralCount = 1;
+            logTree(derivative, "removeNeutral case multiply zero number %lu. CurSubTreeRoot = %p", removeNeutralCount, newNode);
+            removeNeutralCount++;
+
+            return newNode;
         }
-        removeLeftNeutralSubtree (subTreeRoot);
-        removeRightNeutralSubtree(subTreeRoot);
+        removeLeftNeutralSubtree (derivative, subTreeRoot);
+        removeRightNeutralSubtree(derivative, subTreeRoot);
     }
 
     return subTreeRoot;
 }
 
-static treeNode_t* removeNeutralSubtree(treeNode_t* subTreeRoot, treeNode_t* remainSubTreeRoot){
+static treeNode_t* removeNeutralSubtree(tree_t* derivative, treeNode_t* subTreeRoot, treeNode_t* remainSubTreeRoot){
+    assert(derivative);
     assert(subTreeRoot);
     assert(remainSubTreeRoot);
 
@@ -162,6 +212,8 @@ static treeNode_t* removeNeutralSubtree(treeNode_t* subTreeRoot, treeNode_t* rem
         if((subTreeRoot->data.op[0] == '*' && subTreeRoot->data.num == 1) || 
             (subTreeRoot->data.op[0] == '+' && subTreeRoot->data.num == 0)){
             LPRINTF("keep only right subTree of %p", subTreeRoot);
+            logTree(derivative, "keep only right subTree of %p", subTreeRoot);
+
             if(subTreeRoot->parent->parent->left == subTreeRoot->parent){
                 subTreeRoot->parent->parent->left = remainSubTreeRoot;
                 remainSubTreeRoot->parent = subTreeRoot->parent->parent;
@@ -177,13 +229,15 @@ static treeNode_t* removeNeutralSubtree(treeNode_t* subTreeRoot, treeNode_t* rem
     return NULL;
 }
 
-static treeNode_t* removeLeftNeutralSubtree(treeNode_t* subTreeRoot){
+static treeNode_t* removeLeftNeutralSubtree(tree_t* derivative, treeNode_t* subTreeRoot){
     assert(subTreeRoot);
 
     if(subTreeRoot->left && subTreeRoot->right){
-        if(removeNeutralSubtree(subTreeRoot->left, subTreeRoot->right)){
+        if(removeNeutralSubtree(derivative, subTreeRoot->left, subTreeRoot->right)){
             treeNode_t* result = subTreeRoot->right;
             LPRINTF("during optimization freeing leftSubtree");
+            logTree(derivative, "during optimization freeing leftSubtree of %p", subTreeRoot);
+
             freeLeftSubtree(subTreeRoot, false);
             freeExpressionNodeData(subTreeRoot, false, 1);
             free(subTreeRoot);
@@ -194,13 +248,15 @@ static treeNode_t* removeLeftNeutralSubtree(treeNode_t* subTreeRoot){
     return NULL;
 }
 
-static treeNode_t* removeRightNeutralSubtree(treeNode_t* subTreeRoot){
+static treeNode_t* removeRightNeutralSubtree(tree_t* derivative, treeNode_t* subTreeRoot){
     assert(subTreeRoot);
 
     if(subTreeRoot->left && subTreeRoot->right){
-        if(removeNeutralSubtree(subTreeRoot->right, subTreeRoot->left)){
+        if(removeNeutralSubtree(derivative, subTreeRoot->right, subTreeRoot->left)){
             treeNode_t* result = subTreeRoot->left;
-            LPRINTF("during optimization freeing RightSubtree");
+            LPRINTF("during optimization freeing RightSubtree of %p", subTreeRoot);
+            logTree(derivative, "during optimization freeing RightSubtree of %p", subTreeRoot);
+
             freeRightSubtree(subTreeRoot, false);
             freeExpressionNodeData(subTreeRoot, false, 1);
             free(subTreeRoot);

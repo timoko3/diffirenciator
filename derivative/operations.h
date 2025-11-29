@@ -7,8 +7,11 @@ typedef int (*calcHandler_t)(int* params, size_t amountParam);
 
 enum operationNames{
     ADD,
+    SUB,
     MULTIPLY,
-    SIN
+    DIVIDE,
+    SIN,
+    COS
 };
 
 struct operation_t{
@@ -22,7 +25,10 @@ struct operation_t{
 };
 
 static operation_t operations[]{
-    {"+",   ADD,      3, addH, addDiff, 2, 2},
-    {"*",   MULTIPLY, 7, mulH, mulDiff, 2, 1},
-    {"sin", SIN,      1, sinH, sinDiff, 1, 1}
+    {"+",   ADD,      3,  addH, addDiff, 2, 2},
+    {"-",   SUB,      3,  subH, subDiff, 2, 2},
+    {"*",   MULTIPLY, 7,  mulH, mulDiff, 2, 1},
+    {"/",   DIVIDE,   11, divH, divDiff, 2, 1},
+    {"sin", SIN,      1,  sinH, sinDiff, 1, 1},
+    {"cos", COS,      1,  cosH, cosDiff, 1, 1}
 };

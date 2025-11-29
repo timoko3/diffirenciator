@@ -1,7 +1,7 @@
 #include "protectionDifferentiator.h"
-#include "general/file.h"
 
-#include "general/debug.h"
+#include "../general/file.h"
+#include "../general/debug.h"
 #define DEBUG
 
 #include <assert.h>

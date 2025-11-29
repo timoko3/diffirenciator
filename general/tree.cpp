@@ -4,10 +4,10 @@
 
 #define DEBUG
 
-#include "general/strFunc.h"
-#include "general/debug.h"
-#include "general/poison.h"
-#include "general/file.h"
+#include "strFunc.h"
+#include "debug.h"
+#include "poison.h"
+#include "file.h"
 
 #include <assert.h>
 #include <malloc.h>
