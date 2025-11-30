@@ -9,6 +9,7 @@ enum operationNames{
     SUB,
     MULTIPLY,
     DIVIDE,
+    POW,
     SIN,
     COS,
     LN,
@@ -32,6 +33,7 @@ static operation_t operations[]{
     {"-",   SUB,      3,  subH, subDiff, 2, 2, "\\minus", false, false},
     {"*",   MULTIPLY, 7,  mulH, mulDiff, 2, 1, "\\mul"  , false, true},
     {"/",   DIVIDE,   11, divH, divDiff, 2, 1, "\\frac" , true , true},
+    {"^",   POW,      24, powH, powDiff, 2, 0, "\\pow" ,   false, false},
     {"sin", SIN,      1,  sinH, sinDiff, 1, 1, "\\sin"  , true , true},
     {"cos", COS,      1,  cosH, cosDiff, 1, 1, "\\cos"  , true , true},
     {"ln",  LN,       3,  lnH,  lnDiff,  1, 1, "\\ln"   , true , true}

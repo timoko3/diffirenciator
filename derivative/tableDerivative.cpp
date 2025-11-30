@@ -77,6 +77,16 @@ treeNode_t* divDiff(treeNode_t** params){
     return _DIV(_SUB(_MUL(_DIF(params[0]), _C(params[1])), _MUL(_C(params[0]), _DIF(params[1]))), _MUL(_C(params[1]), _C(params[1])));
 }
 
+treeNode_t* powDiff(treeNode_t** params){
+    assert(params);
+    
+    LPRINTF("Производная степени");
+
+    return _MUL(_POW(_C(params[0]), _C(params[1])), _ADD(_MUL(_DIF(params[1]), _LN(_C(params[0]), NULL)), _MUL(_DIV(_DIF(params[0]), _C(params[0])), _C(params[1]))));
+}
+
+// _ADD(_MUL(_DIF(params[1]), _LN(params[0])), _MUL(_DIV(_DIF(params[0]), _C(params[1])), _C(params[1])))
+
 treeNode_t* sinDiff(treeNode_t** params){
     assert(params);
 

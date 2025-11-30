@@ -32,6 +32,12 @@ int divH(int* params){
     return params[0] / params[1];
 } 
 
+int powH(int* params){
+    assert(params);
+
+    return (int) pow((int) params[0], (int) params[1]);
+}
+
 int sinH(int* params){
     assert(params);
 

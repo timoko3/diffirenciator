@@ -11,6 +11,7 @@ treeNode_t* addDiff(treeNode_t** params);
 treeNode_t* subDiff(treeNode_t** params);
 treeNode_t* mulDiff(treeNode_t** params);
 treeNode_t* divDiff(treeNode_t** params);
+treeNode_t* powDiff(treeNode_t** params);
 treeNode_t* sinDiff(treeNode_t** params);
 treeNode_t* cosDiff(treeNode_t** params);
 treeNode_t* lnDiff (treeNode_t** params);

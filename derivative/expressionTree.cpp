@@ -18,6 +18,7 @@ const size_t MAX_VARIABLE_SIZE = 64;
 static treeNode_t* getG(treeNode_t* node, char* buffer, char* curBufferPos);
 static treeNode_t* getE(treeNode_t* node, char* buffer, char** curBufferPos);
 static treeNode_t* getT(treeNode_t* node, char* buffer, char** curBufferPos);
+static treeNode_t* getS(treeNode_t* node, char* buffer, char** curBufferPos);
 static treeNode_t* getP(treeNode_t* node, char* buffer, char** curBufferPos);
 static treeNode_t* getN(char** curBufferPos);
 static treeNode_t* getV(char** curBufferPos);
@@ -151,13 +152,39 @@ static treeNode_t* getT(treeNode_t* node, char* buffer, char** curBufferPos){
 
     LPRINTF("Зашел в T. Строка сейчас: %s", *curBufferPos);
 
-    treeNode_t* val1 = getP(node, buffer, curBufferPos);
+    treeNode_t* val1 = getS(node, buffer, curBufferPos);
     assert(val1);
     
     LPRINTF("Начинаю анализ на знак умножения/деления. s = %s", *curBufferPos);
 
     char* opName = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
     while(**curBufferPos == '*' || **curBufferPos == '/') {
+        opName[0] = **curBufferPos;
+        opName[1] = '\0';
+        (*curBufferPos)++;
+
+        treeNode_t* val2 = getS(node, buffer, curBufferPos);
+        assert(val2);
+
+        val1 = createNewNodeOperator(opName, val1, val2);
+    }
+    free(opName);
+
+    return val1;
+}
+
+static treeNode_t* getS(treeNode_t* node, char* buffer, char** curBufferPos){
+    assert(curBufferPos);
+
+    LPRINTF("Зашел в S. Строка сейчас: %s", *curBufferPos);
+
+    treeNode_t* val1 = getP(node, buffer, curBufferPos);
+    assert(val1);
+    
+    LPRINTF("Начинаю анализ на знак умножения/деления. s = %s", *curBufferPos);
+
+    char* opName = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
+    while(**curBufferPos == '^') {
         opName[0] = **curBufferPos;
         opName[1] = '\0';
         (*curBufferPos)++;
@@ -169,7 +196,7 @@ static treeNode_t* getT(treeNode_t* node, char* buffer, char** curBufferPos){
     }
     free(opName);
 
-    return val1;
+    return val1; 
 }
 
 static treeNode_t* getP(treeNode_t* node, char* buffer, char** curBufferPos){
@@ -184,7 +211,7 @@ static treeNode_t* getP(treeNode_t* node, char* buffer, char** curBufferPos){
 
         if (**curBufferPos != ')') SyntaxError();
         (*curBufferPos)++;  
-          
+
         return val;
     }
     else{

@@ -7,6 +7,7 @@ int addH(int* params);
 int subH(int* params);
 int mulH(int* params);
 int divH(int* params);
+int powH(int* params);
 int sinH(int* params);
 int cosH(int* params);
 int lnH (int* params);

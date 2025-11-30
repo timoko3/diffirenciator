@@ -13,8 +13,10 @@
 #define _SUB(node1, node2) createNewNodeOperator("-", node1, node2)
 #define _MUL(node1, node2) createNewNodeOperator("*", node1, node2)
 #define _DIV(node1, node2) createNewNodeOperator("/", node1, node2)
+#define _POW(node1, node2) createNewNodeOperator("^", node1, node2)
 
 #define _COS(node1, node2) createNewNodeOperator("cos", node1, node2)
 #define _SIN(node1, node2) createNewNodeOperator("sin", node1, node2)
+#define _LN(node1, node2) createNewNodeOperator("ln",  node1, node2)
 
 #endif /* DSL_H */
