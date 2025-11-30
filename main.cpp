@@ -19,15 +19,20 @@ int main(void){
     treeRead(&expression);
     assert(expression.root);
 
+    texDumpTree(&expression);
+
     logTree(&expression, "after reading");
     tree_t derivative = differentiate(&expression);
     logTree(&derivative, "after differentiation");
+
+    texDumpTree(&derivative);
 
     optimizeDerivative(&derivative, derivative.root);
     LPRINTF("Ended optimization");
     logTree(&derivative, "after optimization");
 
     texDumpTree(&derivative);
+    endTexFile(&derivative);
     
     treeDtor(&expression);
     treeDtor(&derivative);

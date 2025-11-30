@@ -19,8 +19,8 @@ static treeNode_t* getG(treeNode_t* node, char* buffer, char* curBufferPos);
 static treeNode_t* getE(treeNode_t* node, char* buffer, char** curBufferPos);
 static treeNode_t* getT(treeNode_t* node, char* buffer, char** curBufferPos);
 static treeNode_t* getP(treeNode_t* node, char* buffer, char** curBufferPos);
-static treeNode_t* getN(treeNode_t* node, char* buffer, char** curBufferPos);
-static treeNode_t* getV(treeNode_t* node, char* buffer, char** curBufferPos);
+static treeNode_t* getN(char** curBufferPos);
+static treeNode_t* getV(char** curBufferPos);
 
 static bool isSupportedOperation(char* readOpName);
 static bool tryParseLongNameOp(char* opName, char** curBufferPos);
@@ -46,7 +46,7 @@ treeNode_t* createNewNodeNumber(int value, treeNode_t* left, treeNode_t* right){
     return newNode;
 }
 
-treeNode_t* createNewNodeVariable(char* type, treeNode_t* left, treeNode_t* right){
+treeNode_t* createNewNodeVariable(const char* type, treeNode_t* left, treeNode_t* right){
     assert(type);
     treeNode_t* newNode = createNewNode(left, right);
 
@@ -58,7 +58,7 @@ treeNode_t* createNewNodeVariable(char* type, treeNode_t* left, treeNode_t* righ
     return newNode;
 }
 
-treeNode_t* createNewNodeOperator(char* type, treeNode_t* left, treeNode_t* right){
+treeNode_t* createNewNodeOperator(const char* type, treeNode_t* left, treeNode_t* right){
     assert(type);
     
     treeNode_t* newNode = createNewNode(left, right);
@@ -182,12 +182,14 @@ static treeNode_t* getP(treeNode_t* node, char* buffer, char** curBufferPos){
         treeNode_t* val = getE(node, buffer, curBufferPos);
         assert(val);
 
-        (*curBufferPos)++;
+        if (**curBufferPos != ')') SyntaxError();
+        (*curBufferPos)++;  
+          
         return val;
     }
     else{
         if('0' <= **curBufferPos && **curBufferPos <= '9'){
-            return getN(node, buffer, curBufferPos);
+            return getN(curBufferPos);
         }
         
         char* opName = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
@@ -195,16 +197,18 @@ static treeNode_t* getP(treeNode_t* node, char* buffer, char** curBufferPos){
 
         treeNode_t* result = NULL;
         if(tryParseLongNameOp(opName, curBufferPos)){
+            if(**curBufferPos != '(') SyntaxError();
             (*curBufferPos)++;
 
             treeNode_t* param = getE(node, buffer, curBufferPos);
 
+            if(**curBufferPos != ')') SyntaxError();
             (*curBufferPos)++;
 
             result = createNewNodeOperator(opName, param, NULL);
         }
         else{
-            result = getV(node, buffer, curBufferPos);
+            result = getV(curBufferPos);
         }
 
         free(opName);
@@ -212,7 +216,7 @@ static treeNode_t* getP(treeNode_t* node, char* buffer, char** curBufferPos){
     }
 }
 
-static treeNode_t* getN(treeNode_t* node, char* buffer, char** curBufferPos){
+static treeNode_t* getN(char** curBufferPos){
     assert(curBufferPos);
 
     LPRINTF("Зашел в N. Строка сейчас: %s", *curBufferPos);
@@ -238,8 +242,7 @@ static treeNode_t* getN(treeNode_t* node, char* buffer, char** curBufferPos){
     return createNewNodeNumber(val, NULL, NULL);;
 }
 
-static treeNode_t* getV(treeNode_t* node, char* buffer, char** curBufferPos){
-    assert(buffer);
+static treeNode_t* getV(char** curBufferPos){
 
     LPRINTF("Зашел в V. Строка сейчас: %s", *curBufferPos);   
     char* startS = *curBufferPos;

@@ -3,12 +3,79 @@
 \usepackage[T2A]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[english,russian]{babel}
+\usepackage{graphicx}
+\usepackage{pgfplots}
+
+\pgfplotsset{compat=1.18}
 
 \newcommand{\plus}[2]{#1 + #2}
 \newcommand{\minus}[2]{#1 - #2}
-\newcommand{\mul}[2]{#1 \cdot #2}
+\newcommand{\mul}[2]{#1 * #2}
 \begin{document}
+\thispagestyle{empty}
+\newgeometry{left=0cm,right=0cm,top=0cm,bottom=0cm}
+\begin{figure}
+\centering
+\includegraphics[width=\paperwidth,height=\paperheight,keepaspectratio]{matan.jpg}
+\caption{Параметры системы во время исполнения теста}
+\end{figure}
+\restoregeometry
+\section{Предостережение}
+Никаких действительных чисел! Мне хватило сечений Дедекинда. Ради вашего же блага прошу вводить только целые числа. При попытке использовать другие числа я не могу ручаться за сохранность французского на вашем компьютере
+\section{Постановка задачи}
+Возьмем производную данного выражения:
 \[
-\frac{\minus{\mul{1}{\plus{x}{2}}}{\mul{x}{1}}}{\mul{\plus{x}{2}}{\plus{x}{2}}}
-\]
+\cos{(\plus{(x)}{(x)})}\]
+\section{Непосредственно (прости господи) дифференцирование и элементарное упрощение выражения}
+\[
+\mul{(\mul{(\sin{(\plus{(x)}{(x)})})}{(-1)})}{(\plus{(1)}{(1)})}\]
+\[
+\mul{(\mul{(\sin{(\plus{(x)}{(x)})})}{(-1)})}{(\plus{(1)}{(1)})}\]
+\[
+\mul{(\mul{(\sin{(\plus{(x)}{(x)})})}{(-1)})}{(\plus{(1)}{(1)})}\]
+\[
+\mul{(\mul{(\sin{(\plus{(x)}{(x)})})}{(-1)})}{(\plus{(1)}{(1)})}\]
+Данное преобразование поистенне чудесно, но у меня не хватает свободного пространство, чтобы показать это. Пусть это останется несложным упражнением для читателя.
+
+\[
+\mul{(\mul{(\sin{(\plus{(x)}{(x)})})}{(-1)})}{(\plus{(1)}{(1)})}\]
+\[
+\mul{(\mul{(\sin{(\plus{(x)}{(x)})})}{(-1)})}{(\plus{(1)}{(1)})}\]
+\[
+\mul{(\mul{(\sin{(\plus{(x)}{(x)})})}{(-1)})}{(\plus{(1)}{(1)})}\]
+\[
+\mul{(\mul{(\sin{(\plus{(x)}{(x)})})}{(-1)})}{(\plus{(1)}{(1)})}\]
+\[
+\mul{(\mul{(\sin{(\plus{(x)}{(x)})})}{(-1)})}{(\plus{(1)}{(1)})}\]
+\[
+\mul{(\mul{(\sin{(\plus{(x)}{(x)})})}{(-1)})}{(\plus{(1)}{(1)})}\]
+Здесь все тривиальнейшим образом сокращается
+
+\[
+\mul{(\mul{(\sin{(\plus{(x)}{(x)})})}{(-1)})}{(\plus{(1)}{(1)})}\]
+\[
+\mul{(\mul{(\sin{(\plus{(x)}{(x)})})}{(-1)})}{(\plus{(1)}{(1)})}\]
+\[
+\mul{(\mul{(\sin{(\plus{(x)}{(x)})})}{(-1)})}{(2)}\]
+\[
+\mul{(\mul{(\sin{(\plus{(x)}{(x)})})}{(-1)})}{(2)}\]
+\[
+\mul{(\mul{(\sin{(\plus{(x)}{(x)})})}{(-1)})}{(2)}\]
+\[
+\mul{(\mul{(\sin{(\plus{(x)}{(x)})})}{(-1)})}{(2)}\]
+\section{Теперь, чтобы все стало совсем понятно(ахахахахаахахаххаха).\\Построим график полученной производной исходной функции}
+\begin{tikzpicture}
+\begin{axis}[
+width=16cm,
+height=8cm,
+domain=-100:100,
+samples=200,
+axis lines=middle,
+xlabel={$x$},
+ylabel={$y$},
+grid=both]
+\addplot[thick, red] {((sin((x)+(x)))*(-1))*(2)};
+\end{axis}
+\end{tikzpicture}
+
 \end{document}

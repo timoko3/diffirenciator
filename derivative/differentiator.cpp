@@ -7,6 +7,7 @@
 #include "mathHandlers.h"
 #include "expressionTree.h"
 #include "tree.h"
+#include "../texDump.h"
 
 // # tree.cpp
 // NodeData ReadData (const char* data);
@@ -61,9 +62,10 @@ treeNode_t* differentiateNode(treeNode_t* node){
 
     LPRINTF("node->type = %d", node->type);
     switch(node->type){
-        case NUMBER:   createdNode = numDiff();      break;
-        case VARIABLE: createdNode = varDiff();      break;
-        case OPERATOR: createdNode = operDiff(node); break;
+        case NUMBER:   createdNode = numDiff();                break;
+        case VARIABLE: createdNode = varDiff();                break;
+        case OPERATOR: createdNode = operDiff(node);           break;
+        case NO_TYPE:  LPRINTF("node: %p has no type", node);  break;
         default: break;
     }
 
@@ -117,7 +119,7 @@ static treeNode_t* collapseConstant(tree_t* derivative, treeNode_t* subTreeRoot)
     assert(subTreeRoot);
 
     static size_t collapseConstantCount = 1;
-    logTree(derivative, "collapseConst number %lu. CurSubTreeRoot = %p", collapseConstantCount, subTreeRoot);
+    // logTree(derivative, "collapseConst number %lu. CurSubTreeRoot = %p", collapseConstantCount, subTreeRoot);
     collapseConstantCount++;
 
     LPRINTF("start collapsing constant");
@@ -156,6 +158,8 @@ static treeNode_t* collapseConstant(tree_t* derivative, treeNode_t* subTreeRoot)
     freeExpressionNodeData(subTreeRoot, false, 1);
     free(subTreeRoot);
 
+    texDumpTree(derivative);
+
     LPRINTF("ended collapsing constant and free root");
     return result;
 }
@@ -165,7 +169,7 @@ static treeNode_t* removeNeutralElements(tree_t* derivative, treeNode_t* subTree
     assert(derivative);
 
     static size_t removeNeutralCount = 1;
-    logTree(derivative, "removeNeutral number %lu. CurSubTreeRoot = %p", removeNeutralCount, subTreeRoot);
+    // logTree(derivative, "removeNeutral number %lu. CurSubTreeRoot = %p", removeNeutralCount, subTreeRoot);
     removeNeutralCount++;
 
     LPRINTF("start removal neutral");
@@ -190,15 +194,19 @@ static treeNode_t* removeNeutralElements(tree_t* derivative, treeNode_t* subTree
 
             LPRINTF("after removing zero multiply subTreeRoot = %p", newNode);
 
-            static size_t removeNeutralCount = 1;
-            logTree(derivative, "removeNeutral case multiply zero number %lu. CurSubTreeRoot = %p", removeNeutralCount, newNode);
-            removeNeutralCount++;
+            static size_t removeNeutralCaseZeroMulCount = 1;
+            // logTree(derivative, "removeNeutral case multiply zero number %lu. CurSubTreeRoot = %p", removeNeutralCaseZeroMulCount, newNode);
+            removeNeutralCaseZeroMulCount++;
+
+            texDumpTree(derivative);
 
             return newNode;
         }
         removeLeftNeutralSubtree (derivative, subTreeRoot);
         removeRightNeutralSubtree(derivative, subTreeRoot);
     }
+
+    texDumpTree(derivative);
 
     return subTreeRoot;
 }
@@ -212,7 +220,7 @@ static treeNode_t* removeNeutralSubtree(tree_t* derivative, treeNode_t* subTreeR
         if((subTreeRoot->data.op[0] == '*' && subTreeRoot->data.num == 1) || 
             (subTreeRoot->data.op[0] == '+' && subTreeRoot->data.num == 0)){
             LPRINTF("keep only right subTree of %p", subTreeRoot);
-            logTree(derivative, "keep only right subTree of %p", subTreeRoot);
+            // logTree(derivative, "keep only right subTree of %p", subTreeRoot);
 
             if(subTreeRoot->parent->parent->left == subTreeRoot->parent){
                 subTreeRoot->parent->parent->left = remainSubTreeRoot;
@@ -236,7 +244,7 @@ static treeNode_t* removeLeftNeutralSubtree(tree_t* derivative, treeNode_t* subT
         if(removeNeutralSubtree(derivative, subTreeRoot->left, subTreeRoot->right)){
             treeNode_t* result = subTreeRoot->right;
             LPRINTF("during optimization freeing leftSubtree");
-            logTree(derivative, "during optimization freeing leftSubtree of %p", subTreeRoot);
+            // logTree(derivative, "during optimization freeing leftSubtree of %p", subTreeRoot);
 
             freeLeftSubtree(subTreeRoot, false);
             freeExpressionNodeData(subTreeRoot, false, 1);
@@ -255,7 +263,7 @@ static treeNode_t* removeRightNeutralSubtree(tree_t* derivative, treeNode_t* sub
         if(removeNeutralSubtree(derivative, subTreeRoot->right, subTreeRoot->left)){
             treeNode_t* result = subTreeRoot->left;
             LPRINTF("during optimization freeing RightSubtree of %p", subTreeRoot);
-            logTree(derivative, "during optimization freeing RightSubtree of %p", subTreeRoot);
+            // logTree(derivative, "during optimization freeing RightSubtree of %p", subTreeRoot);
 
             freeRightSubtree(subTreeRoot, false);
             freeExpressionNodeData(subTreeRoot, false, 1);
@@ -281,9 +289,10 @@ static int calculateSubTree(treeNode_t* subTreeRoot){
                 switch(operations[curOper].paramCount){
                     case 1: params[0] = calculateSubTree(subTreeRoot->left); break;
                     case 2: params[0] = calculateSubTree(subTreeRoot->left); params[1] = calculateSubTree(subTreeRoot->right); break;
+                    default: break;
                 }
 
-                int result = operations[curOper].calcHandler(params, operations[curOper].paramCount);
+                int result = operations[curOper].calcHandler(params);
 
                 free(params);
                 return result;

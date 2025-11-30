@@ -231,11 +231,10 @@ static void initGraphNodes(const treeNode_t* node, FILE* graphFilePtr){
             OPERATOR_NODE_COLOR);
     }
     else if(node->type == NO_TYPE){
-        fprintf(graphFilePtr, "\tnode%d [label=\"{type = NO | parent = %p | address = %p | data = %s | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
+        fprintf(graphFilePtr, "\tnode%d [label=\"{type = NO | parent = %p | address = %p | data = no | {left = %p | right = %p}} \", fillcolor=\"%s\"];\n", 
             (int)(uintptr_t) node,
             node->parent, 
             node, 
-            node->data, 
             node->left, 
             node->right,
             NO_TYPE_COLOR);

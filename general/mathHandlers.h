@@ -3,11 +3,11 @@
 
 #include "generalDifferentiator.h" 
 
-int addH(int* params, size_t amountParam);
-int subH(int* params, size_t amountParam);
-int mulH(int* params, size_t amountParam);
-int divH(int* params, size_t amountParam);
-int sinH(int* params, size_t amountParam);
-int cosH(int* params, size_t amountParam);
+int addH(int* params);
+int subH(int* params);
+int mulH(int* params);
+int divH(int* params);
+int sinH(int* params);
+int cosH(int* params);
 
 #endif /* MATH_HANDLERS_H */

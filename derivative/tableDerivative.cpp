@@ -36,9 +36,10 @@ treeNode_t* operDiff(treeNode_t* node){
             switch(operations[curOper].paramCount){
                 case 1: params[0] = _L; break;
                 case 2: params[0] = _L; params[1] = _R; break;
+                default: break;
             }
 
-            treeNode_t* result = operations[curOper].diffHandler(params, operations[curOper].paramCount);
+            treeNode_t* result = operations[curOper].diffHandler(params);
 
             free(params);
             return result;
@@ -48,44 +49,44 @@ treeNode_t* operDiff(treeNode_t* node){
     return NULL;
 }
 
-treeNode_t* addDiff(treeNode_t** params, size_t amountParam){
+treeNode_t* addDiff(treeNode_t** params){
     assert(params);
 
     LPRINTF("Производная суммы");
     return _ADD(_DIF(params[0]), _DIF(params[1]));
 }
 
-treeNode_t* subDiff(treeNode_t** params, size_t amountParam){
+treeNode_t* subDiff(treeNode_t** params){
     assert(params);
 
     LPRINTF("Производная суммы");
     return _SUB(_DIF(params[0]), _DIF(params[1]));
 }
 
-treeNode_t* mulDiff(treeNode_t** params, size_t amountParam){
+treeNode_t* mulDiff(treeNode_t** params){
     assert(params);
 
     LPRINTF("Производная произведения");
     return _ADD(_MUL(_DIF(params[0]), _C(params[1])), _MUL(_C(params[0]), _DIF(params[1])));
 }
 
-treeNode_t* divDiff(treeNode_t** params, size_t amountParam){
+treeNode_t* divDiff(treeNode_t** params){
     assert(params);
 
     LPRINTF("Производная частного");
     return _DIV(_SUB(_MUL(_DIF(params[0]), _C(params[1])), _MUL(_C(params[0]), _DIF(params[1]))), _MUL(_C(params[1]), _C(params[1])));
 }
 
-treeNode_t* sinDiff(treeNode_t** params, size_t amountParam){
+treeNode_t* sinDiff(treeNode_t** params){
     assert(params);
 
     LPRINTF("Производная синуса");
-    return _COS(_V("x"), NULL);
+    return _MUL(_COS(_C(params[0]), NULL), _DIF(params[0]));
 }
 
-treeNode_t* cosDiff(treeNode_t** params, size_t amountParam){
+treeNode_t* cosDiff(treeNode_t** params){
     assert(params);
 
     LPRINTF("Производная косинуса");
-    return _MUL(_SIN(_V("x"), NULL), _N(-1));
+    return _MUL(_MUL(_SIN(_C(params[0]), NULL), _N(-1)), _DIF(params[0]));
 }
