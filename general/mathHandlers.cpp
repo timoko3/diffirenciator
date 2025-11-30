@@ -43,3 +43,9 @@ int cosH(int* params){
 
     return (int) cos(params[0]);
 } 
+
+int lnH (int* params){
+    assert(params);
+
+    return (int) log(params[0]);
+}

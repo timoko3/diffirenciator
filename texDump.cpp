@@ -74,13 +74,16 @@ void texDumpTree(tree_t* expression){
 
         fprintf(texFilePtr, "\\restoregeometry\n");
 
-        fprintf(texFilePtr, "\\section{Предостережение}\n");
-        fprintf(texFilePtr, "Никаких действительных чисел! Мне хватило сечений Дедекинда. Ради вашего же блага прошу вводить только целые числа. При попытке использовать другие числа я не могу ручаться за сохранность французского на вашем компьютере\n");
+        fprintf(texFilePtr, "\\section{Предостережения}\n");
+        fprintf(texFilePtr, "\\begin{itemize}\n");
+        fprintf(texFilePtr, "\\item (ГЛАВНАЯ АКСИОМА МАТАНА) Помни, что если не продифференцируешь ты, то продиффиринцируют тебя!!\n");
+        fprintf(texFilePtr, "\\item Никаких действительных чисел! Мне хватило сечений Дедекинда. Ради вашего же блага прошу вводить только целые числа. При попытке использовать другие числа я не могу ручаться за сохранность французского на вашем компьютере!!!\n");
+        fprintf(texFilePtr, "\\end{itemize}\n");
 
         fprintf(texFilePtr, "\\section{Постановка задачи}\n");
         fprintf(texFilePtr, "Возьмем производную данного выражения:\n");
 
-        fprintf(texFilePtr, "\\[\n");
+        fprintf(texFilePtr, "\\[\n y(x)=");
         texDumpNode(texFilePtr, expression->root);
         fprintf(texFilePtr, "\\]\n");
         
@@ -109,7 +112,7 @@ void texDumpTree(tree_t* expression){
         dumpRandomCleverMatanPhrase(texFilePtr);
     }
 
-    fprintf(texFilePtr, "\\[\n");
+    fprintf(texFilePtr, "\\[\n y'(x)=");
     texDumpNode(texFilePtr, expression->root);
     fprintf(texFilePtr, "\\]\n");
 
@@ -126,6 +129,12 @@ void endTexFile(tree_t* expression){
 
     FILE* texFilePtr = myOpenFile(&texDumpFile);
     assert(texFilePtr);
+
+    fprintf(texFilePtr, "\\section{Результат вычислений:}\n");
+
+    fprintf(texFilePtr, "\\[\ny'(x)=");
+    texDumpNode(texFilePtr, expression->root);
+    fprintf(texFilePtr, "\\]\n");
 
     fprintf(texFilePtr, "\\section{Теперь, чтобы все стало совсем понятно(ахахахахаахахаххаха).\\\\Построим график полученной производной исходной функции}\n");
 
@@ -166,21 +175,26 @@ static void texDumpNode(FILE* texFilePtr, treeNode_t* node){
         fprintf(texFilePtr, "%s", curOp.texCode);
 
         if(node->left){
-            fprintf(texFilePtr, "{(");
+            fprintf(texFilePtr, "{");
+
+            if(curOp.texNeedBrackets) fprintf(texFilePtr, "(");
 
             texDumpNode(texFilePtr, node->left);
 
-            fprintf(texFilePtr, ")}");
+            if(curOp.texNeedBrackets) fprintf(texFilePtr, ")");
+            fprintf(texFilePtr, "}");
         }
 
 
 
         if(node->right){
-            fprintf(texFilePtr, "{(");
+            fprintf(texFilePtr, "{");
+            if(curOp.texNeedBrackets) fprintf(texFilePtr, "(");
 
             texDumpNode(texFilePtr, node->right);
 
-            fprintf(texFilePtr, ")}");
+            if(curOp.texNeedBrackets) fprintf(texFilePtr, ")");
+            fprintf(texFilePtr, "}");
         }
     }
     
@@ -197,6 +211,8 @@ static void dumpRandomCleverMatanPhrase(FILE* texFilePtr){
 static void generateGraphic(FILE* texFilePtr, tree_t* expression){
     assert(expression);
     assert(texFilePtr);
+
+    fprintf(texFilePtr, "\\centering");
 
     fprintf(texFilePtr, "\\begin{tikzpicture}\n"
                         "\\begin{axis}[\n"

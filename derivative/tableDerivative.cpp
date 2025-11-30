@@ -90,3 +90,10 @@ treeNode_t* cosDiff(treeNode_t** params){
     LPRINTF("Производная косинуса");
     return _MUL(_MUL(_SIN(_C(params[0]), NULL), _N(-1)), _DIF(params[0]));
 }
+
+treeNode_t* lnDiff(treeNode_t** params){
+    assert(params);
+
+    LPRINTF("Производная натурального логарифма");
+    return _MUL(_DIV(_N(1), _C(params[0])), _DIF(params[0]));
+}

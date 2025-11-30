@@ -13,5 +13,6 @@ treeNode_t* mulDiff(treeNode_t** params);
 treeNode_t* divDiff(treeNode_t** params);
 treeNode_t* sinDiff(treeNode_t** params);
 treeNode_t* cosDiff(treeNode_t** params);
+treeNode_t* lnDiff (treeNode_t** params);
 
 #endif /* TABLE_DERIVATIVE_H */

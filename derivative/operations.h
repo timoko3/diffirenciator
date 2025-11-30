@@ -10,7 +10,8 @@ enum operationNames{
     MULTIPLY,
     DIVIDE,
     SIN,
-    COS
+    COS,
+    LN,
 };
 
 struct operation_t{
@@ -23,15 +24,17 @@ struct operation_t{
     int            priorityRank;
     const char*    texCode;
     bool           texExists;
+    bool           texNeedBrackets;
 };
 
 static operation_t operations[]{
-    {"+",   ADD,      3,  addH, addDiff, 2, 2, "\\plus" , false},
-    {"-",   SUB,      3,  subH, subDiff, 2, 2, "\\minus", false},
-    {"*",   MULTIPLY, 7,  mulH, mulDiff, 2, 1, "\\mul"  , false},
-    {"/",   DIVIDE,   11, divH, divDiff, 2, 1, "\\frac" , true},
-    {"sin", SIN,      1,  sinH, sinDiff, 1, 1, "\\sin"  , true},
-    {"cos", COS,      1,  cosH, cosDiff, 1, 1, "\\cos"  , true}
+    {"+",   ADD,      3,  addH, addDiff, 2, 2, "\\plus" , false, false},
+    {"-",   SUB,      3,  subH, subDiff, 2, 2, "\\minus", false, false},
+    {"*",   MULTIPLY, 7,  mulH, mulDiff, 2, 1, "\\mul"  , false, true},
+    {"/",   DIVIDE,   11, divH, divDiff, 2, 1, "\\frac" , true , true},
+    {"sin", SIN,      1,  sinH, sinDiff, 1, 1, "\\sin"  , true , true},
+    {"cos", COS,      1,  cosH, cosDiff, 1, 1, "\\cos"  , true , true},
+    {"ln",  LN,       3,  lnH,  lnDiff,  1, 1, "\\ln"   , true , true}
 };
 
 operation_t* getCurrentOperation(char* curOpStringName);
