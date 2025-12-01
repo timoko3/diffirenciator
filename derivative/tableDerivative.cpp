@@ -29,7 +29,7 @@ treeNode_t* operDiff(treeNode_t* node){
 
     LPRINTF("Создаю ноду операции производной");
     for(size_t curOper = 0; curOper < sizeof(operations) / sizeof(operation_t); curOper++){
-        if(node->data.op[0] == operations[curOper].nameString[0]){
+        if(isEqualStrings(node->data.op, operations[curOper].nameString)){
             LPRINTF("Нашел нужную операцию");
 
             treeNode_t** params = (treeNode_t**) calloc(operations[curOper].paramCount, sizeof(treeNode_t*));
@@ -101,9 +101,37 @@ treeNode_t* cosDiff(treeNode_t** params){
     return _MUL(_MUL(_SIN(_C(params[0]), NULL), _N(-1)), _DIF(params[0]));
 }
 
+treeNode_t* tanDiff(treeNode_t** params){
+    assert(params);
+
+    LPRINTF("Производная тангенса");
+    return _DIV(_DIF(params[0]), _MUL(_COS(_C(params[0]), NULL), _COS(_C(params[0]), NULL)));
+}
+
+treeNode_t* cotDiff(treeNode_t** params){
+    assert(params);
+
+    LPRINTF("Производная котангенса");
+    return _DIV(_MUL(_DIF(params[0]), _N(-1)), _MUL(_SIN(_C(params[0]), NULL), _SIN(_C(params[0]), NULL)));
+}
+
 treeNode_t* lnDiff(treeNode_t** params){
     assert(params);
 
     LPRINTF("Производная натурального логарифма");
     return _MUL(_DIV(_N(1), _C(params[0])), _DIF(params[0]));
+}
+
+treeNode_t* shDiff(treeNode_t** params){
+    assert(params);
+
+    LPRINTF("Производная натурального логарифма");
+    return _MUL(_CH(_C(params[0]), NULL), _DIF(params[0]));
+}
+
+treeNode_t* chDiff(treeNode_t** params){
+    assert(params);
+
+    LPRINTF("Производная натурального логарифма");
+    return _MUL(_SH(_C(params[0]), NULL), _DIF(params[0]));
 }

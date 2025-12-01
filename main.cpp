@@ -32,8 +32,17 @@ int main(void){
     logTree(&derivative, "after optimization");
 
     texDumpTree(&derivative);
-    endTexFile(&derivative);
     
-    treeDtor(&expression);
+    tree_t tailor = tailorExpansion(&expression);
+    
+    logTree(&tailor, "tailor tree dump");
+    
+    texDumpTailor(&tailor);
+    endTexFile(&derivative);
+
+    LPRINTF("конец");
+
+    treeDtor(&tailor);
     treeDtor(&derivative);
+    treeDtor(&expression);
 }

@@ -72,19 +72,20 @@ treeNode_t* createNewNodeOperator(const char* type, treeNode_t* left, treeNode_t
     return newNode;
 }
 
-void copyExpressionNode(treeNode_t* copy, treeNode_t* toCopy){
+void copyExpressionNode(treeNode_t* copy, treeNode_t* node){
     assert(copy);
-    assert(toCopy);
+    
+    if(!node) return;
 
-    copy->type = toCopy->type;
-    if(toCopy->type == NUMBER){
-        copy->data.num = toCopy->data.num;
+    copy->type = node->type;
+    if(node->type == NUMBER){
+        copy->data.num = node->data.num;
     }
-    else if(toCopy->type == VARIABLE){
-        copy->data.var = myStrDup(toCopy->data.var);
+    else if(node->type == VARIABLE){
+        copy->data.var = myStrDup(node->data.var);
     }
-    else if(toCopy->type == OPERATOR){
-        copy->data.op = myStrDup(toCopy->data.op);
+    else if(node->type == OPERATOR){
+        copy->data.op = myStrDup(node->data.op);
     }
 }
 

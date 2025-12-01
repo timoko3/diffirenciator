@@ -6,7 +6,7 @@ treeNode_t* treeDtor(tree_t* expression);
 void treeRead(tree_t* expression);
 
 treeNode_t* createNewNode(treeNode_t* left, treeNode_t* right);
-treeNode_t* copyNode(treeNode_t* toCopy);
+treeNode_t* copyNode(treeNode_t* node);
 bool setParent(treeNode_t* curNode);
 
 void freeNode(treeNode_t* node, bool withoutRoot);

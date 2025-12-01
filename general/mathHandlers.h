@@ -10,6 +10,12 @@ int divH(int* params);
 int powH(int* params);
 int sinH(int* params);
 int cosH(int* params);
+int tanH(int* params);
+int cotH(int* params);
 int lnH (int* params);
+int shH (int* params);
+int chH (int* params);
+
+int factorial(int n);
 
 #endif /* MATH_HANDLERS_H */

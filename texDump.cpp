@@ -143,6 +143,8 @@ void endTexFile(tree_t* expression){
     fprintf(texFilePtr, "\n");
 
     fprintf(texFilePtr, "\\end{document}\n");
+
+    fclose(texFilePtr);
 }
 
 static void defineMacros(FILE* texFilePtr){
@@ -218,7 +220,7 @@ static void generateGraphic(FILE* texFilePtr, tree_t* expression){
                         "\\begin{axis}[\n"
                         "width=16cm,\n"
                         "height=8cm,\n"
-                        "domain=-100:100,\n"
+                        "domain=-10:10,\n"
                         "samples=200,\n"
                         "axis lines=middle,\n"
                         "xlabel={$x$},\n"
@@ -270,4 +272,21 @@ static void dumpExpressionForGraphic(FILE* texFilePtr, treeNode_t* node){
             fprintf(texFilePtr, ")");
         }
     }
+}
+
+void texDumpTailor(tree_t* tailor){
+    assert(tailor);
+
+    fileDescription texDumpFile{
+        texDumpFileName,
+        "ab"
+    };
+
+    FILE* texFilePtr = myOpenFile(&texDumpFile);
+    assert(texFilePtr);
+
+    fprintf(texFilePtr, "\\section{Тейлор...}");
+    fclose(texFilePtr);
+    
+    texDumpTree(tailor);
 }

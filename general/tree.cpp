@@ -64,18 +64,18 @@ treeNode_t* createNewNode(treeNode_t* left, treeNode_t* right){
     return newNode;
 }
 
-treeNode_t* copyNode(treeNode_t* toCopy){
-    assert(toCopy);
+treeNode_t* copyNode(treeNode_t* node){
+    if(!node) return NULL;
 
     treeNode_t* copy = createNewNode(NULL, NULL);
 
-    copyExpressionNode(copy, toCopy);
+    copyExpressionNode(copy, node);
 
-    if(toCopy->left){
-        copy->left  = copyNode(toCopy->left);
+    if(node->left){
+        copy->left  = copyNode(node->left);
     }
-    if(toCopy->right){
-        copy->right = copyNode(toCopy->right); 
+    if(node->right){
+        copy->right = copyNode(node->right); 
     }
     
     setParent(copy);
@@ -106,7 +106,10 @@ bool setParent(treeNode_t* curNode){
 }
 
 void freeNode(treeNode_t* node, bool withoutRoot = false){
-    assert(node);
+    if(!node){
+        LPRINTF("передана нулева нода");
+        return;
+    }
     
     static int depth = 1;
 

@@ -9,18 +9,6 @@
 #include "tree.h"
 #include "../texDump.h"
 
-// # tree.cpp
-// NodeData ReadData (const char* data);
-
-// ...
-// ...
-
-// # treeFunc.cpp // rename
-// NodeData ReadData (const char* data);
-// NodeData ReadData (const char* data) {
-
-// }
-
 #define DEBUG
 
 #include "../general/poison.h"
@@ -33,9 +21,11 @@
 #include <string.h>
 #include <ctype.h>
 
-static bool checkHaveVariables(treeNode_t* curNode);
+const size_t PRECISION_TERM_TAILOR = 3;
+
+static bool        checkHaveVariables(treeNode_t* curNode);
 static treeNode_t* collapseConstant(tree_t* derivative, treeNode_t* subTreeRoot);
-static int calculateSubTree(treeNode_t* subTreeRoot);
+static int         calculateSubTree(treeNode_t* subTreeRoot);
 static treeNode_t* removeNeutralElements    (tree_t* derivative, treeNode_t* subTreeRoot);
 static treeNode_t* removeNeutralSubtree     (tree_t* derivative, treeNode_t* subTreeRoot, treeNode_t* remainSubTreeRoot);
 static treeNode_t* removeLeftNeutralSubtree (tree_t* derivative, treeNode_t* subTreeRoot);
@@ -98,7 +88,32 @@ bool optimizeDerivative(tree_t* derivative, treeNode_t* subTreeRoot){
     return true;
 }
 
-static bool checkHaveVariables(treeNode_t* curNode){ // have has
+tree_t tailorExpansion(tree_t* expression){
+    assert(expression);
+
+    tree_t tailorTree;
+
+    treeCtor(&tailorTree);
+    
+    tree_t curTermDerivative;
+    treeCtor(&curTermDerivative);
+    curTermDerivative.root = _C(expression->root);
+
+    for(size_t curTerm = 0; curTerm < PRECISION_TERM_TAILOR; curTerm++){
+        
+        logTree(&curTermDerivative, "%lu производная tailor", curTerm);
+                
+        tailorTree.root = _ADD(tailorTree.root, _MUL(_DIV(curTermDerivative.root, _N(factorial((int) curTerm))), _POW(_V("x"), _N((int) curTerm))));
+        
+        curTermDerivative = differentiate(&curTermDerivative);
+
+    }
+    freeNode(curTermDerivative.root,     false);
+
+    return tailorTree;
+}
+
+static bool checkHaveVariables(treeNode_t* curNode){
     assert(curNode);
 
     if(curNode->type == VARIABLE){

@@ -1,1 +1,1 @@
-("*" ("x" nil nil ) ("+" ("x" nil nil ) ("6" nil nil )))
+a*x*ln((x+1)^(x+1)/x^(x-1))+bx+c$

@@ -50,8 +50,43 @@ int cosH(int* params){
     return (int) cos(params[0]);
 } 
 
+int tanH(int* params){
+    assert(params);
+
+    return (int) tan(params[0]);
+} 
+
+int cotH(int* params){
+    assert(params);
+
+    return (int) (1 / tan(params[0]));
+} 
+
 int lnH (int* params){
     assert(params);
 
     return (int) log(params[0]);
+}
+
+int shH (int* params){
+    assert(params);
+
+    return (int) sinh(params[0]);
+}
+
+int chH (int* params){
+    assert(params);
+
+    return (int) cosh(params[0]);
+}
+
+int factorial(int n){
+
+    int factorial = 1;
+
+    for(size_t curNum = 1; curNum < n; curNum++){
+        factorial *= curNum;
+    }
+
+    return factorial;
 }
