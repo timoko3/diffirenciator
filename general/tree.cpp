@@ -12,7 +12,6 @@
 #include <assert.h>
 #include <malloc.h>
 
-const char* DIFFERENTIATOR_DATA_FILE_NAME = "realExpression.txt"; 
 
 treeNode_t* treeCtor(tree_t* expression){
     assert(expression);
@@ -33,13 +32,13 @@ treeNode_t* treeDtor(tree_t* expression){
     return NULL;
 }
 
-void treeRead(tree_t* expression){
+void treeRead(tree_t* expression, const char* expressionFile){
     assert(expression);
 
     logTree(expression, "started reading");
 
     data_t treeData;
-    parseStringsFile(&treeData, DIFFERENTIATOR_DATA_FILE_NAME);
+    parseStringsFile(&treeData, expressionFile);
 
     LPRINTF("expression buffer: %s\n", treeData.buffer);
 

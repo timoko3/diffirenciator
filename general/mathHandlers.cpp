@@ -80,11 +80,35 @@ int chH (int* params){
     return (int) cosh(params[0]);
 }
 
+int arcsinH (int* params){
+    assert(params);
+
+    return (int) asin(params[0]);
+}
+
+int arccosH (int* params){
+    assert(params);
+
+    return (int) acos(params[0]);
+}
+
+int arctanH (int* params){
+    assert(params);
+
+    return (int) atan(params[0]);
+}
+
+int sqrtH (int* params){
+    assert(params);
+
+    return (int) sqrt(params[0]);
+}
+
 int factorial(int n){
 
     int factorial = 1;
 
-    for(size_t curNum = 1; curNum < n; curNum++){
+    for(size_t curNum = 1; curNum <= n; curNum++){
         factorial *= curNum;
     }
 

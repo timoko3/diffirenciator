@@ -24,83 +24,86 @@ const char* cleverMatanPhrases[] = {
     "Обладая базовыми знаниями матеметики нетрудно заметить, что...\n",
     "Объяснять не буду т.к. если вам это не очевидно, значит вам пора перестать заниматься математикой.\n",
     "Здесь все тривиальнейшим образом сокращается\n",
-    "Данное преобразование поистенне чудесно, но у меня не хватает свободного пространство, чтобы показать это. Пусть это останется несложным упражнением для читателя.\n",
+    "Данные преобразования поистенне чудесны, но у меня не хватает свободного пространство, чтобы показать это. Пусть это останется несложным упражнением для читателя.\n",
     "Т.к. 1+0=1, следовательно 0+1=1. Дальнейшие преобразования элементарны, поэтому не буду утруждать вас их чтением\n",
     "константы схлопываются, отвыты получаются, кафедра матана беснуется.\n",
     "Впахивают роботы, а не человек...Тут тоже уходит пару слагаемых.\n",
     "Для того, чтобы точно понять данное преобразование советую обратиться к пособию Саблезубова Акакия Акакиявеча к тому 5 сочинений по теме \"1000 способов вскрыть черепную коробку при помощи интеграла\" страница 666 3 абзац формула (17.2) для точного ее понимаю желательно прочитать предыдущие 3 параграфа\n"
 };
 
-void texDumpTree(tree_t* expression){
+void texDumpTree(tree_t* expression, FILE* texFilePtr, bool isTailorTree){
     assert(expression);
 
     static size_t callsTexDump = 0;
     callsTexDump++;
 
-    FILE* texFilePtr = NULL;
-    if(callsTexDump == 1){
-        fileDescription texDumpFile{
-            texDumpFileName,
-            "wb"
-        };
+    bool openFileHere = false;
+    if(!texFilePtr){
+        openFileHere = true;
+        if(callsTexDump == 1){
+            fileDescription texDumpFile{
+                texDumpFileName,
+                "wb"
+            };
 
-        texFilePtr = myOpenFile(&texDumpFile);
-        assert(texFilePtr);
+            texFilePtr = myOpenFile(&texDumpFile);
+            assert(texFilePtr);
 
-        fprintf(texFilePtr, "\\documentclass[a4paper,12pt]{article}\n"
+            fprintf(texFilePtr, "\\documentclass[a4paper,12pt]{article}\n"
 
-                            "\\usepackage[a4paper,top=1.3cm,bottom=2cm,left=1.5cm,right=1.5cm,marginparwidth=0.75cm]{geometry}\n"
+                                "\\usepackage[a4paper,top=1.3cm,bottom=2cm,left=1.5cm,right=1.5cm,marginparwidth=0.75cm]{geometry}\n"
 
-                            "\\usepackage[T2A]{fontenc}\n"
-                            "\\usepackage[utf8]{inputenc}\n"
-                            "\\usepackage[english,russian]{babel}\n"
-                            "\\usepackage{graphicx}\n"
-                            "\\usepackage{pgfplots}\n\n");
+                                "\\usepackage[T2A]{fontenc}\n"
+                                "\\usepackage[utf8]{inputenc}\n"
+                                "\\usepackage[english,russian]{babel}\n"
+                                "\\usepackage{graphicx}\n"
+                                "\\usepackage{breqn}"
+                                "\\usepackage{pgfplots}\n\n");
 
-        fprintf(texFilePtr, "\\pgfplotsset{compat=1.18}\n");
+            fprintf(texFilePtr, "\\pgfplotsset{compat=1.18}\n");
 
-        defineMacros(texFilePtr);
+            defineMacros(texFilePtr);
 
-        fprintf(texFilePtr, "\\begin{document}\n");
+            fprintf(texFilePtr, "\\begin{document}\n");
 
-        fprintf(texFilePtr, "\\thispagestyle{empty}\n"
-                            "\\newgeometry{left=0cm,right=0cm,top=0cm,bottom=0cm}\n");
+            fprintf(texFilePtr, "\\thispagestyle{empty}\n"
+                                "\\newgeometry{left=0cm,right=0cm,top=0cm,bottom=0cm}\n");
 
-        fprintf(texFilePtr, "\\begin{figure}\n"
-		                    "\\centering\n"
-		                    "\\includegraphics[width=\\paperwidth,height=\\paperheight,keepaspectratio]{matan.jpg}\n"
-		                    "\\caption{Параметры системы во время исполнения теста}\n"
-	                        "\\end{figure}\n");
+            fprintf(texFilePtr, "\\begin{figure}\n"
+                                "\\centering\n"
+                                "\\includegraphics[width=\\paperwidth,height=\\paperheight,keepaspectratio]{matan.jpg}\n"
+                                "\\caption{Параметры системы во время исполнения теста}\n"
+                                "\\end{figure}\n");
 
-        fprintf(texFilePtr, "\\restoregeometry\n");
+            fprintf(texFilePtr, "\\restoregeometry\n");
 
-        fprintf(texFilePtr, "\\section{Предостережения}\n");
-        fprintf(texFilePtr, "\\begin{itemize}\n");
-        fprintf(texFilePtr, "\\item (ГЛАВНАЯ АКСИОМА МАТАНА) Помни, что если не продифференцируешь ты, то продиффиринцируют тебя!!\n");
-        fprintf(texFilePtr, "\\item Никаких действительных чисел! Мне хватило сечений Дедекинда. Ради вашего же блага прошу вводить только целые числа. При попытке использовать другие числа я не могу ручаться за сохранность французского на вашем компьютере!!!\n");
-        fprintf(texFilePtr, "\\end{itemize}\n");
+            fprintf(texFilePtr, "\\section{Предостережения}\n");
+            fprintf(texFilePtr, "\\begin{itemize}\n");
+            fprintf(texFilePtr, "\\item (ГЛАВНАЯ АКСИОМА МАТАНА) Помни, что если не продифференцируешь ты, то продиффиринцируют тебя!!\n");
+            fprintf(texFilePtr, "\\item Никаких действительных чисел! Мне хватило сечений Дедекинда. Ради вашего же блага прошу вводить только целые. При попытке использовать другие числа я не могу ручаться за сохранность французского на вашем компьютере!!!\n");
+            fprintf(texFilePtr, "\\end{itemize}\n");
 
-        fprintf(texFilePtr, "\\section{Постановка задачи}\n");
-        fprintf(texFilePtr, "Возьмем производную данного выражения:\n");
+            fprintf(texFilePtr, "\\section{Постановка задачи}\n");
+            fprintf(texFilePtr, "Возьмем производную данного выражения:\n");
 
-        fprintf(texFilePtr, "\\[\n y(x)=");
-        texDumpNode(texFilePtr, expression->root);
-        fprintf(texFilePtr, "\\]\n");
-        
-        fclose(texFilePtr);
+            fprintf(texFilePtr, "\\begin{dmath}\n y(x)=");
+            texDumpNode(texFilePtr, expression->root);
+            fprintf(texFilePtr, "\\end{dmath}\n");
+            
+            fclose(texFilePtr);
 
-        return;
+            return;
+        }
+        else{
+            fileDescription texDumpFile{
+                texDumpFileName,
+                "ab"
+            };
+
+            texFilePtr = myOpenFile(&texDumpFile);
+            assert(texFilePtr);
+        }
     }
-    else{
-        fileDescription texDumpFile{
-            texDumpFileName,
-            "ab"
-        };
-
-        texFilePtr = myOpenFile(&texDumpFile);
-        assert(texFilePtr);
-    }
-    
 
     LPRINTF("texFilePtr: %p, expression->root: %p", texFilePtr, expression->root);
     
@@ -108,15 +111,18 @@ void texDumpTree(tree_t* expression){
         fprintf(texFilePtr, "\\section{Непосредственно (прости господи) дифференцирование и элементарное упрощение выражения}\n");
     }
 
-    if((callsTexDump % 6) == 0){
+    if((callsTexDump % 2) == 0){
         dumpRandomCleverMatanPhrase(texFilePtr);
     }
 
-    fprintf(texFilePtr, "\\[\n y'(x)=");
+    fprintf(texFilePtr, "\\begin{dmath}\n y'(x)=");
     texDumpNode(texFilePtr, expression->root);
-    fprintf(texFilePtr, "\\]\n");
+    if(isTailorTree) fprintf(texFilePtr, "+o(x^%lu)\n", PRECISION_TERM_TAILOR);
+    fprintf(texFilePtr, "\\end{dmath}\n");
 
-    fclose(texFilePtr);
+    if(openFileHere){
+        fclose(texFilePtr);
+    }
 }
 
 void endTexFile(tree_t* expression){
@@ -131,16 +137,20 @@ void endTexFile(tree_t* expression){
     assert(texFilePtr);
 
     fprintf(texFilePtr, "\\section{Результат вычислений:}\n");
+    fprintf(texFilePtr, "Вот мы и получили результат, который с легкостью получал любой пятиклассник в СССР быстрее данной программы. Живите с этим.\n");
 
-    fprintf(texFilePtr, "\\[\ny'(x)=");
+    fprintf(texFilePtr, "\\begin{dmath}\ny'(x)=");
     texDumpNode(texFilePtr, expression->root);
-    fprintf(texFilePtr, "\\]\n");
+    fprintf(texFilePtr, "\\end{dmath}\n");
 
     fprintf(texFilePtr, "\\section{Теперь, чтобы все стало совсем понятно(ахахахахаахахаххаха).\\\\Построим график полученной производной исходной функции}\n");
 
     generateGraphic(texFilePtr, expression);
 
     fprintf(texFilePtr, "\n");
+
+    fprintf(texFilePtr, "\\section{P.S}");
+    fprintf(texFilePtr, "Уважаемая кафедра высшей математики не принимайте всерьез данную работу. Автор на самом деле очень любит матан. Все персонажи вымышлены(почти) и ни один учебник математики не пострадал.");
 
     fprintf(texFilePtr, "\\end{document}\n");
 
@@ -214,7 +224,7 @@ static void generateGraphic(FILE* texFilePtr, tree_t* expression){
     assert(expression);
     assert(texFilePtr);
 
-    fprintf(texFilePtr, "\\centering");
+    fprintf(texFilePtr, "\\begin{center}\n");
 
     fprintf(texFilePtr, "\\begin{tikzpicture}\n"
                         "\\begin{axis}[\n"
@@ -233,6 +243,7 @@ static void generateGraphic(FILE* texFilePtr, tree_t* expression){
 
     fprintf(texFilePtr, "\\end{axis}\n"
                         "\\end{tikzpicture}\n");
+    fprintf(texFilePtr, "\\end{center}\n");
 }
 
 static void dumpExpressionForGraphic(FILE* texFilePtr, treeNode_t* node){
@@ -274,9 +285,7 @@ static void dumpExpressionForGraphic(FILE* texFilePtr, treeNode_t* node){
     }
 }
 
-void texDumpTailor(tree_t* tailor){
-    assert(tailor);
-
+void startTexDumpTailor(){
     fileDescription texDumpFile{
         texDumpFileName,
         "ab"
@@ -285,8 +294,10 @@ void texDumpTailor(tree_t* tailor){
     FILE* texFilePtr = myOpenFile(&texDumpFile);
     assert(texFilePtr);
 
-    fprintf(texFilePtr, "\\section{Тейлор...}");
+    fprintf(texFilePtr, "\\section{И снова Тейлор ...- - -...}\n");
+    fprintf(texFilePtr, "Расчленим исходную функцию до $o(x^%lu)$.\n", PRECISION_TERM_TAILOR);
+
     fclose(texFilePtr);
-    
-    texDumpTree(tailor);
 }
+
+

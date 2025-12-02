@@ -12,11 +12,22 @@
 #include <malloc.h>
 #include <assert.h>
 
-int main(void){
+const char* DIFFERENTIATOR_DATA_FILE_NAME = "realExpression.txt"; 
+
+int main(int argc, char* argv[]){
+
+    const char* expressionFIleName = NULL;
+    if(argc == 2){
+        expressionFIleName = argv[1];
+    }
+    else{
+        expressionFIleName = DIFFERENTIATOR_DATA_FILE_NAME;
+    }
+
     tree_t expression;
     treeCtor(&expression);
     
-    treeRead(&expression);
+    treeRead(&expression, expressionFIleName);
     assert(expression.root);
 
     texDumpTree(&expression);
@@ -25,19 +36,25 @@ int main(void){
     tree_t derivative = differentiate(&expression);
     logTree(&derivative, "after differentiation");
 
+    logTree(&expression, "after differentiation expresion");
+
     texDumpTree(&derivative);
 
-    optimizeDerivative(&derivative, derivative.root);
+    optimizeExpression(&derivative, derivative.root);
     LPRINTF("Ended optimization");
     logTree(&derivative, "after optimization");
 
-    texDumpTree(&derivative);
+    // texDumpTree(&derivative);
     
     tree_t tailor = tailorExpansion(&expression);
-    
     logTree(&tailor, "tailor tree dump");
     
-    texDumpTailor(&tailor);
+    startTexDumpTailor();
+    texDumpTree(&tailor, NULL, true);
+
+    optimizeExpression(&tailor, tailor.root);
+
+    texDumpTree(&tailor, NULL, true);
     endTexFile(&derivative);
 
     LPRINTF("конец");

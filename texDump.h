@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-void texDumpTree(tree_t* expression);
-void texDumpTailor(tree_t* tailor);
+void texDumpTree(tree_t* expression, FILE* externalFilePtr = NULL, bool isTailorTree = false);
+void startTexDumpTailor();
 
 void endTexFile(tree_t* expression);

@@ -22,5 +22,7 @@
 #define _SH(node1, node2)  createNewNodeOperator("sinh",  node1, node2)
 #define _CH(node1, node2)  createNewNodeOperator("cosh",  node1, node2)
 
+#define _SQRT(node1, node2)  createNewNodeOperator("sqrt",  node1, node2)
+
 
 #endif /* DSL_H */

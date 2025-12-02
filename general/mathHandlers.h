@@ -15,6 +15,11 @@ int cotH(int* params);
 int lnH (int* params);
 int shH (int* params);
 int chH (int* params);
+int arcsinH (int* params);
+int arccosH (int* params);
+int arctanH (int* params);
+
+int sqrtH (int* params);
 
 int factorial(int n);
 

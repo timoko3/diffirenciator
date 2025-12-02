@@ -135,3 +135,31 @@ treeNode_t* chDiff(treeNode_t** params){
     LPRINTF("Производная натурального логарифма");
     return _MUL(_SH(_C(params[0]), NULL), _DIF(params[0]));
 }
+
+treeNode_t* arcsinDiff(treeNode_t** params){
+    assert(params);
+
+    LPRINTF("Производная натурального логарифма");
+    return _MUL(_DIV(_N(1), _SQRT(_SUB(_N(1), _POW(_C(params[0]), _N(2))), NULL)), _DIF(params[0]));
+}
+
+treeNode_t* arccosDiff(treeNode_t** params){
+    assert(params);
+
+    LPRINTF("Производная натурального логарифма");
+    return _MUL(_MUL(_DIV(_N(1), _SQRT(_SUB(_N(1), _POW(_C(params[0]), _N(2))), NULL)), _DIF(params[0])), _N(-1));
+}
+
+treeNode_t* arctanDiff(treeNode_t** params){
+    assert(params);
+
+    LPRINTF("Производная натурального логарифма");
+    return _MUL(_DIV(_N(1), _ADD(_N(1), _POW(_C(params[0]), _N(2)))), _DIF(params[0]));
+}
+
+treeNode_t* sqrtDiff(treeNode_t** params){
+    assert(params);
+
+    LPRINTF("Производная натурального логарифма");
+    return _MUL(_DIV(_N(1), _MUL(_N(2), _SQRT(_C(params[0]), NULL))), _DIF(params[0]));
+}
