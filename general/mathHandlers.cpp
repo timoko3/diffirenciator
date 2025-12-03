@@ -108,7 +108,7 @@ int factorial(int n){
 
     int factorial = 1;
 
-    for(size_t curNum = 1; curNum <= n; curNum++){
+    for(int curNum = 1; curNum <= n; curNum++){
         factorial *= curNum;
     }
 

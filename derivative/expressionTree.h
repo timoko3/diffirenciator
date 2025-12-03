@@ -9,3 +9,4 @@ treeNode_t* createNewNodeOperator(const char* type, treeNode_t* left, treeNode_t
 void copyExpressionNode(treeNode_t* copy, treeNode_t* node);
 bool freeExpressionNodeData(treeNode_t* node, bool withoutRoot, int depth);
 
+bool checkNotHaveVariables(treeNode_t* curNode);

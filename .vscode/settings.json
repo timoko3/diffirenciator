@@ -5,6 +5,12 @@
         "string_view": "cpp",
         "initializer_list": "cpp",
         "typeinfo": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "optional": "cpp",
+        "system_error": "cpp",
+        "functional": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "utility": "cpp"
     }
 }

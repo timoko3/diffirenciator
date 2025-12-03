@@ -1,7 +1,7 @@
 #include "tableDerivative.h"
 #include "mathHandlers.h"
 
-typedef treeNode_t* (*diffHandler_t)(treeNode_t** params);
+typedef treeNode_t* (*diffHandler_t)(treeNode_t** params, const char* variableToDiff);
 typedef int (*calcHandler_t)(int* params);
 
 enum operationNames{
@@ -55,6 +55,6 @@ static operation_t operations[]{
     {"sqrt",    SQRT,     7,  sqrtH,    sqrtDiff,    1, 1, "\\sqrt"    , true  , true  }
 };
 
-const size_t PRECISION_TERM_TAILOR = 2;
+const size_t PRECISION_TERM_TAILOR = 0;
 
 operation_t* getCurrentOperation(char* curOpStringName);

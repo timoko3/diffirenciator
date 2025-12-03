@@ -29,44 +29,58 @@
 \section{Постановка задачи}
 Возьмем производную данного выражения:
 \begin{dmath}
- y(x)=\cos{(x)}\end{dmath}
+ y(x)=\plus{\sin{(\plus{\mul{15}{\pow{x}{3}}}{7})}}{\pow{\cos{(\plus{\mul{9}{x}}{6})}}{5}}\end{dmath}
 \section{Непосредственно (прости господи) дифференцирование и элементарное упрощение выражения}
-Здесь все тривиальнейшим образом сокращается
+Данные преобразования поистенне чудесны, но у меня не хватает свободного пространство, чтобы показать это. Пусть это останется несложным упражнением для читателя.
 
 \begin{dmath}
- y'(x)=\mul{(\mul{(\sin{(x)})}{(-1)})}{(1)}\end{dmath}
+ y'(x)=\plus{\mul{(\cos{(\plus{\mul{15}{\pow{x}{3}}}{7})})}{(\plus{\plus{\mul{0}{\pow{x}{3}}}{\mul{15}{\mul{1}{\mul{3}{\pow{x}{\minus{3}{1}}}}}}}{0})}}{\mul{(\mul{(\mul{\sin{(\plus{\mul{9}{x}}{6})}}{-1})}{(\plus{\plus{\mul{0}{x}}{\mul{9}{1}}}{0})})}{(\mul{5}{\pow{\cos{(\plus{\mul{9}{x}}{6})}}{\minus{5}{1}}})}}\end{dmath}
 \begin{dmath}
- y'(x)=\mul{(\sin{(x)})}{(-1)}\end{dmath}
-\section{И снова Тейлор ...- - -...}
-Расчленим исходную функцию до $o(x^2)$.
+ y'(x)=\plus{\mul{(\cos{(\plus{\mul{15}{\pow{x}{3}}}{7})})}{(\plus{\plus{0}{\mul{15}{\mul{1}{\mul{3}{\pow{x}{\minus{3}{1}}}}}}}{0})}}{\mul{(\mul{(\mul{\sin{(\plus{\mul{9}{x}}{6})}}{-1})}{(\plus{\plus{\mul{0}{x}}{\mul{9}{1}}}{0})})}{(\mul{5}{\pow{\cos{(\plus{\mul{9}{x}}{6})}}{\minus{5}{1}}})}}\end{dmath}
 Т.к. 1+0=1, следовательно 0+1=1. Дальнейшие преобразования элементарны, поэтому не буду утруждать вас их чтением
 
 \begin{dmath}
- y'(x)=\plus{\plus{\mul{(\frac{\cos{(x)}}{1})}{(\pow{x}{0})}}{\mul{(\frac{\mul{(\mul{(\sin{(x)})}{(-1)})}{(1)}}{1})}{(\pow{x}{1})}}}{\mul{(\frac{\plus{\mul{(\plus{\mul{(\mul{(\cos{(x)})}{(1)})}{(-1)}}{\mul{(\sin{(x)})}{(0)}})}{(1)}}{\mul{(\mul{(\sin{(x)})}{(-1)})}{(0)}}}{2})}{(\pow{x}{2})}}+o(x^2)
-\end{dmath}
+ y'(x)=\plus{\mul{(\cos{(\plus{\mul{15}{\pow{x}{3}}}{7})})}{(\plus{\plus{0}{\mul{15}{\mul{1}{\mul{3}{\pow{x}{2}}}}}}{0})}}{\mul{(\mul{(\mul{\sin{(\plus{\mul{9}{x}}{6})}}{-1})}{(\plus{\plus{\mul{0}{x}}{\mul{9}{1}}}{0})})}{(\mul{5}{\pow{\cos{(\plus{\mul{9}{x}}{6})}}{\minus{5}{1}}})}}\end{dmath}
 \begin{dmath}
- y'(x)=\plus{\plus{\mul{(\cos{(x)})}{(\pow{x}{0})}}{\mul{(\frac{\mul{(\mul{(\sin{(x)})}{(-1)})}{(1)}}{1})}{(\pow{x}{1})}}}{\mul{(\frac{\plus{\mul{(\plus{\mul{(\mul{(\cos{(x)})}{(1)})}{(-1)}}{\mul{(\sin{(x)})}{(0)}})}{(1)}}{\mul{(\mul{(\sin{(x)})}{(-1)})}{(0)}}}{2})}{(\pow{x}{2})}}\end{dmath}
-Обладая базовыми знаниями матеметики нетрудно заметить, что...
-
-\begin{dmath}
- y'(x)=\plus{\plus{\mul{(\cos{(x)})}{(\pow{x}{0})}}{\mul{(\frac{\mul{(\sin{(x)})}{(-1)}}{1})}{(\pow{x}{1})}}}{\mul{(\frac{\plus{\mul{(\plus{\mul{(\mul{(\cos{(x)})}{(1)})}{(-1)}}{\mul{(\sin{(x)})}{(0)}})}{(1)}}{\mul{(\mul{(\sin{(x)})}{(-1)})}{(0)}}}{2})}{(\pow{x}{2})}}\end{dmath}
-\begin{dmath}
- y'(x)=\plus{\plus{\mul{(\cos{(x)})}{(\pow{x}{0})}}{\mul{(\mul{(\sin{(x)})}{(-1)})}{(\pow{x}{1})}}}{\mul{(\frac{\plus{\mul{(\plus{\mul{(\mul{(\cos{(x)})}{(1)})}{(-1)}}{\mul{(\sin{(x)})}{(0)}})}{(1)}}{\mul{(\mul{(\sin{(x)})}{(-1)})}{(0)}}}{2})}{(\pow{x}{2})}}\end{dmath}
-Обладая базовыми знаниями матеметики нетрудно заметить, что...
-
-\begin{dmath}
- y'(x)=\plus{\plus{\mul{(\cos{(x)})}{(\pow{x}{0})}}{\mul{(\mul{(\sin{(x)})}{(-1)})}{(\pow{x}{1})}}}{\mul{(\frac{\plus{\mul{(\plus{\mul{(\cos{(x)})}{(-1)}}{\mul{(\sin{(x)})}{(0)}})}{(1)}}{\mul{(\mul{(\sin{(x)})}{(-1)})}{(0)}}}{2})}{(\pow{x}{2})}}\end{dmath}
-\begin{dmath}
- y'(x)=\plus{\plus{\mul{(\cos{(x)})}{(\pow{x}{0})}}{\mul{(\mul{(\sin{(x)})}{(-1)})}{(\pow{x}{1})}}}{\mul{(\frac{\plus{\plus{\mul{(\cos{(x)})}{(-1)}}{\mul{(\sin{(x)})}{(0)}}}{\mul{(\mul{(\sin{(x)})}{(-1)})}{(0)}}}{2})}{(\pow{x}{2})}}\end{dmath}
+ y'(x)=\plus{\mul{(\cos{(\plus{\mul{15}{\pow{x}{3}}}{7})})}{(\plus{\plus{0}{\mul{15}{\mul{3}{\pow{x}{2}}}}}{0})}}{\mul{(\mul{(\mul{\sin{(\plus{\mul{9}{x}}{6})}}{-1})}{(\plus{\plus{\mul{0}{x}}{\mul{9}{1}}}{0})})}{(\mul{5}{\pow{\cos{(\plus{\mul{9}{x}}{6})}}{\minus{5}{1}}})}}\end{dmath}
 Здесь все тривиальнейшим образом сокращается
 
 \begin{dmath}
- y'(x)=\plus{\plus{\mul{(\cos{(x)})}{(\pow{x}{0})}}{\mul{(\mul{(\sin{(x)})}{(-1)})}{(\pow{x}{1})}}}{\mul{(\frac{\plus{\plus{\mul{(\cos{(x)})}{(-1)}}{\mul{(\sin{(x)})}{(0)}}}{\mul{(\mul{(\sin{(x)})}{(-1)})}{(0)}}}{2})}{(\pow{x}{2})}}+o(x^2)
+ y'(x)=\plus{\mul{(\cos{(\plus{\mul{15}{\pow{x}{3}}}{7})})}{(\plus{\mul{15}{\mul{3}{\pow{x}{2}}}}{0})}}{\mul{(\mul{(\mul{\sin{(\plus{\mul{9}{x}}{6})}}{-1})}{(\plus{\plus{\mul{0}{x}}{\mul{9}{1}}}{0})})}{(\mul{5}{\pow{\cos{(\plus{\mul{9}{x}}{6})}}{\minus{5}{1}}})}}\end{dmath}
+\begin{dmath}
+ y'(x)=\plus{\mul{(\cos{(\plus{\mul{15}{\pow{x}{3}}}{7})})}{(\mul{15}{\mul{3}{\pow{x}{2}}})}}{\mul{(\mul{(\mul{\sin{(\plus{\mul{9}{x}}{6})}}{-1})}{(\plus{\plus{\mul{0}{x}}{\mul{9}{1}}}{0})})}{(\mul{5}{\pow{\cos{(\plus{\mul{9}{x}}{6})}}{\minus{5}{1}}})}}\end{dmath}
+Обладая базовыми знаниями матеметики нетрудно заметить, что...
+
+\begin{dmath}
+ y'(x)=\plus{\mul{(\cos{(\plus{\mul{15}{\pow{x}{3}}}{7})})}{(\mul{15}{\mul{3}{\pow{x}{2}}})}}{\mul{(\mul{(\mul{\sin{(\plus{\mul{9}{x}}{6})}}{-1})}{(\plus{\plus{0}{\mul{9}{1}}}{0})})}{(\mul{5}{\pow{\cos{(\plus{\mul{9}{x}}{6})}}{\minus{5}{1}}})}}\end{dmath}
+\begin{dmath}
+ y'(x)=\plus{\mul{(\cos{(\plus{\mul{15}{\pow{x}{3}}}{7})})}{(\mul{15}{\mul{3}{\pow{x}{2}}})}}{\mul{(\mul{(\mul{\sin{(\plus{\mul{9}{x}}{6})}}{-1})}{(\plus{\plus{0}{9}}{0})})}{(\mul{5}{\pow{\cos{(\plus{\mul{9}{x}}{6})}}{\minus{5}{1}}})}}\end{dmath}
+Обладая базовыми знаниями матеметики нетрудно заметить, что...
+
+\begin{dmath}
+ y'(x)=\plus{\mul{(\cos{(\plus{\mul{15}{\pow{x}{3}}}{7})})}{(\mul{15}{\mul{3}{\pow{x}{2}}})}}{\mul{(\mul{(\mul{\sin{(\plus{\mul{9}{x}}{6})}}{-1})}{(\plus{9}{0})})}{(\mul{5}{\pow{\cos{(\plus{\mul{9}{x}}{6})}}{\minus{5}{1}}})}}\end{dmath}
+\begin{dmath}
+ y'(x)=\plus{\mul{(\cos{(\plus{\mul{15}{\pow{x}{3}}}{7})})}{(\mul{15}{\mul{3}{\pow{x}{2}}})}}{\mul{(\mul{\mul{\sin{(\plus{\mul{9}{x}}{6})}}{-1}}{9})}{(\mul{5}{\pow{\cos{(\plus{\mul{9}{x}}{6})}}{\minus{5}{1}}})}}\end{dmath}
+Для того, чтобы точно понять данное преобразование советую обратиться к пособию Саблезубова Петра Ивановича к тому 5 сочинений по теме "1000 способов вскрыть черепную коробку при помощи интеграла" страница 666 3 абзац формула (17.2) для точного ее понимаю желательно прочитать предыдущие 3 параграфа
+
+\begin{dmath}
+ y'(x)=\plus{\mul{(\cos{(\plus{\mul{15}{\pow{x}{3}}}{7})})}{(\mul{15}{\mul{3}{\pow{x}{2}}})}}{\mul{(\mul{\mul{\sin{(\plus{\mul{9}{x}}{6})}}{-1}}{9})}{(\mul{5}{\pow{\cos{(\plus{\mul{9}{x}}{6})}}{4}})}}\end{dmath}
+\section{И снова Тейлор ...- - -...}
+Расчленим исходную функцию до $o(x^0)$.
+\begin{dmath}
+ y'(x)=\mul{(\frac{\plus{\sin{(\plus{\mul{15}{\pow{x}{3}}}{7})}}{\pow{\cos{(\plus{\mul{9}{x}}{6})}}{5}}}{1})}{(\pow{x}{0})}+o(x^0)
+\end{dmath}
+Объяснять не буду т.к. если вам это не очевидно, значит вам пора перестать заниматься математикой.
+
+\begin{dmath}
+ y'(x)=\mul{(\plus{\sin{(\plus{\mul{15}{\pow{x}{3}}}{7})}}{\pow{\cos{(\plus{\mul{9}{x}}{6})}}{5}})}{(\pow{x}{0})}\end{dmath}
+\begin{dmath}
+ y'(x)=\mul{(\plus{\sin{(\plus{\mul{15}{\pow{x}{3}}}{7})}}{\pow{\cos{(\plus{\mul{9}{x}}{6})}}{5}})}{(\pow{x}{0})}+o(x^0)
 \end{dmath}
 \section{Результат вычислений:}
 Вот мы и получили результат, который с легкостью получал любой пятиклассник в СССР быстрее данной программы. Живите с этим.
 \begin{dmath}
-y'(x)=\mul{(\sin{(x)})}{(-1)}\end{dmath}
+y'(x)=\plus{\mul{(\cos{(\plus{\mul{15}{\pow{x}{3}}}{7})})}{(\mul{15}{\mul{3}{\pow{x}{2}}})}}{\mul{(\mul{\mul{\sin{(\plus{\mul{9}{x}}{6})}}{-1}}{9})}{(\mul{5}{\pow{\cos{(\plus{\mul{9}{x}}{6})}}{4}})}}\end{dmath}
 \section{Теперь, чтобы все стало совсем понятно(ахахахахаахахаххаха).\\Построим график полученной производной исходной функции}
 \begin{center}
 \begin{tikzpicture}
@@ -79,7 +93,7 @@ axis lines=middle,
 xlabel={$x$},
 ylabel={$y$},
 grid=both]
-\addplot[thick, red] {(sin(x))*(-1)};
+\addplot[thick, red] {((cos(((15)*((x)^(3)))+(7)))*((15)*((3)*((x)^(2)))))+((((sin(((9)*(x))+(6)))*(-1))*(9))*((5)*((cos(((9)*(x))+(6)))^(4))))};
 \end{axis}
 \end{tikzpicture}
 \end{center}

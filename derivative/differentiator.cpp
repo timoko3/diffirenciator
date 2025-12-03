@@ -21,15 +21,16 @@
 #include <string.h>
 #include <ctype.h>
 
-static bool        checkHaveVariables(treeNode_t* curNode);
-static treeNode_t* collapseConstant(tree_t* derivative, treeNode_t* subTreeRoot);
-static int         calculateSubTree(treeNode_t* subTreeRoot);
+static treeNode_t* collapseConstant         (tree_t* derivative, treeNode_t* subTreeRoot);
+static int         calculateSubTree         (treeNode_t* subTreeRoot);
 static treeNode_t* removeNeutralElements    (tree_t* derivative, treeNode_t* subTreeRoot, treeNode_t** addrToAsignNewSubTree);
 static treeNode_t* removeNeutralSubtree     (tree_t* derivative, treeNode_t* subTreeRoot, treeNode_t* remainSubTreeRoot);
 static treeNode_t* removeLeftNeutralSubtree (tree_t* derivative, treeNode_t* subTreeRoot);
 static treeNode_t* removeRightNeutralSubtree(tree_t* derivative, treeNode_t* subTreeRoot);
 
-tree_t differentiate(tree_t* expression){
+static treeNode_t* replaceDivisionWithPow(treeNode_t* subTreeRoot);
+
+tree_t differentiate(tree_t* expression, const char* variableToDiff){
     assert(expression);
 
     LPRINTF("\n\n differentiation start\n");
@@ -38,22 +39,22 @@ tree_t differentiate(tree_t* expression){
 
     treeCtor(&derivativeTree);
 
-    derivativeTree.root = differentiateNode(expression->root);
+    derivativeTree.root = differentiateNode(expression->root, variableToDiff);
 
     return derivativeTree;
 }
 
-treeNode_t* differentiateNode(treeNode_t* node){
+treeNode_t* differentiateNode(treeNode_t* node, const char* variableToDiff){
     assert(node);
     LPRINTF("differentiateNode start");
     treeNode_t* createdNode = NULL;
 
     LPRINTF("node->type = %d", node->type);
     switch(node->type){
-        case NUMBER:   createdNode = numDiff();                break;
-        case VARIABLE: createdNode = varDiff();                break;
-        case OPERATOR: createdNode = operDiff(node);           break;
-        case NO_TYPE:  LPRINTF("node: %p has no type", node);  break;
+        case NUMBER:   createdNode = numDiff ();                       break;
+        case VARIABLE: createdNode = varDiff (node, variableToDiff);   break;
+        case OPERATOR: createdNode = operDiff(node, variableToDiff);   break;
+        case NO_TYPE:  LPRINTF("node: %p has no type", node);          break;
         default: break;
     }
 
@@ -73,7 +74,7 @@ bool optimizeExpression(tree_t* derivative, treeNode_t* subTreeRoot){
         optimizeExpression(derivative, subTreeRoot->right);
     }
 
-    if(checkHaveVariables(subTreeRoot)){
+    if(checkNotHaveVariables(subTreeRoot)){
         LPRINTF("subTreeRoot addr: %p", subTreeRoot);
         subTreeRoot = collapseConstant(derivative, subTreeRoot);
 
@@ -100,11 +101,47 @@ bool optimizeExpression(tree_t* derivative, treeNode_t* subTreeRoot){
 
     subTreeRoot = removeNeutralElements(derivative, subTreeRoot, addrToAsignNewSubTree);
 
+    // if(subTreeRoot->type == OPERATOR){
+    //     LPRINTF("check case with pow subTreeRoot->left->data.var = %d");
+    //     if(isEqualStrings(subTreeRoot->data.op, "/") && subTreeRoot->right->type == VARIABLE){
+    //         LPRINTF("case replace with pow aproved");
+    
+    //         treeNode_t* curSubTreeRoot = subTreeRoot;
+    //         treeNode_t* newNode = replaceDivisionWithPow(subTreeRoot);
+    //         LPRINTF("newNode = %p", newNode);
+
+    //         if(subTreeRoot->parent->left == subTreeRoot){
+    //             subTreeRoot->parent->left = newNode;
+    //         }
+    //         else{
+    //             subTreeRoot->parent->right = subTreeRoot->parent->left;
+    //         }
+    //         newNode->parent = subTreeRoot->parent;
+
+    //         freeNode(curSubTreeRoot, false);
+
+    //         subTreeRoot = newNode;
+
+    //         LPRINTF("subTreeRoot.right.type = %d", subTreeRoot->right->type);
+    //         LPRINTF("subTreeRoot.left.type = %d", subTreeRoot->left->type);
+
+    //         LPRINTF("subTreeRoot = %p, data = %s, subTreeRoot.left = %p, subTreeRoot.right = %p, subTreeRoot.left.type = %d ,subTreeRoot.right.type = %d", subTreeRoot, subTreeRoot->data.op, subTreeRoot->left, subTreeRoot->right, subTreeRoot->left->type, subTreeRoot->right->type);
+            
+
+    //         LPRINTF("subTreeRoot.left.data.num = %d, subTreeRoot.right.data.op = %s", subTreeRoot->left->data.num, subTreeRoot->right->data.op);
+            
+    //         LPRINTF("subTreeRoot->parent->left = %p", subTreeRoot->parent->left);
+            
+    //         logTree(derivative, "replace div with pow");
+    //     }
+    // }
+
     return true;
 }
 
-tree_t tailorExpansion(tree_t* expression){
+tree_t tailorExpansion(tree_t* expression, const char* variableToDiff){
     assert(expression);
+    assert(variableToDiff);
 
     tree_t tailorTree;
     treeCtor(&tailorTree);
@@ -124,29 +161,12 @@ tree_t tailorExpansion(tree_t* expression){
         
         // logTree(&tailorTree, "%lu  tailorTree", curTerm);
         
-        curTermDerivative = differentiate(&curTermDerivative);
+        curTermDerivative = differentiate(&curTermDerivative, variableToDiff);
 
     }
     freeNode(curTermDerivative.root,     false);
 
     return tailorTree;
-}
-
-static bool checkHaveVariables(treeNode_t* curNode){
-    assert(curNode);
-
-    if(curNode->type == VARIABLE){
-        return false;
-    }
-
-    if(curNode->left){
-        if(!checkHaveVariables(curNode->left)) return false;
-    }
-    if(curNode->right){
-        if(!checkHaveVariables(curNode->right)) return false;
-    }
-
-    return true;
 }
 
 static treeNode_t* collapseConstant(tree_t* derivative, treeNode_t* subTreeRoot){
@@ -213,12 +233,14 @@ static treeNode_t* removeNeutralElements(tree_t* derivative, treeNode_t* subTree
     // logTree(derivative, "removeNeutral number %lu. CurSubTreeRoot = %p", removeNeutralCount, subTreeRoot);
     removeNeutralCount++;
 
-    LPRINTF("check if can removal neutral");
+    LPRINTF("check if can removal neutral subTreeRoot = %p", subTreeRoot);
     if(subTreeRoot->type == OPERATOR){
         if(subTreeRoot->data.op[0] == '*' && subTreeRoot->left->data.num == 0){
             LPRINTF("zero multiply case removal neutral");
 
             freeNode(subTreeRoot, true);
+
+            assert(subTreeRoot->parent);
 
             treeNode_t* newNode = NULL;
             if(subTreeRoot->parent->left == subTreeRoot){
@@ -229,6 +251,7 @@ static treeNode_t* removeNeutralElements(tree_t* derivative, treeNode_t* subTree
                 subTreeRoot->parent->right = createNewNodeNumber(0, NULL, NULL);
                 newNode = subTreeRoot->parent->right;
             }
+            newNode->parent = subTreeRoot->parent;
 
             freeExpressionNodeData(subTreeRoot, false, 1);
             free(subTreeRoot);
@@ -239,10 +262,13 @@ static treeNode_t* removeNeutralElements(tree_t* derivative, treeNode_t* subTree
             // logTree(derivative, "removeNeutral case multiply zero number %lu. CurSubTreeRoot = %p", removeNeutralCaseZeroMulCount, newNode);
             removeNeutralCaseZeroMulCount++;
 
+            // logTree(derivative, "during removal of neutral mul 0");
             texDumpTree(derivative);
 
             return newNode;
         }
+
+        LPRINTF("subTreeRoot->left = %p, subTreeRoot->right = %p", subTreeRoot->left, subTreeRoot->right);
         treeNode_t* newRootLeft = removeLeftNeutralSubtree(derivative, subTreeRoot);
         if(newRootLeft){
             LPRINTF("*addrToAsignNewSubTree = %p", *addrToAsignNewSubTree);
@@ -268,27 +294,40 @@ static treeNode_t* removeNeutralSubtree(tree_t* derivative, treeNode_t* subTreeR
     assert(subTreeRoot);
     assert(remainSubTreeRoot);
 
-    LPRINTF("Проверка на то, есть ли умножение на 1 или плюсование 0. subTreeRoot->data.num = %d, subTreeRoot->parent->data.op[0] == '%c', subTreeRoot = %p, subTreeRoot->parent->right = %p", subTreeRoot->data.num, subTreeRoot->parent->data.op[0], subTreeRoot, subTreeRoot->parent->right);
+    if(!subTreeRoot->parent){
+        return NULL;
+    }
 
-    // if(subTreeRoot->parent->type == OPERATOR){
-        if((subTreeRoot->parent->data.op[0] == '*' && subTreeRoot->data.num == 1)  || 
-            ((subTreeRoot->parent->data.op[0] == '+' || subTreeRoot->parent->data.op[0] == '-') && subTreeRoot->data.num == 0) ||
-            (subTreeRoot->parent->data.op[0] == '/' && subTreeRoot->data.num == 1 && subTreeRoot->parent->right == subTreeRoot)){
-            LPRINTF("удаляем поддерево с корнем %p", subTreeRoot);
+    if(subTreeRoot->type != NUMBER){
+        return NULL;
+    }
 
-            if(subTreeRoot->parent->parent){
-                if(subTreeRoot->parent->parent->left == subTreeRoot->parent){
-                    subTreeRoot->parent->parent->left = remainSubTreeRoot;
-                    remainSubTreeRoot->parent = subTreeRoot->parent->parent;
-                }
-                else{
-                    subTreeRoot->parent->parent->right = remainSubTreeRoot;
-                }
+    // LPRINTF("subTreeRoot = %p, subTreeRoot->parent->data.op = %s", subTreeRoot, subTreeRoot->parent->data.num);
+    // LPRINTF("subTreeRoot->parent = %p, subTreeRoot->parent->data.op = %s", subTreeRoot->parent->data.op);
+
+    // LPRINTF("Проверка на то, есть ли умножение на 1 или плюсование 0. subTreeRoot->data.num = %d, subTreeRoot->parent->data.op[0] == '%c', subTreeRoot = %p, subTreeRoot->parent->right = %p", subTreeRoot->data.num, subTreeRoot->parent->data.op[0], subTreeRoot, subTreeRoot->parent->right);
+
+    if((subTreeRoot->parent->data.op[0] == '*' && subTreeRoot->data.num == 1)  || 
+        ((subTreeRoot->parent->data.op[0] == '+' || subTreeRoot->parent->data.op[0] == '-') && subTreeRoot->data.num == 0) ||
+        (subTreeRoot->parent->data.op[0] == '/' && subTreeRoot->data.num == 1 && subTreeRoot->parent->right == subTreeRoot)){
+        LPRINTF("удаляем поддерево с корнем %p", subTreeRoot);
+
+        if(subTreeRoot->parent->parent){
+            if(subTreeRoot->parent->parent->left == subTreeRoot->parent){
+                subTreeRoot->parent->parent->left = remainSubTreeRoot;
+                remainSubTreeRoot->parent = subTreeRoot->parent->parent;
             }
+            else{
+                subTreeRoot->parent->parent->right = remainSubTreeRoot;
+            }
+        }
+        else{
+            derivative->root = remainSubTreeRoot;
+            remainSubTreeRoot->parent = NULL;
+        }
 
-            return remainSubTreeRoot;
-        }   
-    // }
+        return remainSubTreeRoot;
+    }   
     
     return NULL;
 }
@@ -297,6 +336,7 @@ static treeNode_t* removeLeftNeutralSubtree(tree_t* derivative, treeNode_t* subT
     assert(subTreeRoot);
 
     if(subTreeRoot->left && subTreeRoot->right && subTreeRoot->type == OPERATOR){
+        LPRINTF("subTreeRoot->left = %p, subTreeRoot->right = %p", subTreeRoot->left, subTreeRoot->right);
         if(removeNeutralSubtree(derivative, subTreeRoot->left, subTreeRoot->right)){
             treeNode_t* result = subTreeRoot->right;
             LPRINTF("during optimization freeing leftSubtree");
@@ -330,6 +370,16 @@ static treeNode_t* removeRightNeutralSubtree(tree_t* derivative, treeNode_t* sub
     }
 
     return NULL;
+}
+
+static treeNode_t* replaceDivisionWithPow(treeNode_t* subTreeRoot){
+    assert(subTreeRoot);
+
+    LPRINTF("FIX -pow");
+
+    treeNode_t* newNode = _MUL(_C(subTreeRoot->left), _POW(_C(subTreeRoot->right), _N(-1)));
+
+    return newNode;
 }
 
 

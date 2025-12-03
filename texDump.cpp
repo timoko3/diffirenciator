@@ -20,6 +20,8 @@ static void dumpRandomCleverMatanPhrase(FILE* texFilePtr);
 static void generateGraphic(FILE* texFilePtr, tree_t* expression);
 static void dumpExpressionForGraphic(FILE* texFilePtr, treeNode_t* node);
 
+static bool needBracketsOp(treeNode_t* node, operation_t curOp);
+
 const char* cleverMatanPhrases[] = {
     "Обладая базовыми знаниями матеметики нетрудно заметить, что...\n",
     "Объяснять не буду т.к. если вам это не очевидно, значит вам пора перестать заниматься математикой.\n",
@@ -28,7 +30,7 @@ const char* cleverMatanPhrases[] = {
     "Т.к. 1+0=1, следовательно 0+1=1. Дальнейшие преобразования элементарны, поэтому не буду утруждать вас их чтением\n",
     "константы схлопываются, отвыты получаются, кафедра матана беснуется.\n",
     "Впахивают роботы, а не человек...Тут тоже уходит пару слагаемых.\n",
-    "Для того, чтобы точно понять данное преобразование советую обратиться к пособию Саблезубова Акакия Акакиявеча к тому 5 сочинений по теме \"1000 способов вскрыть черепную коробку при помощи интеграла\" страница 666 3 абзац формула (17.2) для точного ее понимаю желательно прочитать предыдущие 3 параграфа\n"
+    "Для того, чтобы точно понять данное преобразование советую обратиться к пособию Саблезубова Петра Ивановича к тому 5 сочинений по теме \"1000 способов вскрыть черепную коробку при помощи интеграла\" страница 666 3 абзац формула (17.2) для точного ее понимаю желательно прочитать предыдущие 3 параграфа\n"
 };
 
 void texDumpTree(tree_t* expression, FILE* texFilePtr, bool isTailorTree){
@@ -189,11 +191,11 @@ static void texDumpNode(FILE* texFilePtr, treeNode_t* node){
         if(node->left){
             fprintf(texFilePtr, "{");
 
-            if(curOp.texNeedBrackets) fprintf(texFilePtr, "(");
+            if(needBracketsOp(node, curOp))fprintf(texFilePtr, "(");
 
             texDumpNode(texFilePtr, node->left);
 
-            if(curOp.texNeedBrackets) fprintf(texFilePtr, ")");
+            if(needBracketsOp(node, curOp)) fprintf(texFilePtr, ")");
             fprintf(texFilePtr, "}");
         }
 
@@ -201,11 +203,11 @@ static void texDumpNode(FILE* texFilePtr, treeNode_t* node){
 
         if(node->right){
             fprintf(texFilePtr, "{");
-            if(curOp.texNeedBrackets) fprintf(texFilePtr, "(");
+            if(needBracketsOp(node, curOp)) fprintf(texFilePtr, "(");
 
             texDumpNode(texFilePtr, node->right);
 
-            if(curOp.texNeedBrackets) fprintf(texFilePtr, ")");
+            if(needBracketsOp(node, curOp)) fprintf(texFilePtr, ")");
             fprintf(texFilePtr, "}");
         }
     }
@@ -300,4 +302,21 @@ void startTexDumpTailor(){
     fclose(texFilePtr);
 }
 
+static bool needBracketsOp(treeNode_t* node, operation_t curOp){
+    assert(node);
 
+
+    if(isEqualStrings(curOp.nameString, "*") && (node->left->type != OPERATOR || node->right->type != OPERATOR)){
+        return false;
+    }
+    else{
+        if(curOp.texNeedBrackets){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    return false;
+}

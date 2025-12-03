@@ -107,6 +107,23 @@ bool freeExpressionNodeData(treeNode_t* node, bool withoutRoot, int depth){
     return false;
 }
 
+bool checkNotHaveVariables(treeNode_t* curNode){
+    assert(curNode);
+
+    if(curNode->type == VARIABLE){
+        return false;
+    }
+
+    if(curNode->left){
+        if(!checkNotHaveVariables(curNode->left)) return false;
+    }
+    if(curNode->right){
+        if(!checkNotHaveVariables(curNode->right)) return false;
+    }
+
+    return true;
+}
+
 static treeNode_t* getG(treeNode_t* node, char* buffer, char* curBufferPos){
     assert(curBufferPos);
     

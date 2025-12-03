@@ -1,7 +1,7 @@
 #ifndef DSL_H
 #define DSL_H
 
-#define _DIF(node) differentiateNode(node)
+#define _DIF(node, variableToDiff) differentiateNode(node, variableToDiff)
 #define _L         node->left
 #define _R         node->right
 #define _C(node)   copyNode(node)

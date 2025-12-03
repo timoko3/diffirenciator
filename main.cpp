@@ -16,8 +16,14 @@ const char* DIFFERENTIATOR_DATA_FILE_NAME = "realExpression.txt";
 
 int main(int argc, char* argv[]){
 
-    const char* expressionFIleName = NULL;
-    if(argc == 2){
+    const char* expressionFIleName = "";
+
+    const char* variableToDiff = "";
+    if(argc == 3){
+        expressionFIleName = argv[1];
+        variableToDiff     = argv[2];
+    }
+    else if(argc == 2){
         expressionFIleName = argv[1];
     }
     else{
@@ -32,8 +38,9 @@ int main(int argc, char* argv[]){
 
     texDumpTree(&expression);
 
+    
     logTree(&expression, "after reading");
-    tree_t derivative = differentiate(&expression);
+    tree_t derivative = differentiate(&expression, variableToDiff);
     logTree(&derivative, "after differentiation");
 
     logTree(&expression, "after differentiation expresion");
@@ -42,12 +49,12 @@ int main(int argc, char* argv[]){
 
     optimizeExpression(&derivative, derivative.root);
     LPRINTF("Ended optimization");
-    logTree(&derivative, "after optimization");
+    // logTree(&derivative, "after optimization");
 
     // texDumpTree(&derivative);
     
-    tree_t tailor = tailorExpansion(&expression);
-    logTree(&tailor, "tailor tree dump");
+    tree_t tailor = tailorExpansion(&expression, variableToDiff);
+    // logTree(&tailor, "tailor tree dump");
     
     startTexDumpTailor();
     texDumpTree(&tailor, NULL, true);
