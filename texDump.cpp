@@ -17,7 +17,7 @@ const char* texDumpFileName = "DumpDifferentiator.tex";
 
 static void dumpRandomCleverMatanPhrase(FILE* texFilePtr);
 
-static void generateGraphic(FILE* texFilePtr, tree_t* expression);
+static void generateGraphic(FILE* texFilePtr, tree_t* expression, tree_t* scaleGraphic);
 static void dumpExpressionForGraphic(FILE* texFilePtr, treeNode_t* node);
 
 static bool needBracketsOp(treeNode_t* node, operation_t curOp);
@@ -127,8 +127,9 @@ void texDumpTree(tree_t* expression, FILE* texFilePtr, bool isTailorTree){
     }
 }
 
-void endTexFile(tree_t* expression){
+void endTexFile(tree_t* expression, tree_t* scaleGraphic){
     assert(expression);
+    assert(scaleGraphic);
 
     fileDescription texDumpFile{
         texDumpFileName,
@@ -145,11 +146,7 @@ void endTexFile(tree_t* expression){
     texDumpNode(texFilePtr, expression->root);
     fprintf(texFilePtr, "\\end{dmath}\n");
 
-    fprintf(texFilePtr, "\\section{Теперь, чтобы все стало совсем понятно(ахахахахаахахаххаха).\\\\Построим график полученной производной исходной функции}\n");
-
-    generateGraphic(texFilePtr, expression);
-
-    fprintf(texFilePtr, "\n");
+    generateGraphic(texFilePtr, expression, scaleGraphic);
 
     fprintf(texFilePtr, "\\section{P.S}");
     fprintf(texFilePtr, "Уважаемая кафедра высшей математики не принимайте всерьез данную работу. Автор на самом деле очень любит матан. Все персонажи вымышлены(почти) и ни один учебник математики не пострадал.");
@@ -222,9 +219,12 @@ static void dumpRandomCleverMatanPhrase(FILE* texFilePtr){
     fprintf(texFilePtr, "%s\n", cleverMatanPhrases[curPhraseInd]);
 }
 
-static void generateGraphic(FILE* texFilePtr, tree_t* expression){
+static void generateGraphic(FILE* texFilePtr, tree_t* expression, tree_t* scaleGraphic){
     assert(expression);
     assert(texFilePtr);
+    assert(scaleGraphic);
+
+    fprintf(texFilePtr, "\\section{Теперь, чтобы все стало совсем понятно(ахахахахаахахаххаха).\\\\Построим график полученной производной исходной функции}\n");
 
     fprintf(texFilePtr, "\\begin{center}\n");
 
@@ -232,12 +232,14 @@ static void generateGraphic(FILE* texFilePtr, tree_t* expression){
                         "\\begin{axis}[\n"
                         "width=16cm,\n"
                         "height=8cm,\n"
-                        "domain=-10:10,\n"
+                        "domain=%d:%d,\n"
                         "samples=200,\n"
                         "axis lines=middle,\n"
                         "xlabel={$x$},\n"
                         "ylabel={$y$},\n"
-                        "grid=both]\n");
+                        "grid=both]\n", 
+                        scaleGraphic->root->left->data.num, 
+                        scaleGraphic->root->right->data.num);
 
     fprintf(texFilePtr, "\\addplot[thick, red] {");
     dumpExpressionForGraphic(texFilePtr, expression->root);
@@ -245,7 +247,7 @@ static void generateGraphic(FILE* texFilePtr, tree_t* expression){
 
     fprintf(texFilePtr, "\\end{axis}\n"
                         "\\end{tikzpicture}\n");
-    fprintf(texFilePtr, "\\end{center}\n");
+    fprintf(texFilePtr, "\\end{center}\n\n");
 }
 
 static void dumpExpressionForGraphic(FILE* texFilePtr, treeNode_t* node){

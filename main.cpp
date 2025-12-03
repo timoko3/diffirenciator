@@ -30,12 +30,14 @@ int main(int argc, char* argv[]){
         expressionFIleName = DIFFERENTIATOR_DATA_FILE_NAME;
     }
 
+
+
     tree_t expression;
     treeCtor(&expression);
     
-    treeRead(&expression, expressionFIleName);
+    tree_t scaleGraphic = treeRead(&expression, expressionFIleName);
+    
     assert(expression.root);
-
     texDumpTree(&expression);
 
     
@@ -50,8 +52,6 @@ int main(int argc, char* argv[]){
     optimizeExpression(&derivative, derivative.root);
     LPRINTF("Ended optimization");
     // logTree(&derivative, "after optimization");
-
-    // texDumpTree(&derivative);
     
     tree_t tailor = tailorExpansion(&expression, variableToDiff);
     // logTree(&tailor, "tailor tree dump");
@@ -62,11 +62,12 @@ int main(int argc, char* argv[]){
     optimizeExpression(&tailor, tailor.root);
 
     texDumpTree(&tailor, NULL, true);
-    endTexFile(&derivative);
+    endTexFile(&derivative, &scaleGraphic);
 
     LPRINTF("конец");
 
     treeDtor(&tailor);
     treeDtor(&derivative);
     treeDtor(&expression);
+    treeDtor(&scaleGraphic);
 }

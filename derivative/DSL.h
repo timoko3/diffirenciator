@@ -24,5 +24,6 @@
 
 #define _SQRT(node1, node2)  createNewNodeOperator("sqrt",  node1, node2)
 
+#define _SCALE_GRAPH(node1, node2) createNewNodeOperator(":",  node1, node2)
 
 #endif /* DSL_H */

@@ -32,7 +32,7 @@ treeNode_t* treeDtor(tree_t* expression){
     return NULL;
 }
 
-void treeRead(tree_t* expression, const char* expressionFile){
+tree_t treeRead(tree_t* expression, const char* expressionFile){
     assert(expression);
 
     logTree(expression, "started reading");
@@ -43,12 +43,18 @@ void treeRead(tree_t* expression, const char* expressionFile){
     LPRINTF("expression buffer: %s\n", treeData.buffer);
 
     static size_t curPos = 0;
-    readExpression(expression, treeData.buffer, &curPos);
+
+    tree_t scaleGraphic;
+    treeCtor(&scaleGraphic);
+
+    readExpression(expression, treeData.buffer, &curPos, &scaleGraphic);
     
     free(treeData.buffer);
     free(treeData.strings);
 
     logTree(expression, "ended reading");
+
+    return scaleGraphic;
 }
 
 treeNode_t* createNewNode(treeNode_t* left, treeNode_t* right){
