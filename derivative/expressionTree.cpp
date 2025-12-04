@@ -19,8 +19,8 @@ const size_t MAX_VARIABLE_SIZE = 64;
 const int GRAPHIC_STANDARD_MIN_X = -10;
 const int GRAPHIC_STANDARD_MAX_X =  10;
 
-static treeNode_t* getM(treeNode_t* node, char* buffer, char* curBufferPos, tree_t* scaleGraphic);
 static treeNode_t* getG(treeNode_t* node, char* buffer, char** curBufferPos);
+static treeNode_t* getM(treeNode_t* node, char* buffer, char** curBufferPos);
 static treeNode_t* getE(treeNode_t* node, char* buffer, char** curBufferPos);
 static treeNode_t* getT(treeNode_t* node, char* buffer, char** curBufferPos);
 static treeNode_t* getS(treeNode_t* node, char* buffer, char** curBufferPos);
@@ -34,10 +34,12 @@ static bool stringNameOpHaveBracket(char* opName, char nextChar);
 
 static void SyntaxError();
 
-treeNode_t* readExpression(tree_t* expression, char* buffer, size_t* curBufferPos, tree_t* scaleGraphic){
+treeNode_t* readExpression(tree_t* expression, char* buffer, size_t* curBufferPos){
     LPRINTF("begin reading root: %p", expression->root);
 
-    expression->root = getM(expression->root, buffer, &buffer[*curBufferPos], scaleGraphic);
+    char* curBufferPtr = &buffer[*curBufferPos];
+
+    expression->root = getG(expression->root, buffer, &curBufferPtr);
 
     return expression->root;
 }
@@ -129,67 +131,11 @@ bool checkNotHaveVariables(treeNode_t* curNode){
     return true;
 }
 
-static treeNode_t* getM(treeNode_t* node, char* buffer, char* curBufferPos, tree_t* scaleGraphic){
-    assert(curBufferPos);
-    assert(scaleGraphic);
-
-    LPRINTF("Зашел в M. Строка сейчас: %s", curBufferPos);
-    node = getG(node, buffer, &curBufferPos);
-
-    if(*curBufferPos != '&'){
-        SyntaxError();
-    }
-    curBufferPos++;
-
-    scaleGraphic->root = _SCALE_GRAPH(NULL, NULL);
-
-    if(('0' <= *curBufferPos && *curBufferPos <= '9') || (*curBufferPos == '-')){
-        LPRINTF("SET USER GRAPHIC SCALE, Строка сейчас: %s", curBufferPos);
-
-        if(*curBufferPos == '-'){
-            curBufferPos++;
-            scaleGraphic->root->left = getN(&curBufferPos);
-            scaleGraphic->root->left->data.num *= -1;
-        }
-        else{
-            scaleGraphic->root->left = getN(&curBufferPos);
-        }
-
-
-        if(*curBufferPos != ':'){
-            SyntaxError();
-        }
-        curBufferPos++;
-
-
-        if(*curBufferPos == '-'){
-            curBufferPos++;
-            scaleGraphic->root->right = getN(&curBufferPos);
-            scaleGraphic->root->right->data.num *= -1;
-        }
-        else{
-            scaleGraphic->root->right = getN(&curBufferPos);
-        }
-    }
-    else{
-        LPRINTF("SET DEFAULT GRAPHIC SCALE");
-
-        scaleGraphic->root->left  = _N(GRAPHIC_STANDARD_MIN_X);
-        scaleGraphic->root->right = _N(GRAPHIC_STANDARD_MAX_X);
-    }
-
-
-
-    curBufferPos++;
-
-    return node;
-}
-
 static treeNode_t* getG(treeNode_t* node, char* buffer, char** curBufferPos){
     assert(curBufferPos);
     
     LPRINTF("Зашел в G. Строка сейчас: %s", *curBufferPos);
-    node = getE(node, buffer, curBufferPos);
+    node = getM(node, buffer, curBufferPos);
     if(**curBufferPos != '$'){
         SyntaxError();
     }
@@ -198,6 +144,32 @@ static treeNode_t* getG(treeNode_t* node, char* buffer, char** curBufferPos){
     LPRINTF("Завершаю чтение и возвращаю ноду: %p", node);
 
     return node;
+}
+
+static treeNode_t* getM(treeNode_t* node, char* buffer, char** curBufferPos){
+    assert(curBufferPos);
+
+    LPRINTF("Зашел в M. Строка сейчас: %s", *curBufferPos);
+
+    treeNode_t* val1 = getE(node, buffer, curBufferPos);
+    assert(val1);
+
+    LPRINTF("Начинаю анализ на знак сложения/вычитания. s = %s", *curBufferPos);
+
+    char* opName = (char*) calloc(MAX_VARIABLE_SIZE, sizeof(char));
+    while(**curBufferPos == ':') {
+        opName[0] = **curBufferPos;
+        opName[1] = '\0';
+        (*curBufferPos)++;
+
+        treeNode_t* val2 = getE(node, buffer, curBufferPos);
+        assert(val2);
+
+        val1 = createNewNodeOperator(opName, val1, val2);
+    }
+    free(opName);
+
+    return val1;
 }
 
 static treeNode_t* getE(treeNode_t* node, char* buffer, char** curBufferPos){
@@ -294,7 +266,7 @@ static treeNode_t* getP(treeNode_t* node, char* buffer, char** curBufferPos){
         return val;
     }
     else{
-        if('0' <= **curBufferPos && **curBufferPos <= '9'){
+        if(('0' <= **curBufferPos && **curBufferPos <= '9') || ((**curBufferPos == '-') && ('0' <= *(*curBufferPos + 1) && *(*curBufferPos + 1) <= '9'))){
             return getN(curBufferPos);
         }
         
@@ -330,8 +302,17 @@ static treeNode_t* getN(char** curBufferPos){
     char* startS = *curBufferPos;
 
     int val = 0;
-    while('0' <= **curBufferPos && **curBufferPos <= '9'){
+
+    bool isNegative = false;
+    while(('0' <= **curBufferPos && **curBufferPos <= '9') || ((**curBufferPos == '-') && ('0' <= *(*curBufferPos + 1) && *(*curBufferPos + 1) <= '9'))){
         LPRINTF("Получаю число val = %d", val);
+        if(**curBufferPos == '-'){
+            LPRINTF("отрицательное число найдено");
+            isNegative = true;
+
+            (*curBufferPos)++;
+            continue;
+        }
 
         val = val * 10 + (**curBufferPos - '0');
 
@@ -343,6 +324,10 @@ static treeNode_t* getN(char** curBufferPos){
     }
     if(*curBufferPos == startS){
         SyntaxError();
+    }
+
+    if(isNegative){
+        val *= -1;
     }
 
     return createNewNodeNumber(val, NULL, NULL);

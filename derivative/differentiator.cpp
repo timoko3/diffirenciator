@@ -28,7 +28,7 @@ static treeNode_t* removeNeutralSubtree     (tree_t* derivative, treeNode_t* sub
 static treeNode_t* removeLeftNeutralSubtree (tree_t* derivative, treeNode_t* subTreeRoot);
 static treeNode_t* removeRightNeutralSubtree(tree_t* derivative, treeNode_t* subTreeRoot);
 
-static treeNode_t* replaceDivisionWithPow(treeNode_t* subTreeRoot);
+// static treeNode_t* replaceDivisionWithPow(treeNode_t* subTreeRoot);
 
 tree_t differentiate(tree_t* expression, const char* variableToDiff){
     assert(expression);
@@ -372,15 +372,15 @@ static treeNode_t* removeRightNeutralSubtree(tree_t* derivative, treeNode_t* sub
     return NULL;
 }
 
-static treeNode_t* replaceDivisionWithPow(treeNode_t* subTreeRoot){
-    assert(subTreeRoot);
+// static treeNode_t* replaceDivisionWithPow(treeNode_t* subTreeRoot){
+//     assert(subTreeRoot);
 
-    LPRINTF("FIX -pow");
+//     LPRINTF("FIX -pow");
 
-    treeNode_t* newNode = _MUL(_C(subTreeRoot->left), _POW(_C(subTreeRoot->right), _N(-1)));
+//     treeNode_t* newNode = _MUL(_C(subTreeRoot->left), _POW(_C(subTreeRoot->right), _N(-1)));
 
-    return newNode;
-}
+//     return newNode;
+// }
 
 
 static int calculateSubTree(treeNode_t* subTreeRoot){

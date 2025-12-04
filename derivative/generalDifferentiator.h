@@ -35,4 +35,5 @@ struct tree_t{
     size_t        amountNodes;
 };
 
+
 #endif /* GENERAL_AKINATOR_H */ 

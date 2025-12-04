@@ -1,6 +1,8 @@
 #include "tree.h"
 #include "expressionTree.h"
+#include "differentiator.h"
 #include "protectionDifferentiator.h"
+#include "../derivative/differentiatorConfig.h"
 
 #define DEBUG
 
@@ -32,29 +34,22 @@ treeNode_t* treeDtor(tree_t* expression){
     return NULL;
 }
 
-tree_t treeRead(tree_t* expression, const char* expressionFile){
-    assert(expression);
-
-    logTree(expression, "started reading");
+void treeRead(const char* expressionFile){
+    assert(expressionFile);
 
     data_t treeData;
     parseStringsFile(&treeData, expressionFile);
 
     LPRINTF("expression buffer: %s\n", treeData.buffer);
 
-    static size_t curPos = 0;
-
-    tree_t scaleGraphic;
-    treeCtor(&scaleGraphic);
-
-    readExpression(expression, treeData.buffer, &curPos, &scaleGraphic);
+    for(size_t curStringInd = 0; curStringInd < treeData.nStrings; curStringInd++){
+        LPRINTF("treeRead main cycle iteration: %lu", curStringInd + 1);
+        differentiatorReadConfigParam(treeData.strings[curStringInd]);
+    }
     
     free(treeData.buffer);
     free(treeData.strings);
 
-    logTree(expression, "ended reading");
-
-    return scaleGraphic;
 }
 
 treeNode_t* createNewNode(treeNode_t* left, treeNode_t* right){

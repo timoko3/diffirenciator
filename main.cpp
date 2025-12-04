@@ -3,6 +3,7 @@
 #include "differentiator.h"
 #include "tree.h"
 #include "texDump.h"
+#include "differentiatorConfig.h"
 
 #define DEBUG
 
@@ -29,32 +30,41 @@ int main(int argc, char* argv[]){
     else{
         expressionFIleName = DIFFERENTIATOR_DATA_FILE_NAME;
     }
-
-
-
-    tree_t expression;
-    treeCtor(&expression);
     
-    tree_t scaleGraphic = treeRead(&expression, expressionFIleName);
-    
-    assert(expression.root);
-    texDumpTree(&expression);
+    treeRead(expressionFIleName);
 
-    
-    logTree(&expression, "after reading");
-    tree_t derivative = differentiate(&expression, variableToDiff);
+    LPRINTF("exit reading function");
+
+    tree_t* tailorOrder = findConfigParameter(TAILOR_ORDER);
+    LPRINTF("tailorOrder.type = %d", tailorOrder->root->type);
+    logTree(tailorOrder, "tailor order tree");
+
+    tree_t* tailorX0 = findConfigParameter(TAILOR_X0);
+    LPRINTF("tailorOrder.type = %d", tailorOrder->root->type);
+    logTree(tailorX0, "tailorX0 tree");
+
+    tree_t* formula = findConfigParameter(FORMULA);
+    LPRINTF("tailorOrder.type = %d", tailorOrder->root->type);
+    logTree(formula, "formula tree");
+
+    tree_t* graphicXScale = findConfigParameter(GRAPHIC_X_SCALE);
+    LPRINTF("tailorOrder.type = %d", tailorOrder->root->type);
+    logTree(graphicXScale, "graphicXScale tree");
+
+    tree_t* graphicYScale = findConfigParameter(GRAPHIC_Y_SCALE);
+    LPRINTF("tailorOrder.type = %d", tailorOrder->root->type);
+    logTree(graphicYScale, "graphicYScale tree");
+
+    tree_t derivative = differentiate(formula, variableToDiff);
     logTree(&derivative, "after differentiation");
 
-    logTree(&expression, "after differentiation expresion");
-
-    texDumpTree(&derivative);
+    texDumpTree(formula);
 
     optimizeExpression(&derivative, derivative.root);
     LPRINTF("Ended optimization");
-    // logTree(&derivative, "after optimization");
+    logTree(&derivative, "after optimization");
     
-    tree_t tailor = tailorExpansion(&expression, variableToDiff);
-    // logTree(&tailor, "tailor tree dump");
+    tree_t tailor = tailorExpansion(formula, variableToDiff);
     
     startTexDumpTailor();
     texDumpTree(&tailor, NULL, true);
@@ -62,12 +72,9 @@ int main(int argc, char* argv[]){
     optimizeExpression(&tailor, tailor.root);
 
     texDumpTree(&tailor, NULL, true);
-    endTexFile(&derivative, &scaleGraphic);
+    endTexFile(formula, &derivative, graphicXScale);
 
+    configDtor();
+    
     LPRINTF("конец");
-
-    treeDtor(&tailor);
-    treeDtor(&derivative);
-    treeDtor(&expression);
-    treeDtor(&scaleGraphic);
 }

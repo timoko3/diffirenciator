@@ -127,7 +127,8 @@ void texDumpTree(tree_t* expression, FILE* texFilePtr, bool isTailorTree){
     }
 }
 
-void endTexFile(tree_t* expression, tree_t* scaleGraphic){
+void endTexFile(tree_t* expression, tree_t* derivative, tree_t* scaleGraphic){
+    assert(derivative);
     assert(expression);
     assert(scaleGraphic);
 
@@ -139,14 +140,20 @@ void endTexFile(tree_t* expression, tree_t* scaleGraphic){
     FILE* texFilePtr = myOpenFile(&texDumpFile);
     assert(texFilePtr);
 
-    fprintf(texFilePtr, "\\section{Результат вычислений:}\n");
-    fprintf(texFilePtr, "Вот мы и получили результат, который с легкостью получал любой пятиклассник в СССР быстрее данной программы. Живите с этим.\n");
+    fprintf(texFilePtr, "\\section{Результат вычислений производной:}\n");
+    fprintf(texFilePtr, "Исходная функция:\n");
 
-    fprintf(texFilePtr, "\\begin{dmath}\ny'(x)=");
+    fprintf(texFilePtr, "\\begin{dmath}\ny(x)=");
     texDumpNode(texFilePtr, expression->root);
     fprintf(texFilePtr, "\\end{dmath}\n");
 
-    generateGraphic(texFilePtr, expression, scaleGraphic);
+    fprintf(texFilePtr, "Вот мы и получили результат, который с легкостью получал любой пятиклассник в СССР быстрее данной программы. Живите с этим.\n");
+
+    fprintf(texFilePtr, "\\begin{dmath}\ny'(x)=");
+    texDumpNode(texFilePtr, derivative->root);
+    fprintf(texFilePtr, "\\end{dmath}\n");
+
+    generateGraphic(texFilePtr, derivative, scaleGraphic);
 
     fprintf(texFilePtr, "\\section{P.S}");
     fprintf(texFilePtr, "Уважаемая кафедра высшей математики не принимайте всерьез данную работу. Автор на самом деле очень любит матан. Все персонажи вымышлены(почти) и ни один учебник математики не пострадал.");
@@ -165,7 +172,7 @@ static void defineMacros(FILE* texFilePtr){
         if(!operations[curOpInd].texExists){
             switch(operations[curOpInd].paramCount){
                 case 1: fprintf(texFilePtr, "\\newcommand{%s}[%lu]{%s(#1)}\n", operations[curOpInd].texCode, operations[curOpInd].paramCount, operations[curOpInd].nameString); break;
-                case 2: fprintf(texFilePtr, "\\newcommand{%s}[%lu]{#1 %s #2}\n", operations[curOpInd].texCode, operations[curOpInd].paramCount, operations[curOpInd].nameString); break;
+                case 2: (isEqualStrings(operations[curOpInd].nameString, "*")) ? fprintf(texFilePtr, "\\newcommand{%s}[%lu]{#1 \\cdot #2}\n", operations[curOpInd].texCode, operations[curOpInd].paramCount) : fprintf(texFilePtr, "\\newcommand{%s}[%lu]{#1 %s #2}\n", operations[curOpInd].texCode, operations[curOpInd].paramCount, operations[curOpInd].nameString); break;
                 default: break;
             }
         }
@@ -175,7 +182,11 @@ static void defineMacros(FILE* texFilePtr){
 static void texDumpNode(FILE* texFilePtr, treeNode_t* node){
 
     if(node->type == NUMBER){
+        if(node->data.num < 0)fprintf(texFilePtr, "(");
+
         fprintf(texFilePtr, "%d", node->data.num);
+
+        if(node->data.num < 0)fprintf(texFilePtr, ")");
     }
     else if(node->type == VARIABLE){
         fprintf(texFilePtr, "%s", node->data.var);
@@ -311,6 +322,12 @@ static bool needBracketsOp(treeNode_t* node, operation_t curOp){
     if(isEqualStrings(curOp.nameString, "*") && (node->left->type != OPERATOR || node->right->type != OPERATOR)){
         return false;
     }
+    else if(isEqualStrings(curOp.nameString, "*") && (node->left->type == OPERATOR) && (isEqualStrings(node->left->data.op, "+") || isEqualStrings(node->left->data.op, "-"))){
+        return true;
+    }
+    // else if(isEqualStrings(curOp.nameString, "*") && ((node->left->type == NUMBER && node->left->data.num < 0) || (node->right->type == NUMBER && node->right->data.num < 0))){
+    //     return true;
+    // }
     else{
         if(curOp.texNeedBrackets){
             return true;
