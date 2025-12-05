@@ -2,7 +2,10 @@
 
 #include <stdio.h>
 
-void texDumpTree(tree_t* expression, FILE* externalFilePtr = NULL, bool isTailorTree = false);
-void startTexDumpTailor();
+void texDumpTree(tree_t* expression, FILE* externalFilePtr = NULL, bool isTailorTree = false, tree_t* tailorX0 = NULL, tree_t* tailorOrder = NULL);
+void startTexDumpTailor(tree_t* tailorX0, tree_t* tailorOrder);
 
-void endTexFile(tree_t* expression, tree_t* derivative, tree_t* scaleGraphic);
+FILE* generateGraphic(tree_t* expression, tree_t* scaleGraphicX, tree_t* scaleGraphicY);
+void endGraphicDump(FILE* texFilePtr);
+
+void endTexFile(tree_t* expression, tree_t* derivative);

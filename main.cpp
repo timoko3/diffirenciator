@@ -64,17 +64,26 @@ int main(int argc, char* argv[]){
     LPRINTF("Ended optimization");
     logTree(&derivative, "after optimization");
     
-    tree_t tailor = tailorExpansion(formula, variableToDiff);
+    tree_t tailor = tailorExpansion(formula, variableToDiff, tailorX0, tailorOrder);
     
-    startTexDumpTailor();
-    texDumpTree(&tailor, NULL, true);
+    startTexDumpTailor(tailorX0, tailorOrder);
+    texDumpTree(&tailor, NULL, true, tailorX0, tailorOrder);
 
     optimizeExpression(&tailor, tailor.root);
 
-    texDumpTree(&tailor, NULL, true);
-    endTexFile(formula, &derivative, graphicXScale);
+    texDumpTree(&tailor, NULL, true, tailorX0, tailorOrder);
+
+    FILE* texFilePtr = generateGraphic(&derivative, graphicXScale, graphicYScale);
+    generateGraphic(formula, graphicXScale, graphicYScale);
+    generateGraphic(&tailor, graphicXScale, graphicYScale);
+    
+    endGraphicDump(texFilePtr);
+
+    endTexFile(formula, &derivative);
 
     configDtor();
-    
+    treeDtor(&derivative);
+    treeDtor(&tailor);
+
     LPRINTF("конец");
 }

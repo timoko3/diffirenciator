@@ -22,7 +22,7 @@
 #include <ctype.h>
 
 static treeNode_t* collapseConstant         (tree_t* derivative, treeNode_t* subTreeRoot);
-static int         calculateSubTree         (treeNode_t* subTreeRoot);
+
 static treeNode_t* removeNeutralElements    (tree_t* derivative, treeNode_t* subTreeRoot, treeNode_t** addrToAsignNewSubTree);
 static treeNode_t* removeNeutralSubtree     (tree_t* derivative, treeNode_t* subTreeRoot, treeNode_t* remainSubTreeRoot);
 static treeNode_t* removeLeftNeutralSubtree (tree_t* derivative, treeNode_t* subTreeRoot);
@@ -139,9 +139,11 @@ bool optimizeExpression(tree_t* derivative, treeNode_t* subTreeRoot){
     return true;
 }
 
-tree_t tailorExpansion(tree_t* expression, const char* variableToDiff){
+tree_t tailorExpansion(tree_t* expression, const char* variableToDiff, tree_t* tailorX0, tree_t* tailorOrder){
     assert(expression);
     assert(variableToDiff);
+    assert(tailorX0);
+    assert(tailorOrder);
 
     tree_t tailorTree;
     treeCtor(&tailorTree);
@@ -150,13 +152,16 @@ tree_t tailorExpansion(tree_t* expression, const char* variableToDiff){
     treeCtor(&curTermDerivative);
     curTermDerivative.root = _C(expression->root);
 
-    for(size_t curTerm = 0; curTerm <= PRECISION_TERM_TAILOR; curTerm++){
+    int x0val       = calculateSubTree(tailorX0->root);
+    int tailorOrderVal = calculateSubTree(tailorOrder->root);
+
+    for(size_t curTerm = 0; curTerm <= (size_t) tailorOrderVal; curTerm++){
         
         if(tailorTree.root){
-            tailorTree.root = _ADD(tailorTree.root, _MUL(_DIV(curTermDerivative.root, _N(factorial((int) curTerm))), _POW(_V("x"), _N((int) curTerm))));
+            tailorTree.root = _ADD(tailorTree.root, _MUL(_DIV(curTermDerivative.root, _N(factorial((int) curTerm))), _POW(_SUB(_V("x"), _N(x0val)), _N((int) curTerm))));
         }
         else{
-            tailorTree.root = _MUL(_DIV(curTermDerivative.root, _N(factorial((int) curTerm))), _POW(_V("x"), _N((int) curTerm)));
+            tailorTree.root = _MUL(_DIV(curTermDerivative.root, _N(factorial((int) curTerm))), _POW(_SUB(_V("x"), _N(x0val)), _N((int) curTerm)));
         }
         
         // logTree(&tailorTree, "%lu  tailorTree", curTerm);
@@ -383,7 +388,7 @@ static treeNode_t* removeRightNeutralSubtree(tree_t* derivative, treeNode_t* sub
 // }
 
 
-static int calculateSubTree(treeNode_t* subTreeRoot){
+int calculateSubTree(treeNode_t* subTreeRoot){
     assert(subTreeRoot);
     
     if(subTreeRoot->type == OPERATOR){

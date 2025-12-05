@@ -1,5 +1,6 @@
 #include "texDump.h"
 #include "derivative/operations.h"
+#include "differentiator.h"
 
 #define DEBUG
 
@@ -13,14 +14,22 @@
 static void defineMacros(FILE* texFilePtr);
 static void texDumpNode(FILE* texFilePtr, treeNode_t* node);
 
-const char* texDumpFileName = "DumpDifferentiator.tex";
+const char* texDumpFileName           = "DumpDifferentiator.tex";
+const char* PY_GEN_GRAPHIC_FILE_NAME  = "genGraphic.py";
 
 static void dumpRandomCleverMatanPhrase(FILE* texFilePtr);
 
 static void generateGraphic(FILE* texFilePtr, tree_t* expression, tree_t* scaleGraphic);
 static void dumpExpressionForGraphic(FILE* texFilePtr, treeNode_t* node);
 
-static bool needBracketsOp(treeNode_t* node, operation_t curOp);
+enum caseNeedBracketsOp{
+    NO_NEED,
+    LEFT_OPERAND,
+    RIGHT_OPERAND,
+    BOTH_OPERAND
+};
+
+static caseNeedBracketsOp needBracketsOp(treeNode_t* node, operation_t curOp);
 
 const char* cleverMatanPhrases[] = {
     "Обладая базовыми знаниями матеметики нетрудно заметить, что...\n",
@@ -33,7 +42,8 @@ const char* cleverMatanPhrases[] = {
     "Для того, чтобы точно понять данное преобразование советую обратиться к пособию Саблезубова Петра Ивановича к тому 5 сочинений по теме \"1000 способов вскрыть черепную коробку при помощи интеграла\" страница 666 3 абзац формула (17.2) для точного ее понимаю желательно прочитать предыдущие 3 параграфа\n"
 };
 
-void texDumpTree(tree_t* expression, FILE* texFilePtr, bool isTailorTree){
+
+void texDumpTree(tree_t* expression, FILE* texFilePtr, bool isTailorTree, tree_t* tailorX0, tree_t* tailorOrder){
     assert(expression);
 
     static size_t callsTexDump = 0;
@@ -117,9 +127,12 @@ void texDumpTree(tree_t* expression, FILE* texFilePtr, bool isTailorTree){
         dumpRandomCleverMatanPhrase(texFilePtr);
     }
 
-    fprintf(texFilePtr, "\\begin{dmath}\n y'(x)=");
+    if(isTailorTree)fprintf(texFilePtr, "\\begin{dmath}\n y(x)=");
+    else fprintf(texFilePtr, "\\begin{dmath}\n y'(x)=");
+
     texDumpNode(texFilePtr, expression->root);
-    if(isTailorTree) fprintf(texFilePtr, "+o(x^%lu)\n", PRECISION_TERM_TAILOR);
+    
+    if(isTailorTree) fprintf(texFilePtr, "+o((x-%d)^%d)\n", calculateSubTree(tailorX0->root), calculateSubTree(tailorOrder->root));
     fprintf(texFilePtr, "\\end{dmath}\n");
 
     if(openFileHere){
@@ -127,10 +140,9 @@ void texDumpTree(tree_t* expression, FILE* texFilePtr, bool isTailorTree){
     }
 }
 
-void endTexFile(tree_t* expression, tree_t* derivative, tree_t* scaleGraphic){
+void endTexFile(tree_t* expression, tree_t* derivative){
     assert(derivative);
     assert(expression);
-    assert(scaleGraphic);
 
     fileDescription texDumpFile{
         texDumpFileName,
@@ -152,8 +164,6 @@ void endTexFile(tree_t* expression, tree_t* derivative, tree_t* scaleGraphic){
     fprintf(texFilePtr, "\\begin{dmath}\ny'(x)=");
     texDumpNode(texFilePtr, derivative->root);
     fprintf(texFilePtr, "\\end{dmath}\n");
-
-    generateGraphic(texFilePtr, derivative, scaleGraphic);
 
     fprintf(texFilePtr, "\\section{P.S}");
     fprintf(texFilePtr, "Уважаемая кафедра высшей математики не принимайте всерьез данную работу. Автор на самом деле очень любит матан. Все персонажи вымышлены(почти) и ни один учебник математики не пострадал.");
@@ -196,14 +206,16 @@ static void texDumpNode(FILE* texFilePtr, treeNode_t* node){
 
         fprintf(texFilePtr, "%s", curOp.texCode);
 
+        caseNeedBracketsOp curBracketsCase = needBracketsOp(node, curOp);
+
         if(node->left){
             fprintf(texFilePtr, "{");
 
-            if(needBracketsOp(node, curOp))fprintf(texFilePtr, "(");
+            if(curBracketsCase == BOTH_OPERAND || curBracketsCase == LEFT_OPERAND) fprintf(texFilePtr, "(");
 
             texDumpNode(texFilePtr, node->left);
 
-            if(needBracketsOp(node, curOp)) fprintf(texFilePtr, ")");
+            if(curBracketsCase == BOTH_OPERAND || curBracketsCase == LEFT_OPERAND) fprintf(texFilePtr, ")");
             fprintf(texFilePtr, "}");
         }
 
@@ -211,11 +223,11 @@ static void texDumpNode(FILE* texFilePtr, treeNode_t* node){
 
         if(node->right){
             fprintf(texFilePtr, "{");
-            if(needBracketsOp(node, curOp)) fprintf(texFilePtr, "(");
+            if(curBracketsCase == BOTH_OPERAND || curBracketsCase == RIGHT_OPERAND) fprintf(texFilePtr, "(");
 
             texDumpNode(texFilePtr, node->right);
 
-            if(needBracketsOp(node, curOp)) fprintf(texFilePtr, ")");
+            if(curBracketsCase == BOTH_OPERAND || curBracketsCase == RIGHT_OPERAND) fprintf(texFilePtr, ")");
             fprintf(texFilePtr, "}");
         }
     }
@@ -230,35 +242,100 @@ static void dumpRandomCleverMatanPhrase(FILE* texFilePtr){
     fprintf(texFilePtr, "%s\n", cleverMatanPhrases[curPhraseInd]);
 }
 
-static void generateGraphic(FILE* texFilePtr, tree_t* expression, tree_t* scaleGraphic){
+FILE*  generateGraphic(tree_t* expression, tree_t* scaleGraphicX, tree_t* scaleGraphicY){
     assert(expression);
-    assert(texFilePtr);
-    assert(scaleGraphic);
+    assert(scaleGraphicX);
+    assert(scaleGraphicY);
 
-    fprintf(texFilePtr, "\\section{Теперь, чтобы все стало совсем понятно(ахахахахаахахаххаха).\\\\Построим график полученной производной исходной функции}\n");
+    static int genGraphicCalls = 0;
+    genGraphicCalls++;
 
-    fprintf(texFilePtr, "\\begin{center}\n");
+    static FILE* texFilePtr = NULL;
 
-    fprintf(texFilePtr, "\\begin{tikzpicture}\n"
-                        "\\begin{axis}[\n"
-                        "width=16cm,\n"
-                        "height=8cm,\n"
-                        "domain=%d:%d,\n"
-                        "samples=200,\n"
-                        "axis lines=middle,\n"
-                        "xlabel={$x$},\n"
-                        "ylabel={$y$},\n"
-                        "grid=both]\n", 
-                        scaleGraphic->root->left->data.num, 
-                        scaleGraphic->root->right->data.num);
+    if(genGraphicCalls == 1){
 
-    fprintf(texFilePtr, "\\addplot[thick, red] {");
+        fileDescription texDumpFile{
+            texDumpFileName,
+            "ab"
+        };
+
+        texFilePtr = myOpenFile(&texDumpFile);
+        assert(texFilePtr);
+
+        fprintf(texFilePtr, "\\section{Теперь, чтобы все стало совсем понятно(ахахахахаахахаххаха).\\\\Построим график полученной производной исходной функции}\n");
+
+        fprintf(texFilePtr, "\\begin{center}\n");
+
+        fprintf(texFilePtr, "\\begin{tikzpicture}\n"
+                            "\\begin{axis}[\n"
+                            "width=16cm,\n"
+                            "height=8cm,\n"
+                            "domain=%d:%d,\n"
+                            "xmin=%d,\n"
+                            "xmax=%d,\n"
+                            "ymin=%d,\n"
+                            "ymax=%d,\n"
+                            "restrict y to domain=-%d:%d,\n"
+                            "unbounded coords=discard,\n"
+                            "samples=5000,\n"
+                            "axis lines=middle,\n"
+                            "xlabel={$x$},\n"
+                            "ylabel={$y$},\n"
+                            "grid=both]\n", 
+                            scaleGraphicX->root->left->data.num, 
+                            scaleGraphicX->root->right->data.num,
+                            scaleGraphicX->root->left->data.num, 
+                            scaleGraphicX->root->right->data.num,
+                            scaleGraphicY->root->left->data.num,
+                            scaleGraphicY->root->right->data.num,
+                            scaleGraphicY->root->left->data.num,
+                            scaleGraphicY->root->right->data.num);
+    }
+
+    char color[10] = "";
+    switch(genGraphicCalls){
+        case 1: myStrCpy(color, "red");   break;
+        case 2: myStrCpy(color, "blue");  break;
+        case 3: myStrCpy(color, "green"); break;
+        default: break;
+    }
+
+    fprintf(texFilePtr, "\\addplot[thick, %s] {", color);
     dumpExpressionForGraphic(texFilePtr, expression->root);
     fprintf(texFilePtr, "};\n");
 
+    return texFilePtr;
+}
+
+void pythonGenGraphic(tree_t* expression, tree_t* scaleGraphicX, tree_t* scaleGraphicY){
+    assert(expression);
+    assert(scaleGraphicX);
+    assert(scaleGraphicY);
+
+    fileDescription pyGenGraphic{
+        PY_GEN_GRAPHIC_FILE_NAME,
+        "wb"
+    };
+
+    FILE* pyFilePtr = myOpenFile(&pyGenGraphic);
+    assert(pyFilePtr);
+
+    fprintf(pyFilePtr, "import matplotlib.pyplot as plt\n");
+    fprintf(pyFilePtr, "import numpy as np\n\n");
+
+    fprintf(pyFilePtr, "import numpy as np\n\n");
+    fprintf(pyFilePtr, "import operator\n");
+    fprintf(pyFilePtr, "import math\n");
+
+
+}
+
+void endGraphicDump(FILE* texFilePtr){
     fprintf(texFilePtr, "\\end{axis}\n"
                         "\\end{tikzpicture}\n");
     fprintf(texFilePtr, "\\end{center}\n\n");
+
+    fclose(texFilePtr);
 }
 
 static void dumpExpressionForGraphic(FILE* texFilePtr, treeNode_t* node){
@@ -278,12 +355,14 @@ static void dumpExpressionForGraphic(FILE* texFilePtr, treeNode_t* node){
             fprintf(texFilePtr, "%s", curOp.nameString);
         }
 
+        caseNeedBracketsOp curBracketsCase = needBracketsOp(node, curOp);
+
         if(node->left){
-            fprintf(texFilePtr, "(");
+            if(curBracketsCase == BOTH_OPERAND || curBracketsCase == LEFT_OPERAND) fprintf(texFilePtr, "(");
 
             dumpExpressionForGraphic(texFilePtr, node->left);
 
-            fprintf(texFilePtr, ")");
+            if(curBracketsCase == BOTH_OPERAND || curBracketsCase == LEFT_OPERAND) fprintf(texFilePtr, ")");
         }
 
         if(curOp.paramCount == 2){
@@ -291,16 +370,19 @@ static void dumpExpressionForGraphic(FILE* texFilePtr, treeNode_t* node){
         }
 
         if(node->right){
-            fprintf(texFilePtr, "(");
+            if(curBracketsCase == BOTH_OPERAND || curBracketsCase == RIGHT_OPERAND) fprintf(texFilePtr, "(");
 
             dumpExpressionForGraphic(texFilePtr, node->right);
 
-            fprintf(texFilePtr, ")");
+            if(curBracketsCase == BOTH_OPERAND || curBracketsCase == RIGHT_OPERAND) fprintf(texFilePtr, ")");
         }
     }
 }
 
-void startTexDumpTailor(){
+void startTexDumpTailor(tree_t* tailorX0, tree_t* tailorOrder){
+    assert(tailorX0);
+    assert(tailorOrder);
+
     fileDescription texDumpFile{
         texDumpFileName,
         "ab"
@@ -310,32 +392,32 @@ void startTexDumpTailor(){
     assert(texFilePtr);
 
     fprintf(texFilePtr, "\\section{И снова Тейлор ...- - -...}\n");
-    fprintf(texFilePtr, "Расчленим исходную функцию до $o(x^%lu)$.\n", PRECISION_TERM_TAILOR);
+    fprintf(texFilePtr, "Расчленим исходную функцию до $o((x-%d)^%d)$.\n", calculateSubTree(tailorX0->root), calculateSubTree(tailorOrder->root));
 
     fclose(texFilePtr);
 }
 
-static bool needBracketsOp(treeNode_t* node, operation_t curOp){
+static caseNeedBracketsOp needBracketsOp(treeNode_t* node, operation_t curOp){
     assert(node);
 
 
     if(isEqualStrings(curOp.nameString, "*") && (node->left->type != OPERATOR || node->right->type != OPERATOR)){
-        return false;
+        return NO_NEED;
     }
     else if(isEqualStrings(curOp.nameString, "*") && (node->left->type == OPERATOR) && (isEqualStrings(node->left->data.op, "+") || isEqualStrings(node->left->data.op, "-"))){
-        return true;
+        return BOTH_OPERAND;
     }
-    // else if(isEqualStrings(curOp.nameString, "*") && ((node->left->type == NUMBER && node->left->data.num < 0) || (node->right->type == NUMBER && node->right->data.num < 0))){
-    //     return true;
-    // }
+    else if(isEqualStrings(curOp.nameString, "^") && ((node->left->type == OPERATOR && isEqualStrings(node->left->data.op, "-")) || (node->left->type == OPERATOR && isEqualStrings(node->left->data.op, "+")))){
+        return LEFT_OPERAND;
+    }
     else{
         if(curOp.texNeedBrackets){
-            return true;
+            return BOTH_OPERAND;
         }
         else{
-            return false;
+            return NO_NEED;
         }
     }
 
-    return false;
+    return NO_NEED;
 }
