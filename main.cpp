@@ -68,16 +68,19 @@ int main(int argc, char* argv[]){
     
     startTexDumpTailor(tailorX0, tailorOrder);
     texDumpTree(&tailor, NULL, true, tailorX0, tailorOrder);
-
+    
     optimizeExpression(&tailor, tailor.root);
+    // logTree(&tailor, "tailor expansion after optimization");
 
     texDumpTree(&tailor, NULL, true, tailorX0, tailorOrder);
 
-    FILE* texFilePtr = generateGraphic(&derivative, graphicXScale, graphicYScale);
-    generateGraphic(formula, graphicXScale, graphicYScale);
-    generateGraphic(&tailor, graphicXScale, graphicYScale);
+    // FILE* texFilePtr = generateGraphic(&derivative, graphicXScale, graphicYScale);
+    // generateGraphic(formula, graphicXScale, graphicYScale);
+    // generateGraphic(&tailor, graphicXScale, graphicYScale);
     
-    endGraphicDump(texFilePtr);
+    pythonGenGraphic(formula, &derivative, &tailor, tailorOrder, tailorX0, graphicXScale, graphicYScale);
+
+    // endGraphicDump();
 
     endTexFile(formula, &derivative);
 

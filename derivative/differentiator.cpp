@@ -29,6 +29,7 @@ static treeNode_t* removeLeftNeutralSubtree (tree_t* derivative, treeNode_t* sub
 static treeNode_t* removeRightNeutralSubtree(tree_t* derivative, treeNode_t* subTreeRoot);
 
 // static treeNode_t* replaceDivisionWithPow(treeNode_t* subTreeRoot);
+static void replaceVariableWithNumber(treeNode_t* node, int valToReplace, const char* variableToDiff);
 
 tree_t differentiate(tree_t* expression, const char* variableToDiff){
     assert(expression);
@@ -64,6 +65,8 @@ treeNode_t* differentiateNode(treeNode_t* node, const char* variableToDiff){
 bool optimizeExpression(tree_t* derivative, treeNode_t* subTreeRoot){
     assert(derivative);
     assert(subTreeRoot);
+
+    // logTree(derivative, "optimization");
 
     LPRINTF("\n\nstart optimization");
 
@@ -152,24 +155,34 @@ tree_t tailorExpansion(tree_t* expression, const char* variableToDiff, tree_t* t
     treeCtor(&curTermDerivative);
     curTermDerivative.root = _C(expression->root);
 
-    int x0val       = calculateSubTree(tailorX0->root);
+    int x0val          = calculateSubTree(tailorX0->root);
     int tailorOrderVal = calculateSubTree(tailorOrder->root);
 
     for(size_t curTerm = 0; curTerm <= (size_t) tailorOrderVal; curTerm++){
-        
+        tree_t curTermDerivativeInPoint;
+        treeCtor(&curTermDerivativeInPoint);
+        curTermDerivativeInPoint.root = _C(curTermDerivative.root);
+        assert(curTermDerivativeInPoint.root);
+
+        // logTree(&curTermDerivativeInPoint, "tailor derivative copied to replace variable with num");
+
+        replaceVariableWithNumber(curTermDerivativeInPoint.root, tailorX0->root->data.num, variableToDiff);
+
         if(tailorTree.root){
-            tailorTree.root = _ADD(tailorTree.root, _MUL(_DIV(curTermDerivative.root, _N(factorial((int) curTerm))), _POW(_SUB(_V("x"), _N(x0val)), _N((int) curTerm))));
+            tailorTree.root = _ADD(tailorTree.root, _MUL(_DIV(curTermDerivativeInPoint.root, _N(factorial((int) curTerm))), _POW(_SUB(_V("x"), _N(x0val)), _N((int) curTerm))));
         }
         else{
-            tailorTree.root = _MUL(_DIV(curTermDerivative.root, _N(factorial((int) curTerm))), _POW(_SUB(_V("x"), _N(x0val)), _N((int) curTerm)));
+            tailorTree.root = _MUL(_DIV(curTermDerivativeInPoint.root, _N(factorial((int) curTerm))), _POW(_SUB(_V("x"), _N(x0val)), _N((int) curTerm)));
         }
         
         // logTree(&tailorTree, "%lu  tailorTree", curTerm);
-        
+        tree_t tmp = curTermDerivative;
         curTermDerivative = differentiate(&curTermDerivative, variableToDiff);
-
+        freeNode(tmp.root, false);
     }
-    freeNode(curTermDerivative.root,     false);
+    freeNode(curTermDerivative.root, false);
+    
+    setParent(tailorTree.root);
 
     return tailorTree;
 }
@@ -185,6 +198,10 @@ static treeNode_t* collapseConstant(tree_t* derivative, treeNode_t* subTreeRoot)
 
     treeNode_t* result = NULL;
 
+    if(subTreeRoot->type == OPERATOR && isEqualStrings(subTreeRoot->data.op, "/")){
+        return subTreeRoot;
+    }
+
     int calculatedVal = calculateSubTree(subTreeRoot);
     LPRINTF("calculatedVal: %d", calculatedVal);
 
@@ -198,6 +215,8 @@ static treeNode_t* collapseConstant(tree_t* derivative, treeNode_t* subTreeRoot)
     
     LPRINTF("freed collapsingConst with no problems");
 
+
+    LPRINTF("subTreeRoot = %p\n", subTreeRoot);
     if(subTreeRoot == derivative->root){
         LPRINTF("subTreeRoot == derivative->root");
         derivative->root = createNewNodeNumber(calculatedVal, NULL, NULL);
@@ -209,13 +228,16 @@ static treeNode_t* collapseConstant(tree_t* derivative, treeNode_t* subTreeRoot)
     }
 
     if(subTreeRoot->parent->left == subTreeRoot){
+        LPRINTF("case subTreeRoot parent's left");
         subTreeRoot->parent->left = createNewNodeNumber(calculatedVal, NULL, NULL);
         result = subTreeRoot->parent->right;
     }
     else{
+        LPRINTF("case subTreeRoot parent's left");
         subTreeRoot->parent->right = createNewNodeNumber(calculatedVal, NULL, NULL);
         result = subTreeRoot->parent->right;
     }
+    LPRINTF("MEOW");
     setParent(subTreeRoot->parent);
 
     LPRINTF("setParent succeed in collapseConstant func");
@@ -223,7 +245,7 @@ static treeNode_t* collapseConstant(tree_t* derivative, treeNode_t* subTreeRoot)
     freeExpressionNodeData(subTreeRoot, false, 1);
     free(subTreeRoot);
 
-    texDumpTree(derivative);
+    // texDumpTree(derivative);
 
     LPRINTF("ended collapsing constant and free root");
     return result;
@@ -268,7 +290,7 @@ static treeNode_t* removeNeutralElements(tree_t* derivative, treeNode_t* subTree
             removeNeutralCaseZeroMulCount++;
 
             // logTree(derivative, "during removal of neutral mul 0");
-            texDumpTree(derivative);
+            // texDumpTree(derivative);
 
             return newNode;
         }
@@ -279,7 +301,7 @@ static treeNode_t* removeNeutralElements(tree_t* derivative, treeNode_t* subTree
             LPRINTF("*addrToAsignNewSubTree = %p", *addrToAsignNewSubTree);
             *addrToAsignNewSubTree = newRootLeft;
             subTreeRoot = newRootLeft;
-            texDumpTree(derivative);
+            // texDumpTree(derivative);
         }
 
         treeNode_t* newRootRight = removeRightNeutralSubtree(derivative, subTreeRoot);
@@ -287,7 +309,7 @@ static treeNode_t* removeNeutralElements(tree_t* derivative, treeNode_t* subTree
             LPRINTF("*addrToAsignNewSubTree = %p", *addrToAsignNewSubTree);
             *addrToAsignNewSubTree = newRootRight;
             subTreeRoot = newRootRight;
-            texDumpTree(derivative);
+            // texDumpTree(derivative);
         }
     }
 
@@ -324,6 +346,7 @@ static treeNode_t* removeNeutralSubtree(tree_t* derivative, treeNode_t* subTreeR
             }
             else{
                 subTreeRoot->parent->parent->right = remainSubTreeRoot;
+                remainSubTreeRoot->parent = subTreeRoot->parent->parent;
             }
         }
         else{
@@ -390,7 +413,7 @@ static treeNode_t* removeRightNeutralSubtree(tree_t* derivative, treeNode_t* sub
 
 int calculateSubTree(treeNode_t* subTreeRoot){
     assert(subTreeRoot);
-    
+
     if(subTreeRoot->type == OPERATOR){
         for(size_t curOper = 0; curOper < sizeof(operations) / sizeof(operation_t); curOper++){
             if(isEqualStrings(operations[curOper].nameString, subTreeRoot->data.op)){
@@ -402,8 +425,10 @@ int calculateSubTree(treeNode_t* subTreeRoot){
                     case 2: params[0] = calculateSubTree(subTreeRoot->left); params[1] = calculateSubTree(subTreeRoot->right); break;
                     default: break;
                 }
-
+                // LPRINTF("params[0] = %d, params[1] = %d", params[0], params[1]);
+                
                 int result = operations[curOper].calcHandler(params);
+                LPRINTF("result = %d", result);
 
                 free(params);
                 return result;
@@ -416,4 +441,24 @@ int calculateSubTree(treeNode_t* subTreeRoot){
 
     LPRINTF("calculation failure");
     return 0;
+}
+
+static void replaceVariableWithNumber(treeNode_t* node, int valToReplace, const char* variableToDiff){
+    assert(node);
+    assert(variableToDiff);
+
+    if(node->type == VARIABLE && isEqualStrings(node->data.var, variableToDiff)){
+        free(node->data.var);
+        node->type = NUMBER;
+        node->data.num = valToReplace;
+
+    }
+
+    if(node->left){
+        replaceVariableWithNumber(node->left, valToReplace, variableToDiff);
+    }
+
+    if(node->right){
+        replaceVariableWithNumber(node->right, valToReplace, variableToDiff);
+    }
 }

@@ -1,5 +1,9 @@
 #include "mathHandlers.h"
 
+#define DEBUG
+
+#include "debug.h"
+
 #include <math.h>
 #include <assert.h>
 #include <stdio.h>
@@ -41,13 +45,15 @@ int powH(int* params){
 int sinH(int* params){
     assert(params);
 
-    return (int) sin(params[0]);
+    LPRINTF("Сейчас операция синус c параметром %d\n", params[0]);
+
+    return (int) round(sin(params[0]));
 } 
 
 int cosH(int* params){
     assert(params);
 
-    return (int) cos(params[0]);
+    return (int) round(cos(params[0]));
 } 
 
 int tanH(int* params){

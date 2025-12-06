@@ -242,95 +242,162 @@ static void dumpRandomCleverMatanPhrase(FILE* texFilePtr){
     fprintf(texFilePtr, "%s\n", cleverMatanPhrases[curPhraseInd]);
 }
 
-FILE*  generateGraphic(tree_t* expression, tree_t* scaleGraphicX, tree_t* scaleGraphicY){
+// FILE*  generateGraphic(tree_t* expression, tree_t* scaleGraphicX, tree_t* scaleGraphicY){
+//     assert(expression);
+//     assert(scaleGraphicX);
+//     assert(scaleGraphicY);
+
+//     static int genGraphicCalls = 0;
+//     genGraphicCalls++;
+
+//     static FILE* texFilePtr = NULL;
+
+//     if(genGraphicCalls == 1){
+
+//         fileDescription texDumpFile{
+//             texDumpFileName,
+//             "ab"
+//         };
+
+//         texFilePtr = myOpenFile(&texDumpFile);
+//         assert(texFilePtr);
+
+//         fprintf(texFilePtr, "\\section{Теперь, чтобы все стало совсем понятно(ахахахахаахахаххаха).\\\\Построим график полученной производной исходной функции}\n");
+
+//         fprintf(texFilePtr, "\\begin{center}\n");
+
+//         fprintf(texFilePtr, "\\begin{tikzpicture}\n"
+//                             "\\begin{axis}[\n"
+//                             "width=16cm,\n"
+//                             "height=8cm,\n"
+//                             "domain=%d:%d,\n"
+//                             "xmin=%d,\n"
+//                             "xmax=%d,\n"
+//                             "ymin=%d,\n"
+//                             "ymax=%d,\n"
+//                             "restrict y to domain=-%d:%d,\n"
+//                             "unbounded coords=discard,\n"
+//                             "samples=5000,\n"
+//                             "axis lines=middle,\n"
+//                             "xlabel={$x$},\n"
+//                             "ylabel={$y$},\n"
+//                             "grid=both]\n", 
+//                             scaleGraphicX->root->left->data.num, 
+//                             scaleGraphicX->root->right->data.num,
+//                             scaleGraphicX->root->left->data.num, 
+//                             scaleGraphicX->root->right->data.num,
+//                             scaleGraphicY->root->left->data.num,
+//                             scaleGraphicY->root->right->data.num,
+//                             scaleGraphicY->root->left->data.num,
+//                             scaleGraphicY->root->right->data.num);
+//     }
+
+//     char color[10] = "";
+//     switch(genGraphicCalls){
+//         case 1: myStrCpy(color, "red");   break;
+//         case 2: myStrCpy(color, "blue");  break;
+//         case 3: myStrCpy(color, "green"); break;
+//         default: break;
+//     }
+
+//     fprintf(texFilePtr, "\\addplot[thick, %s] {", color);
+//     dumpExpressionForGraphic(texFilePtr, expression->root);
+//     fprintf(texFilePtr, "};\n");
+
+//     return texFilePtr;
+// }
+
+void pythonGenGraphic(tree_t* expression, tree_t* derivative, tree_t* tailor, tree_t* tailorOrder, tree_t* tailorX0, tree_t* scaleGraphicX, tree_t* scaleGraphicY){
     assert(expression);
+    assert(derivative);
+    assert(tailor);
+    assert(tailorOrder);
+    assert(tailorX0);
     assert(scaleGraphicX);
     assert(scaleGraphicY);
 
-    static int genGraphicCalls = 0;
-    genGraphicCalls++;
+    static int callsGenGraphic = 0;
+    callsGenGraphic++;
 
-    static FILE* texFilePtr = NULL;
+    FILE* pyFilePtr = NULL;
 
-    if(genGraphicCalls == 1){
-
-        fileDescription texDumpFile{
-            texDumpFileName,
-            "ab"
+    if(callsGenGraphic == 1){
+        fileDescription pyGenGraphic{
+            PY_GEN_GRAPHIC_FILE_NAME,
+            "wb"
         };
 
-        texFilePtr = myOpenFile(&texDumpFile);
-        assert(texFilePtr);
+        pyFilePtr = myOpenFile(&pyGenGraphic);
+        assert(pyFilePtr);
 
-        fprintf(texFilePtr, "\\section{Теперь, чтобы все стало совсем понятно(ахахахахаахахаххаха).\\\\Построим график полученной производной исходной функции}\n");
+        fprintf(pyFilePtr, "import matplotlib.pyplot as plt\n");
+        fprintf(pyFilePtr, "import numpy as np\n\n");
 
-        fprintf(texFilePtr, "\\begin{center}\n");
+        fprintf(pyFilePtr, "import numpy as np\n\n");
+        fprintf(pyFilePtr, "import operator\n");
+        fprintf(pyFilePtr, "import math\n");
 
-        fprintf(texFilePtr, "\\begin{tikzpicture}\n"
-                            "\\begin{axis}[\n"
-                            "width=16cm,\n"
-                            "height=8cm,\n"
-                            "domain=%d:%d,\n"
-                            "xmin=%d,\n"
-                            "xmax=%d,\n"
-                            "ymin=%d,\n"
-                            "ymax=%d,\n"
-                            "restrict y to domain=-%d:%d,\n"
-                            "unbounded coords=discard,\n"
-                            "samples=5000,\n"
-                            "axis lines=middle,\n"
-                            "xlabel={$x$},\n"
-                            "ylabel={$y$},\n"
-                            "grid=both]\n", 
-                            scaleGraphicX->root->left->data.num, 
-                            scaleGraphicX->root->right->data.num,
-                            scaleGraphicX->root->left->data.num, 
-                            scaleGraphicX->root->right->data.num,
-                            scaleGraphicY->root->left->data.num,
-                            scaleGraphicY->root->right->data.num,
-                            scaleGraphicY->root->left->data.num,
-                            scaleGraphicY->root->right->data.num);
+        fprintf(pyFilePtr, "addH = operator.add    \n"  );
+        fprintf(pyFilePtr, "subH = operator.sub    \n"  );
+        fprintf(pyFilePtr, "mulH = operator.mul    \n"  );
+        fprintf(pyFilePtr, "divH = operator.truediv\n"  );
+        fprintf(pyFilePtr, "powH = operator.pow    \n\n");
+
+
+        fprintf(pyFilePtr, "sinH = math.sin\n"                 );
+        fprintf(pyFilePtr, "cosH = math.cos\n"                 );
+        fprintf(pyFilePtr, "tanH = math.tan\n"                 );
+        fprintf(pyFilePtr, "cotH = lambda x: 1 / math.tan(x)\n");
+        fprintf(pyFilePtr, "lnH = math.log\n"                  );
+        fprintf(pyFilePtr, "shH = math.sinh\n"                 );
+        fprintf(pyFilePtr, "chH = math.cosh\n"                 );
+        fprintf(pyFilePtr, "arcsinH = math.asin\n"             );
+        fprintf(pyFilePtr, "arccosH = math.acos\n"             );
+        fprintf(pyFilePtr, "arctanH = math.atan\n"             );
+        fprintf(pyFilePtr, "sqrtH = math.sqrt\n"               );
     }
 
-    char color[10] = "";
-    switch(genGraphicCalls){
-        case 1: myStrCpy(color, "red");   break;
-        case 2: myStrCpy(color, "blue");  break;
-        case 3: myStrCpy(color, "green"); break;
-        default: break;
-    }
 
-    fprintf(texFilePtr, "\\addplot[thick, %s] {", color);
-    dumpExpressionForGraphic(texFilePtr, expression->root);
-    fprintf(texFilePtr, "};\n");
+    fprintf(pyFilePtr, "def y(x):\n\treturn ");
+    dumpExpressionForGraphic(pyFilePtr, expression->root);
+    fprintf(pyFilePtr, "\n");
 
-    return texFilePtr;
+    fprintf(pyFilePtr, "def taylor(x):\n\treturn ");
+    dumpExpressionForGraphic(pyFilePtr, tailor->root);
+    fprintf(pyFilePtr, "\n");
+
+    fprintf(pyFilePtr, "def y_prime(x):\n\treturn ");
+    dumpExpressionForGraphic(pyFilePtr, derivative->root);
+    fprintf(pyFilePtr, "\n");
+
+    fprintf(pyFilePtr, "x_vals = np.linspace(%d, %d, 400)\n", scaleGraphicX->root->left->data.num, scaleGraphicX->root->right->data.num);
+
+    fprintf(pyFilePtr, "plt.figure(figsize=(10, 6))\n");
+
+    fprintf(pyFilePtr, "plt.plot(x_vals, y(x_vals), label=\"f(x)\", linewidth=2)\n");
+    fprintf(pyFilePtr, "plt.plot(x_vals, taylor(x_vals), '--', label=\"Тейлор f(x)\", linewidth=2)\n");
+    fprintf(pyFilePtr, "plt.plot(x_vals, y_prime(x_vals), label=\"f'(x)\", linewidth=2)\n");
+
+    fprintf(pyFilePtr, "plt.xlabel(\"x\", fontsize=12)\n");
+    fprintf(pyFilePtr, "plt.ylabel(\"y\", fontsize=12)\n");
+    fprintf(pyFilePtr, "plt.grid(True, alpha=0.3)\n");
+
+    fprintf(pyFilePtr, "plt.savefig(\"graph.jpg\")\n");
+
+    fclose(pyFilePtr);
+
+    system("python genGraphic.py");
 }
 
-void pythonGenGraphic(tree_t* expression, tree_t* scaleGraphicX, tree_t* scaleGraphicY){
-    assert(expression);
-    assert(scaleGraphicX);
-    assert(scaleGraphicY);
-
-    fileDescription pyGenGraphic{
-        PY_GEN_GRAPHIC_FILE_NAME,
-        "wb"
+void endGraphicDump(){
+    fileDescription texDumpFile{
+        texDumpFileName,
+        "ab"
     };
 
-    FILE* pyFilePtr = myOpenFile(&pyGenGraphic);
-    assert(pyFilePtr);
+    FILE* texFilePtr = myOpenFile(&texDumpFile);
+    assert(texFilePtr);
 
-    fprintf(pyFilePtr, "import matplotlib.pyplot as plt\n");
-    fprintf(pyFilePtr, "import numpy as np\n\n");
-
-    fprintf(pyFilePtr, "import numpy as np\n\n");
-    fprintf(pyFilePtr, "import operator\n");
-    fprintf(pyFilePtr, "import math\n");
-
-
-}
-
-void endGraphicDump(FILE* texFilePtr){
     fprintf(texFilePtr, "\\end{axis}\n"
                         "\\end{tikzpicture}\n");
     fprintf(texFilePtr, "\\end{center}\n\n");
@@ -352,7 +419,7 @@ static void dumpExpressionForGraphic(FILE* texFilePtr, treeNode_t* node){
         operation_t curOp = *getCurrentOperation(node->data.op);
 
         if(curOp.paramCount == 1){
-            fprintf(texFilePtr, "%s", curOp.nameString);
+            fprintf(texFilePtr, "%s", curOp.pyCode);
         }
 
         caseNeedBracketsOp curBracketsCase = needBracketsOp(node, curOp);
@@ -366,7 +433,7 @@ static void dumpExpressionForGraphic(FILE* texFilePtr, treeNode_t* node){
         }
 
         if(curOp.paramCount == 2){
-            fprintf(texFilePtr, "%s", curOp.nameString);
+            fprintf(texFilePtr, "%s", curOp.pyCode);
         }
 
         if(node->right){

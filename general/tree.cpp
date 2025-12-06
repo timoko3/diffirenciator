@@ -56,7 +56,7 @@ treeNode_t* createNewNode(treeNode_t* left, treeNode_t* right){
 
     treeNode_t* newNode = (treeNode_t*) calloc(1, sizeof(treeNode_t));
     assert(newNode);
-    LPRINTF("Выделил память");
+    LPRINTF("Выделил память newNode = %p", newNode);
 
     newNode->left  = left;
     newNode->right = right;
