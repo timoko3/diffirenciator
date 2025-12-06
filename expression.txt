@@ -1,5 +1,5 @@
-tailor_order = 2$
-tailor_x0 = 1$
-formula = sin(x)$
-x_scale = -5:5$
+tailor_order = 5$
+tailor_x0 = 5$
+formula = cos(x)*sin(x)$
+x_scale = -5:10$
 y_scale = -5:5$

@@ -13,7 +13,7 @@ enum differentiatorConfigParams{
 
 
 struct configParam{
-    char* name;
+    const char* name;
     differentiatorConfigParams paramType;
     tree_t treeParam;
 };

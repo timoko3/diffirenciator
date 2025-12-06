@@ -9,7 +9,7 @@
 #include "tree.h"
 #include "../texDump.h"
 
-#define DEBUG
+// #define DEBUG
 
 #include "../general/poison.h"
 #include "../general/debug.h"
@@ -21,9 +21,9 @@
 #include <string.h>
 #include <ctype.h>
 
-static treeNode_t* collapseConstant         (tree_t* derivative, treeNode_t* subTreeRoot);
+static treeNode_t* collapseConstant         (tree_t* derivative, treeNode_t* subTreeRoot, bool needDump);
 
-static treeNode_t* removeNeutralElements    (tree_t* derivative, treeNode_t* subTreeRoot, treeNode_t** addrToAsignNewSubTree);
+static treeNode_t* removeNeutralElements    (tree_t* derivative, treeNode_t* subTreeRoot, treeNode_t** addrToAsignNewSubTree, bool needDump);
 static treeNode_t* removeNeutralSubtree     (tree_t* derivative, treeNode_t* subTreeRoot, treeNode_t* remainSubTreeRoot);
 static treeNode_t* removeLeftNeutralSubtree (tree_t* derivative, treeNode_t* subTreeRoot);
 static treeNode_t* removeRightNeutralSubtree(tree_t* derivative, treeNode_t* subTreeRoot);
@@ -62,29 +62,34 @@ treeNode_t* differentiateNode(treeNode_t* node, const char* variableToDiff){
     return createdNode;
 }
 
-bool optimizeExpression(tree_t* derivative, treeNode_t* subTreeRoot){
+bool optimizeExpression(tree_t* derivative, treeNode_t* subTreeRoot, bool needDump){
     assert(derivative);
     assert(subTreeRoot);
 
-    // logTree(derivative, "optimization");
+    // if(needDump){
+    //     logTree(derivative, "optimization");
+    // }
 
     LPRINTF("\n\nstart optimization");
 
     if(subTreeRoot->left){
-        optimizeExpression(derivative, subTreeRoot->left);
+        optimizeExpression(derivative, subTreeRoot->left, needDump);
     }
     if(subTreeRoot->right){
-        optimizeExpression(derivative, subTreeRoot->right);
+        optimizeExpression(derivative, subTreeRoot->right, needDump);
     }
 
     if(checkNotHaveVariables(subTreeRoot)){
         LPRINTF("subTreeRoot addr: %p", subTreeRoot);
-        subTreeRoot = collapseConstant(derivative, subTreeRoot);
+        subTreeRoot = collapseConstant(derivative, subTreeRoot, needDump);
 
         if(subTreeRoot == derivative->root){
             return true;
         }
     }
+
+    LPRINTF("subTreeRoot = %p", subTreeRoot);
+    LPRINTF("subTreeRoot->parent = %p", subTreeRoot->parent);
 
     treeNode_t** addrToAsignNewSubTree = NULL;
     if(subTreeRoot->parent){
@@ -102,7 +107,7 @@ bool optimizeExpression(tree_t* derivative, treeNode_t* subTreeRoot){
     }
     assert(addrToAsignNewSubTree);
 
-    subTreeRoot = removeNeutralElements(derivative, subTreeRoot, addrToAsignNewSubTree);
+    subTreeRoot = removeNeutralElements(derivative, subTreeRoot, addrToAsignNewSubTree, needDump);
 
     // if(subTreeRoot->type == OPERATOR){
     //     LPRINTF("check case with pow subTreeRoot->left->data.var = %d");
@@ -140,6 +145,33 @@ bool optimizeExpression(tree_t* derivative, treeNode_t* subTreeRoot){
     // }
 
     return true;
+}
+
+tree_t tangentExpression(tree_t* expression, tree_t* derivative, tree_t* tailorX0, const char* variableToDiff){
+    assert(expression);
+    assert(derivative);
+    assert(tailorX0);
+    assert(variableToDiff);
+
+    tree_t tangentTree;
+    treeCtor(&tangentTree);
+
+    tree_t derivativeInPoint;
+    treeCtor(&derivativeInPoint);
+    derivativeInPoint.root = _C(derivative->root);
+    replaceVariableWithNumber(derivativeInPoint.root, tailorX0->root->data.num, variableToDiff);
+
+    tree_t expressionInPoint;
+    treeCtor(&expressionInPoint);
+    expressionInPoint.root = _C(expression->root);
+    replaceVariableWithNumber(expressionInPoint.root, tailorX0->root->data.num, variableToDiff);
+    
+    tangentTree.root = _ADD(expressionInPoint.root, _MUL(derivativeInPoint.root, _SUB(_V("x"),  _N(tailorX0->root->data.num))));
+    
+    // freeNode(derivativeInPoint.root, false);
+    // freeNode(expressionInPoint.root, false);
+
+    return tangentTree;
 }
 
 tree_t tailorExpansion(tree_t* expression, const char* variableToDiff, tree_t* tailorX0, tree_t* tailorOrder){
@@ -187,7 +219,7 @@ tree_t tailorExpansion(tree_t* expression, const char* variableToDiff, tree_t* t
     return tailorTree;
 }
 
-static treeNode_t* collapseConstant(tree_t* derivative, treeNode_t* subTreeRoot){
+static treeNode_t* collapseConstant(tree_t* derivative, treeNode_t* subTreeRoot, bool needDump){
     assert(subTreeRoot);
 
     static size_t collapseConstantCount = 1;
@@ -230,7 +262,7 @@ static treeNode_t* collapseConstant(tree_t* derivative, treeNode_t* subTreeRoot)
     if(subTreeRoot->parent->left == subTreeRoot){
         LPRINTF("case subTreeRoot parent's left");
         subTreeRoot->parent->left = createNewNodeNumber(calculatedVal, NULL, NULL);
-        result = subTreeRoot->parent->right;
+        result = subTreeRoot->parent->left;
     }
     else{
         LPRINTF("case subTreeRoot parent's left");
@@ -245,13 +277,15 @@ static treeNode_t* collapseConstant(tree_t* derivative, treeNode_t* subTreeRoot)
     freeExpressionNodeData(subTreeRoot, false, 1);
     free(subTreeRoot);
 
-    // texDumpTree(derivative);
+    if(needDump){
+        texDumpTree(derivative);
+    }
 
     LPRINTF("ended collapsing constant and free root");
     return result;
 }
 
-static treeNode_t* removeNeutralElements(tree_t* derivative, treeNode_t* subTreeRoot, treeNode_t** addrToAsignNewSubTree){
+static treeNode_t* removeNeutralElements(tree_t* derivative, treeNode_t* subTreeRoot, treeNode_t** addrToAsignNewSubTree, bool needDump){
     assert(subTreeRoot);
     assert(derivative);
     assert(addrToAsignNewSubTree);
@@ -301,7 +335,10 @@ static treeNode_t* removeNeutralElements(tree_t* derivative, treeNode_t* subTree
             LPRINTF("*addrToAsignNewSubTree = %p", *addrToAsignNewSubTree);
             *addrToAsignNewSubTree = newRootLeft;
             subTreeRoot = newRootLeft;
-            // texDumpTree(derivative);
+
+            if(needDump){
+                texDumpTree(derivative);
+            }
         }
 
         treeNode_t* newRootRight = removeRightNeutralSubtree(derivative, subTreeRoot);
@@ -309,7 +346,10 @@ static treeNode_t* removeNeutralElements(tree_t* derivative, treeNode_t* subTree
             LPRINTF("*addrToAsignNewSubTree = %p", *addrToAsignNewSubTree);
             *addrToAsignNewSubTree = newRootRight;
             subTreeRoot = newRootRight;
-            // texDumpTree(derivative);
+
+            if(needDump){
+                texDumpTree(derivative);
+            }
         }
     }
 

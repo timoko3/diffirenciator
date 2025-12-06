@@ -2,7 +2,7 @@
 #include "tree.h"
 #include "expressionTree.h"
 
-#define DEBUG
+// #define DEBUG
 
 #include "../general/debug.h"
 

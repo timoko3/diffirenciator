@@ -4,7 +4,7 @@
 #include "protectionDifferentiator.h"
 #include "../derivative/differentiatorConfig.h"
 
-#define DEBUG
+// #define DEBUG
 
 #include "strFunc.h"
 #include "debug.h"

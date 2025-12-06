@@ -2,7 +2,7 @@
 #include "operations.h"
 #include "DSL.h"
 
-#define DEBUG
+// #define DEBUG
 
 #include "../general/tree.h"
 #include "../general/strFunc.h"

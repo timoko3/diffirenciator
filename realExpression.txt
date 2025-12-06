@@ -1,5 +1,5 @@
-tailor_order = 2$
+tailor_order = 5$
 tailor_x0 = 1$
 formula = sin(15*x^3+7)+cos(9*x+6)^5$
-x_scale = -6:6$
-y_scale = -25:25$
+x_scale = -1:2$
+y_scale = -10:10$

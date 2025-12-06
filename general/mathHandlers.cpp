@@ -1,6 +1,6 @@
 #include "mathHandlers.h"
 
-#define DEBUG
+// #define DEBUG
 
 #include "debug.h"
 

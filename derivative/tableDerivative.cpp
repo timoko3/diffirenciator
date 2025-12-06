@@ -4,7 +4,7 @@
 #include "operations.h"
 #include "expressionTree.h"
 
-#define DEBUG 
+// #define DEBUG 
 
 #include "../general/tree.h"
 #include "../general/debug.h"

@@ -307,10 +307,32 @@ static void dumpRandomCleverMatanPhrase(FILE* texFilePtr){
 //     return texFilePtr;
 // }
 
-void pythonGenGraphic(tree_t* expression, tree_t* derivative, tree_t* tailor, tree_t* tailorOrder, tree_t* tailorX0, tree_t* scaleGraphicX, tree_t* scaleGraphicY){
+void insertGraphicTex(){
+    static FILE* texFilePtr = NULL;
+    fileDescription texDumpFile{
+        texDumpFileName,
+        "ab"
+    };
+
+    texFilePtr = myOpenFile(&texDumpFile);
+    assert(texFilePtr);
+
+    fprintf(texFilePtr, "\\section{Теперь, чтобы все стало совсем понятно(ахахахахаахахаххаха).\\\\Построим график полученной производной исходной функции}\n");
+
+    fprintf(texFilePtr, "\\begin{figure}\n"
+                    "\\centering\n"
+                    "\\includegraphics[width=1.0\\textwidth, keepaspectratio]{graph.jpg}\n"
+                    "\\end{figure}\n");
+    fprintf(texFilePtr, "\\newpage\n");
+
+    fclose(texFilePtr);
+}
+
+void pythonGenGraphic(tree_t* expression, tree_t* derivative, tree_t* tailor, tree_t* tangent, tree_t* tailorOrder, tree_t* tailorX0, tree_t* scaleGraphicX, tree_t* scaleGraphicY){
     assert(expression);
     assert(derivative);
     assert(tailor);
+    assert(tangent);
     assert(tailorOrder);
     assert(tailorX0);
     assert(scaleGraphicX);
@@ -337,24 +359,24 @@ void pythonGenGraphic(tree_t* expression, tree_t* derivative, tree_t* tailor, tr
         fprintf(pyFilePtr, "import operator\n");
         fprintf(pyFilePtr, "import math\n");
 
-        fprintf(pyFilePtr, "addH = operator.add    \n"  );
-        fprintf(pyFilePtr, "subH = operator.sub    \n"  );
-        fprintf(pyFilePtr, "mulH = operator.mul    \n"  );
-        fprintf(pyFilePtr, "divH = operator.truediv\n"  );
-        fprintf(pyFilePtr, "powH = operator.pow    \n\n");
+        // fprintf(pyFilePtr, "addH = operator.add    \n"  );
+        // fprintf(pyFilePtr, "subH = operator.sub    \n"  );
+        // fprintf(pyFilePtr, "mulH = operator.mul    \n"  );
+        // fprintf(pyFilePtr, "divH = operator.truediv\n"  );
+        // fprintf(pyFilePtr, "powH = operator.pow    \n\n");
 
 
-        fprintf(pyFilePtr, "sinH = math.sin\n"                 );
-        fprintf(pyFilePtr, "cosH = math.cos\n"                 );
-        fprintf(pyFilePtr, "tanH = math.tan\n"                 );
-        fprintf(pyFilePtr, "cotH = lambda x: 1 / math.tan(x)\n");
-        fprintf(pyFilePtr, "lnH = math.log\n"                  );
-        fprintf(pyFilePtr, "shH = math.sinh\n"                 );
-        fprintf(pyFilePtr, "chH = math.cosh\n"                 );
-        fprintf(pyFilePtr, "arcsinH = math.asin\n"             );
-        fprintf(pyFilePtr, "arccosH = math.acos\n"             );
-        fprintf(pyFilePtr, "arctanH = math.atan\n"             );
-        fprintf(pyFilePtr, "sqrtH = math.sqrt\n"               );
+        // fprintf(pyFilePtr, "sinH = math.sin\n"                 );
+        // fprintf(pyFilePtr, "cosH = math.cos\n"                 );
+        // fprintf(pyFilePtr, "tanH = math.tan\n"                 );
+        // fprintf(pyFilePtr, "cotH = lambda x: 1 / math.tan(x)\n");
+        // fprintf(pyFilePtr, "lnH = math.log\n"                  );
+        // fprintf(pyFilePtr, "shH = math.sinh\n"                 );
+        // fprintf(pyFilePtr, "chH = math.cosh\n"                 );
+        // fprintf(pyFilePtr, "arcsinH = math.asin\n"             );
+        // fprintf(pyFilePtr, "arccosH = math.acos\n"             );
+        // fprintf(pyFilePtr, "arctanH = math.atan\n"             );
+        // fprintf(pyFilePtr, "sqrtH = math.sqrt\n"               );
     }
 
 
@@ -370,13 +392,27 @@ void pythonGenGraphic(tree_t* expression, tree_t* derivative, tree_t* tailor, tr
     dumpExpressionForGraphic(pyFilePtr, derivative->root);
     fprintf(pyFilePtr, "\n");
 
-    fprintf(pyFilePtr, "x_vals = np.linspace(%d, %d, 400)\n", scaleGraphicX->root->left->data.num, scaleGraphicX->root->right->data.num);
+    fprintf(pyFilePtr, "def tangent(x):\n\treturn ");
+    dumpExpressionForGraphic(pyFilePtr, tangent->root);
+    fprintf(pyFilePtr, "\n");
 
+    fprintf(pyFilePtr, "x_vals = np.linspace(%d, %d, 1000)\n", scaleGraphicX->root->left->data.num, scaleGraphicX->root->right->data.num);
+    
     fprintf(pyFilePtr, "plt.figure(figsize=(10, 6))\n");
-
+    
     fprintf(pyFilePtr, "plt.plot(x_vals, y(x_vals), label=\"f(x)\", linewidth=2)\n");
     fprintf(pyFilePtr, "plt.plot(x_vals, taylor(x_vals), '--', label=\"Тейлор f(x)\", linewidth=2)\n");
-    fprintf(pyFilePtr, "plt.plot(x_vals, y_prime(x_vals), label=\"f'(x)\", linewidth=2)\n");
+    // fprintf(pyFilePtr, "plt.plot(x_vals, y_prime(x_vals), label=\"f'(x)\", linewidth=2)\n");
+    fprintf(pyFilePtr, "plt.plot(x_vals, tangent(x_vals), label=\"касетельная\", linewidth=2)\n");
+    
+    fprintf(pyFilePtr, "plt.axis([%d, %d, %d, %d])\n", scaleGraphicX->root->left->data.num, scaleGraphicX->root->right->data.num, scaleGraphicY->root->left->data.num, scaleGraphicY->root->right->data.num);
+
+    fprintf(pyFilePtr, "plt.plot(%d, y(%d),\n"
+                       "\tmarker='o',\n"
+                       "\tmarkersize=10,\n"
+                       "\tcolor='red',\n"
+                       "\tlabel='точка разложения')\n", tailorX0->root->data.num, 
+                                                       tailorX0->root->data.num);
 
     fprintf(pyFilePtr, "plt.xlabel(\"x\", fontsize=12)\n");
     fprintf(pyFilePtr, "plt.ylabel(\"y\", fontsize=12)\n");

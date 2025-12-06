@@ -8,6 +8,7 @@ void startTexDumpTailor(tree_t* tailorX0, tree_t* tailorOrder);
 FILE* generateGraphic(tree_t* expression, tree_t* scaleGraphicX, tree_t* scaleGraphicY);
 void endGraphicDump();
 
-void pythonGenGraphic(tree_t* expression, tree_t* derivative, tree_t* tailor, tree_t* tailorOrder, tree_t* tailorX0, tree_t* scaleGraphicX, tree_t* scaleGraphicY);
+void pythonGenGraphic(tree_t* expression, tree_t* derivative, tree_t* tailor, tree_t* tangent, tree_t* tailorOrder, tree_t* tailorX0, tree_t* scaleGraphicX, tree_t* scaleGraphicY);
+void insertGraphicTex();
 
 void endTexFile(tree_t* expression, tree_t* derivative);
