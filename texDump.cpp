@@ -70,6 +70,7 @@ void texDumpTree(tree_t* expression, FILE* texFilePtr, bool isTailorTree, tree_t
                                 "\\usepackage[english,russian]{babel}\n"
                                 "\\usepackage{graphicx}\n"
                                 "\\usepackage{breqn}"
+                                "\\usepackage{float}"
                                 "\\usepackage{pgfplots}\n\n");
 
             fprintf(texFilePtr, "\\pgfplotsset{compat=1.18}\n");
@@ -132,7 +133,7 @@ void texDumpTree(tree_t* expression, FILE* texFilePtr, bool isTailorTree, tree_t
 
     texDumpNode(texFilePtr, expression->root);
     
-    if(isTailorTree) fprintf(texFilePtr, "+o((x-%d)^%d)\n", calculateSubTree(tailorX0->root), calculateSubTree(tailorOrder->root));
+    if(isTailorTree) fprintf(texFilePtr, "+o((x-%lg)^%lg)\n", calculateSubTree(tailorX0->root), calculateSubTree(tailorOrder->root));
     fprintf(texFilePtr, "\\end{dmath}\n");
 
     if(openFileHere){
@@ -194,7 +195,7 @@ static void texDumpNode(FILE* texFilePtr, treeNode_t* node){
     if(node->type == NUMBER){
         if(node->data.num < 0)fprintf(texFilePtr, "(");
 
-        fprintf(texFilePtr, "%d", node->data.num);
+        fprintf(texFilePtr, "%lg", node->data.num);
 
         if(node->data.num < 0)fprintf(texFilePtr, ")");
     }
@@ -237,7 +238,7 @@ static void texDumpNode(FILE* texFilePtr, treeNode_t* node){
 static void dumpRandomCleverMatanPhrase(FILE* texFilePtr){
     assert(texFilePtr);
 
-    int curPhraseInd = rand() % (int) (sizeof(cleverMatanPhrases) / sizeof(char*));
+    int curPhraseInd = rand() % (sizeof(cleverMatanPhrases) / sizeof(char*));
 
     fprintf(texFilePtr, "%s\n", cleverMatanPhrases[curPhraseInd]);
 }
@@ -247,7 +248,7 @@ static void dumpRandomCleverMatanPhrase(FILE* texFilePtr){
 //     assert(scaleGraphicX);
 //     assert(scaleGraphicY);
 
-//     static int genGraphicCalls = 0;
+//     static double genGraphicCalls = 0;
 //     genGraphicCalls++;
 
 //     static FILE* texFilePtr = NULL;
@@ -319,11 +320,11 @@ void insertGraphicTex(){
 
     fprintf(texFilePtr, "\\section{Теперь, чтобы все стало совсем понятно(ахахахахаахахаххаха).\\\\Построим график полученной производной исходной функции}\n");
 
-    fprintf(texFilePtr, "\\begin{figure}\n"
+    fprintf(texFilePtr, "\\begin{figure}[H]\n"
                     "\\centering\n"
                     "\\includegraphics[width=1.0\\textwidth, keepaspectratio]{graph.jpg}\n"
                     "\\end{figure}\n");
-    fprintf(texFilePtr, "\\newpage\n");
+    // fprintf(texFilePtr, "\\newpage\n");
 
     fclose(texFilePtr);
 }
@@ -338,7 +339,7 @@ void pythonGenGraphic(tree_t* expression, tree_t* derivative, tree_t* tailor, tr
     assert(scaleGraphicX);
     assert(scaleGraphicY);
 
-    static int callsGenGraphic = 0;
+    static double callsGenGraphic = 0;
     callsGenGraphic++;
 
     FILE* pyFilePtr = NULL;
@@ -396,7 +397,7 @@ void pythonGenGraphic(tree_t* expression, tree_t* derivative, tree_t* tailor, tr
     dumpExpressionForGraphic(pyFilePtr, tangent->root);
     fprintf(pyFilePtr, "\n");
 
-    fprintf(pyFilePtr, "x_vals = np.linspace(%d, %d, 1000)\n", scaleGraphicX->root->left->data.num, scaleGraphicX->root->right->data.num);
+    fprintf(pyFilePtr, "x_vals = np.linspace(%lg, %lg, 1000)\n", scaleGraphicX->root->left->data.num, scaleGraphicX->root->right->data.num);
     
     fprintf(pyFilePtr, "plt.figure(figsize=(10, 6))\n");
     
@@ -405,9 +406,9 @@ void pythonGenGraphic(tree_t* expression, tree_t* derivative, tree_t* tailor, tr
     // fprintf(pyFilePtr, "plt.plot(x_vals, y_prime(x_vals), label=\"f'(x)\", linewidth=2)\n");
     fprintf(pyFilePtr, "plt.plot(x_vals, tangent(x_vals), label=\"касетельная\", linewidth=2)\n");
     
-    fprintf(pyFilePtr, "plt.axis([%d, %d, %d, %d])\n", scaleGraphicX->root->left->data.num, scaleGraphicX->root->right->data.num, scaleGraphicY->root->left->data.num, scaleGraphicY->root->right->data.num);
+    fprintf(pyFilePtr, "plt.axis([%lg, %lg, %lg, %lg])\n", scaleGraphicX->root->left->data.num, scaleGraphicX->root->right->data.num, scaleGraphicY->root->left->data.num, scaleGraphicY->root->right->data.num);
 
-    fprintf(pyFilePtr, "plt.plot(%d, y(%d),\n"
+    fprintf(pyFilePtr, "plt.plot(%lg, y(%lg),\n"
                        "\tmarker='o',\n"
                        "\tmarkersize=10,\n"
                        "\tcolor='red',\n"
@@ -417,6 +418,7 @@ void pythonGenGraphic(tree_t* expression, tree_t* derivative, tree_t* tailor, tr
     fprintf(pyFilePtr, "plt.xlabel(\"x\", fontsize=12)\n");
     fprintf(pyFilePtr, "plt.ylabel(\"y\", fontsize=12)\n");
     fprintf(pyFilePtr, "plt.grid(True, alpha=0.3)\n");
+    fprintf(pyFilePtr, "plt.legend()\n");
 
     fprintf(pyFilePtr, "plt.savefig(\"graph.jpg\")\n");
 
@@ -446,7 +448,7 @@ static void dumpExpressionForGraphic(FILE* texFilePtr, treeNode_t* node){
     assert(node);
 
     if(node->type == NUMBER){
-        fprintf(texFilePtr, "%d", node->data.num);
+        fprintf(texFilePtr, "%lg", node->data.num);
     }
     else if(node->type == VARIABLE){
         fprintf(texFilePtr, "%s", node->data.var);
@@ -495,7 +497,7 @@ void startTexDumpTailor(tree_t* tailorX0, tree_t* tailorOrder){
     assert(texFilePtr);
 
     fprintf(texFilePtr, "\\section{И снова Тейлор ...- - -...}\n");
-    fprintf(texFilePtr, "Расчленим исходную функцию до $o((x-%d)^%d)$.\n", calculateSubTree(tailorX0->root), calculateSubTree(tailorOrder->root));
+    fprintf(texFilePtr, "Расчленим исходную функцию до $o((x-%lg)^%lg)$.\n", calculateSubTree(tailorX0->root), calculateSubTree(tailorOrder->root));
 
     fclose(texFilePtr);
 }

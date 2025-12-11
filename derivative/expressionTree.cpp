@@ -16,8 +16,8 @@
 
 const size_t MAX_VARIABLE_SIZE = 64;
 
-const int GRAPHIC_STANDARD_MIN_X = -10;
-const int GRAPHIC_STANDARD_MAX_X =  10;
+const double GRAPHIC_STANDARD_MIN_X = -10;
+const double GRAPHIC_STANDARD_MAX_X =  10;
 
 static treeNode_t* getG(treeNode_t* node, char* buffer, char** curBufferPos);
 static treeNode_t* getM(treeNode_t* node, char* buffer, char** curBufferPos);
@@ -44,7 +44,7 @@ treeNode_t* readExpression(tree_t* expression, char* buffer, size_t* curBufferPo
     return expression->root;
 }
 
-treeNode_t* createNewNodeNumber(int value, treeNode_t* left, treeNode_t* right){
+treeNode_t* createNewNodeNumber(double value, treeNode_t* left, treeNode_t* right){
     treeNode_t* newNode = createNewNode(left, right);
 
     newNode->type = NUMBER;
@@ -301,11 +301,14 @@ static treeNode_t* getN(char** curBufferPos){
 
     char* startS = *curBufferPos;
 
-    int val = 0;
+    double val = 0;
 
     bool isNegative = false;
-    while(('0' <= **curBufferPos && **curBufferPos <= '9') || ((**curBufferPos == '-') && ('0' <= *(*curBufferPos + 1) && *(*curBufferPos + 1) <= '9'))){
+    bool notInt = false;
+    double notIntFix = 1;
+    while(('0' <= **curBufferPos && **curBufferPos <= '9') || ((**curBufferPos == '-') && ('0' <= *(*curBufferPos + 1) && *(*curBufferPos + 1) <= '9')) || ((**curBufferPos == '.') && ('0' <= *(*curBufferPos + 1) && *(*curBufferPos + 1) <= '9'))){
         LPRINTF("Получаю число val = %d", val);
+
         if(**curBufferPos == '-'){
             LPRINTF("отрицательное число найдено");
             isNegative = true;
@@ -313,7 +316,16 @@ static treeNode_t* getN(char** curBufferPos){
             (*curBufferPos)++;
             continue;
         }
-
+        if(notInt){
+            notIntFix *= 10;
+        }
+        if(**curBufferPos == '.'){
+            printf("MEOW\n");
+            notInt = true;
+            (*curBufferPos)++;
+            continue;
+        }
+        
         val = val * 10 + (**curBufferPos - '0');
 
         LPRINTF("Получаю число val = %d", val);
@@ -328,6 +340,10 @@ static treeNode_t* getN(char** curBufferPos){
 
     if(isNegative){
         val *= -1;
+    }
+
+    if(notInt){
+        val /= notIntFix;
     }
 
     return createNewNodeNumber(val, NULL, NULL);

@@ -49,20 +49,20 @@ int main(int argc, char* argv[]){
 
     tree_t* graphicXScale = findConfigParameter(GRAPHIC_X_SCALE);
     LPRINTF("tailorOrder.type = %d", tailorOrder->root->type);
-    // logTree(graphicXScale, "graphicXScale tree");
+    logTree(graphicXScale, "graphicXScale tree");
 
     tree_t* graphicYScale = findConfigParameter(GRAPHIC_Y_SCALE);
     LPRINTF("tailorOrder.type = %d", tailorOrder->root->type);
     // logTree(graphicYScale, "graphicYScale tree");
 
     tree_t derivative = differentiate(formula, variableToDiff);
-    // logTree(&derivative, "after differentiation");
+    logTree(&derivative, "after differentiation");
 
     texDumpTree(formula);
 
-    optimizeExpression(&derivative, derivative.root);
+    optimizeExpression(&derivative, derivative.root, true);
     LPRINTF("Ended optimization");
-    // logTree(&derivative, "after optimization");
+    logTree(&derivative, "after optimization");
     
     tree_t tangent = tangentExpression(formula, &derivative, tailorX0, variableToDiff);
 
@@ -74,7 +74,7 @@ int main(int argc, char* argv[]){
     // texDumpTree(&tailor, NULL, true, tailorX0, tailorOrder);
     
     // logTree(&tailor, "tailor expansion before optimization");
-    optimizeExpression(&tailor, tailor.root);
+    optimizeExpression(&tailor, tailor.root, true);
     // logTree(&tailor, "tailor expansion after optimization");
 
     texDumpTree(&tailor, NULL, true, tailorX0, tailorOrder);

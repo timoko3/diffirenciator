@@ -8,25 +8,25 @@
 #include <assert.h>
 #include <stdio.h>
 
-int addH(int* params){
+double addH(double* params){
     assert(params);
 
     return params[0] + params[1];
 }
 
-int subH(int* params){
+double subH(double* params){
     assert(params);
 
     return params[0] - params[1];
 }
 
-int mulH(int* params){
+double mulH(double* params){
     assert(params);
 
     return params[0] * params[1];
 } 
 
-int divH(int* params){
+double divH(double* params){
     assert(params);
 
     if(params[1] == 0){
@@ -36,85 +36,85 @@ int divH(int* params){
     return params[0] / params[1];
 } 
 
-int powH(int* params){
+double powH(double* params){
     assert(params);
 
-    return (int) pow((int) params[0], (int) params[1]);
+    return (double) pow((double) params[0], (double) params[1]);
 }
 
-int sinH(int* params){
+double sinH(double* params){
     assert(params);
 
     LPRINTF("Сейчас операция синус c параметром %d\n", params[0]);
 
-    return (int) round(sin(params[0]));
+    return (double) round(sin(params[0]));
 } 
 
-int cosH(int* params){
+double cosH(double* params){
     assert(params);
 
-    return (int) round(cos(params[0]));
+    return (double) round(cos(params[0]));
 } 
 
-int tanH(int* params){
+double tanH(double* params){
     assert(params);
 
-    return (int) tan(params[0]);
+    return (double) tan(params[0]);
 } 
 
-int cotH(int* params){
+double cotH(double* params){
     assert(params);
 
-    return (int) (1 / tan(params[0]));
+    return (double) (1 / tan(params[0]));
 } 
 
-int lnH (int* params){
+double lnH (double* params){
     assert(params);
 
-    return (int) log(params[0]);
+    return (double) log(params[0]);
 }
 
-int shH (int* params){
+double shH (double* params){
     assert(params);
 
-    return (int) sinh(params[0]);
+    return (double) sinh(params[0]);
 }
 
-int chH (int* params){
+double chH (double* params){
     assert(params);
 
-    return (int) cosh(params[0]);
+    return (double) cosh(params[0]);
 }
 
-int arcsinH (int* params){
+double arcsinH (double* params){
     assert(params);
 
-    return (int) asin(params[0]);
+    return (double) asin(params[0]);
 }
 
-int arccosH (int* params){
+double arccosH (double* params){
     assert(params);
 
-    return (int) acos(params[0]);
+    return (double) acos(params[0]);
 }
 
-int arctanH (int* params){
+double arctanH (double* params){
     assert(params);
 
-    return (int) atan(params[0]);
+    return (double) atan(params[0]);
 }
 
-int sqrtH (int* params){
+double sqrtH (double* params){
     assert(params);
 
-    return (int) sqrt(params[0]);
+    return (double) sqrt(params[0]);
 }
 
-int factorial(int n){
+double factorial(double n){
 
-    int factorial = 1;
+    double factorial = 1;
 
-    for(int curNum = 1; curNum <= n; curNum++){
+    for(double curNum = 1; curNum <= n; curNum++){
         factorial *= curNum;
     }
 

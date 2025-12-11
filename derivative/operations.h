@@ -2,7 +2,7 @@
 #include "mathHandlers.h"
 
 typedef treeNode_t* (*diffHandler_t)(treeNode_t** params, const char* variableToDiff);
-typedef int (*calcHandler_t)(int* params);
+typedef double (*calcHandler_t)(double* params);
 
 enum operationNames{
     ADD,

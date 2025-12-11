@@ -9,7 +9,7 @@
 union treeVal_t{
     char* op;
     char* var;
-    int num;
+    double num;
 };
 
 enum nodeType{
