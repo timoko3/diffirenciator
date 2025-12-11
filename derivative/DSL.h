@@ -2,8 +2,12 @@
 #define DSL_H
 
 #define _DIF(node, variableToDiff) differentiateNode(node, variableToDiff)
-#define _L         node->left
-#define _R         node->right
+#define _L(node)   node->left
+#define _R(node)   node->right
+#define _PAR(node) node->parent
+#define _DATA_NUM(node) node->data.num
+#define _DATA_OP(node) node->data.op
+#define _DATA_VAR(node) node->data.var
 #define _C(node)   copyNode(node)
 
 #define _N(value)  createNewNodeNumber    (value, NULL, NULL)

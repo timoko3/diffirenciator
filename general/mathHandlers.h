@@ -23,4 +23,6 @@ double sqrtH (double* params);
 
 double factorial(double n);
 
+bool isEqualDouble(double num1, double num2);
+
 #endif /* MATH_HANDLERS_H */

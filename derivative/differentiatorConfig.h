@@ -18,13 +18,7 @@ struct configParam{
     tree_t treeParam;
 };
 
-static configParam config[]{
-    {"tailor_order" , TAILOR_ORDER,     },
-    {"tailor_x0"    , TAILOR_X0,        },
-    {"formula"      , FORMULA,          },
-    {"x_scale"      , GRAPHIC_X_SCALE,  },
-    {"y_scale"      , GRAPHIC_Y_SCALE,  }
-};
+extern configParam config[];
 
 void differentiatorReadConfigParam(string curString);
 tree_t* findConfigParameter(differentiatorConfigParams type);

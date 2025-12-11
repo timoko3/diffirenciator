@@ -11,6 +11,14 @@
 
 const size_t MAX_CONFIG_NAME_SIZE = 30;
 
+configParam config[]{
+    {"tailor_order" , TAILOR_ORDER,     },
+    {"tailor_x0"    , TAILOR_X0,        },
+    {"formula"      , FORMULA,          },
+    {"x_scale"      , GRAPHIC_X_SCALE,  },
+    {"y_scale"      , GRAPHIC_Y_SCALE,  }
+};
+
 static bool getConfigParameter(const char* configParamName, configParam** curConfigParam);
 
 void differentiatorReadConfigParam(string curString){

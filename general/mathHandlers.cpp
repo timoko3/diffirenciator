@@ -120,3 +120,11 @@ double factorial(double n){
 
     return factorial;
 }
+
+bool isEqualDouble(double num1, double num2){
+    if(fabs(num2 - num1) < 0.001){
+        return true;
+    }
+
+    return false; 
+}

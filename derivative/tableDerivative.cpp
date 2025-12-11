@@ -37,8 +37,8 @@ treeNode_t* operDiff(treeNode_t* node, const char* variableToDiff){
 
             treeNode_t** params = (treeNode_t**) calloc(operations[curOper].paramCount, sizeof(treeNode_t*));
             switch(operations[curOper].paramCount){
-                case 1: params[0] = _L; break;
-                case 2: params[0] = _L; params[1] = _R; break;
+                case 1: params[0] = _L(node); break;
+                case 2: params[0] = _L(node); params[1] = _R(node); break;
                 default: break;
             }
 
