@@ -320,7 +320,6 @@ static treeNode_t* getN(char** curBufferPos){
             notIntFix *= 10;
         }
         if(**curBufferPos == '.'){
-            printf("MEOW\n");
             notInt = true;
             (*curBufferPos)++;
             continue;

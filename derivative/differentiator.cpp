@@ -43,6 +43,7 @@ tree_t differentiate(tree_t* expression, const char* variableToDiff){
     treeCtor(&derivativeTree);
 
     derivativeTree.root = differentiateNode(expression->root, variableToDiff);
+    derivativeTree.amountNodes = countNodesTree(derivativeTree.root);
 
     return derivativeTree;
 }
@@ -213,10 +214,15 @@ tree_t tailorExpansion(tree_t* expression, const char* variableToDiff, tree_t* t
         tree_t tmp = curTermDerivative;
         curTermDerivative = differentiate(&curTermDerivative, variableToDiff);
         freeNode(tmp.root, false);
+
+        optimizeExpression(&curTermDerivative, curTermDerivative.root);
+        optimizeExpression(&tailorTree, tailorTree.root);
     }
     freeNode(curTermDerivative.root, false);
     
     setParent(tailorTree.root);
+
+    tailorTree.amountNodes = countNodesTree(tailorTree.root);
 
     return tailorTree;
 }

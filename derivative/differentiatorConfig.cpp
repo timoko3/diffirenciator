@@ -18,7 +18,7 @@ void differentiatorReadConfigParam(string curString){
 
     size_t curPos = 0;
 
-    char* curBufferPtr = curString.ptr;
+    // char* curBufferPtr = curString.ptr;
     
     char curNameConfigParam[MAX_CONFIG_NAME_SIZE] = "";
 
@@ -27,7 +27,7 @@ void differentiatorReadConfigParam(string curString){
     sscanf(curString.ptr, "%s%n", curNameConfigParam, &amountReadSymbols);
     LPRINTF("amountReadSymbols = %d", amountReadSymbols);
 
-    curPos += amountReadSymbols;
+    curPos += (size_t) amountReadSymbols;
 
     while(curString.ptr[curPos] == ' ' || curString.ptr[curPos] == '='){
         curPos++;
@@ -53,6 +53,8 @@ tree_t* findConfigParameter(differentiatorConfigParams type){
             return &config[curConfigInd].treeParam;
         }
     }
+
+    return NULL;
 }
 
 void configDtor(){

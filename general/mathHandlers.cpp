@@ -29,7 +29,7 @@ double mulH(double* params){
 double divH(double* params){
     assert(params);
 
-    if(params[1] == 0){
+    if((params[1] - 0) < 0.0001){
         printf("Деление на 0 невозможно!\n");
     }
 
@@ -39,7 +39,7 @@ double divH(double* params){
 double powH(double* params){
     assert(params);
 
-    return (double) pow((double) params[0], (double) params[1]);
+    return pow(params[0], params[1]);
 }
 
 double sinH(double* params){
@@ -47,67 +47,67 @@ double sinH(double* params){
 
     LPRINTF("Сейчас операция синус c параметром %d\n", params[0]);
 
-    return (double) round(sin(params[0]));
+    return  round(sin(params[0]));
 } 
 
 double cosH(double* params){
     assert(params);
 
-    return (double) round(cos(params[0]));
+    return  round(cos(params[0]));
 } 
 
 double tanH(double* params){
     assert(params);
 
-    return (double) tan(params[0]);
+    return  tan(params[0]);
 } 
 
 double cotH(double* params){
     assert(params);
 
-    return (double) (1 / tan(params[0]));
+    return (1 / tan(params[0]));
 } 
 
 double lnH (double* params){
     assert(params);
 
-    return (double) log(params[0]);
+    return log(params[0]);
 }
 
 double shH (double* params){
     assert(params);
 
-    return (double) sinh(params[0]);
+    return sinh(params[0]);
 }
 
 double chH (double* params){
     assert(params);
 
-    return (double) cosh(params[0]);
+    return cosh(params[0]);
 }
 
 double arcsinH (double* params){
     assert(params);
 
-    return (double) asin(params[0]);
+    return asin(params[0]);
 }
 
 double arccosH (double* params){
     assert(params);
 
-    return (double) acos(params[0]);
+    return acos(params[0]);
 }
 
 double arctanH (double* params){
     assert(params);
 
-    return (double) atan(params[0]);
+    return atan(params[0]);
 }
 
 double sqrtH (double* params){
     assert(params);
 
-    return (double) sqrt(params[0]);
+    return sqrt(params[0]);
 }
 
 double factorial(double n){

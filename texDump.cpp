@@ -2,7 +2,7 @@
 #include "derivative/operations.h"
 #include "differentiator.h"
 
-#define DEBUG
+// #define DEBUG
 
 #include "general/file.h"
 #include "general/debug.h"
@@ -19,7 +19,7 @@ const char* PY_GEN_GRAPHIC_FILE_NAME  = "genGraphic.py";
 
 static void dumpRandomCleverMatanPhrase(FILE* texFilePtr);
 
-static void generateGraphic(FILE* texFilePtr, tree_t* expression, tree_t* scaleGraphic);
+// static void generateGraphic(FILE* texFilePtr, tree_t* expression, tree_t* scaleGraphic);
 static void dumpExpressionForGraphic(FILE* texFilePtr, treeNode_t* node);
 
 enum caseNeedBracketsOp{
@@ -238,7 +238,7 @@ static void texDumpNode(FILE* texFilePtr, treeNode_t* node){
 static void dumpRandomCleverMatanPhrase(FILE* texFilePtr){
     assert(texFilePtr);
 
-    int curPhraseInd = rand() % (sizeof(cleverMatanPhrases) / sizeof(char*));
+    int curPhraseInd = (size_t) rand() % (sizeof(cleverMatanPhrases) / sizeof(char*));
 
     fprintf(texFilePtr, "%s\n", cleverMatanPhrases[curPhraseInd]);
 }
@@ -344,7 +344,7 @@ void pythonGenGraphic(tree_t* expression, tree_t* derivative, tree_t* tailor, tr
 
     FILE* pyFilePtr = NULL;
 
-    if(callsGenGraphic == 1){
+    if((callsGenGraphic - 1) < 0.001){
         fileDescription pyGenGraphic{
             PY_GEN_GRAPHIC_FILE_NAME,
             "wb"

@@ -8,6 +8,7 @@ void treeRead(const char* expressionFileName);
 treeNode_t* createNewNode(treeNode_t* left, treeNode_t* right);
 treeNode_t* copyNode(treeNode_t* node);
 bool setParent(treeNode_t* curNode);
+int countNodesTree(treeNode_t* node);
 
 void freeNode(treeNode_t* node, bool withoutRoot);
 void freeLeftSubtree(treeNode_t* node,  bool withoutRoot);

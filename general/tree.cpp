@@ -83,6 +83,21 @@ treeNode_t* copyNode(treeNode_t* node){
     return copy;
 }
 
+int countNodesTree(treeNode_t* node){
+    assert(node);
+
+    static int result = 0;
+    result++;
+
+    if(node->left){
+        countNodesTree(node->left);
+    }
+    if(node->right){
+        countNodesTree(node->right);
+    }
+
+    return result;
+}
 
 bool setParent(treeNode_t* curNode){
     assert(curNode);

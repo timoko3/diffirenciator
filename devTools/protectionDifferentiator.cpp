@@ -183,7 +183,7 @@ void treeGraphDump(tree_t* expression){
     printGraphNode(expression->root, graphFilePtr);
 
     fprintf(graphFilePtr, "root_label [shape=box, width = 2.4, height = 1.4, label=\"ROOT\", style=\"filled\", fillcolor=\"#BBDDEE\", color=\"%s\", penwidth = 6,  fontcolor=\"darkblue\", fontsize = 40];\n", TREE_BRANCH_COLOR);
-    fprintf(graphFilePtr, "root_label -> node%d [color=\"%s\"  , arrowsize=2.5, penwidth=3];\n", expression->root, TREE_BRANCH_COLOR);
+    fprintf(graphFilePtr, "root_label -> node%d [color=\"%s\"  , arrowsize=2.5, penwidth=3];\n", (int)(uintptr_t) expression->root, TREE_BRANCH_COLOR);
 
     fprintf(graphFilePtr, "}\n");
 
