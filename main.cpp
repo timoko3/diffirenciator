@@ -70,6 +70,7 @@ int main(int argc, char* argv[]){
 
     tree_t tailor = tailorExpansion(formula, variableToDiff, tailorX0, tailorOrder);
     
+
     startTexDumpTailor(tailorX0, tailorOrder);
     texDumpTree(&tailor, NULL, true, tailorX0, tailorOrder);
     

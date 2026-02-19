@@ -510,7 +510,10 @@ static caseNeedBracketsOp needBracketsOp(treeNode_t* node, operation_t curOp){
         return NO_NEED;
     }
     else if(isEqualStrings(curOp.nameString, "*") && (node->left->type == OPERATOR) && (isEqualStrings(node->left->data.op, "+") || isEqualStrings(node->left->data.op, "-"))){
-        return BOTH_OPERAND;
+        return LEFT_OPERAND;
+    }
+    else if(isEqualStrings(curOp.nameString, "*") && (node->right->type == OPERATOR) && (isEqualStrings(node->right->data.op, "+") || isEqualStrings(node->right->data.op, "-"))){
+        return RIGHT_OPERAND;
     }
     else if(isEqualStrings(curOp.nameString, "^") && ((node->left->type == OPERATOR && isEqualStrings(node->left->data.op, "-")) || (node->left->type == OPERATOR && isEqualStrings(node->left->data.op, "+")))){
         return LEFT_OPERAND;

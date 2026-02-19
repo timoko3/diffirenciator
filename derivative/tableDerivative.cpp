@@ -104,7 +104,7 @@ treeNode_t* powDiff(treeNode_t** params, const char* variableToDiff){
 treeNode_t* expFuncDiff(treeNode_t** params, const char* variableToDiff){
     assert(params);
 
-    return _MUL(_POW(_C(params[0]), _C(params[1])), _ADD(_MUL(_DIF(params[1], variableToDiff), _LN(_C(params[0]), NULL)), _MUL(_DIV(_DIF(params[0], variableToDiff), _C(params[0])), _C(params[1]))));
+    return _MUL(_POW(_C(params[0]), _C(params[1])), _ADD(_MUL(_DIF(params[1], variableToDiff), _LN(_C(params[0]), NULL)), _MUL(_C(params[1]), _DIV(_DIF(params[0], variableToDiff), _C(params[0])))));
 }
 
 treeNode_t* sinDiff(treeNode_t** params, const char* variableToDiff){

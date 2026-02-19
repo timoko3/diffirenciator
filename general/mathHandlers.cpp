@@ -1,6 +1,6 @@
 #include "mathHandlers.h"
 
-// #define DEBUG
+#define DEBUG
 
 #include "debug.h"
 
@@ -45,15 +45,15 @@ double powH(double* params){
 double sinH(double* params){
     assert(params);
 
-    LPRINTF("Сейчас операция синус c параметром %d\n", params[0]);
+    LPRINTF("Сейчас операция синус c параметром %lf\n", params[0]);
 
-    return  round(sin(params[0]));
+    return sin(params[0]);
 } 
 
 double cosH(double* params){
     assert(params);
 
-    return  round(cos(params[0]));
+    return cos(params[0]);
 } 
 
 double tanH(double* params){
@@ -122,7 +122,8 @@ double factorial(double n){
 }
 
 bool isEqualDouble(double num1, double num2){
-    if(fabs(num2 - num1) < 0.001){
+    if(fabs(num2 - num1) < 0.00001){
+        // LPRINTF("%lf и %lf равны");
         return true;
     }
 

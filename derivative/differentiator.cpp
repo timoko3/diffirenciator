@@ -176,12 +176,13 @@ tree_t tailorExpansion(tree_t* expression, const char* variableToDiff, tree_t* t
         }
         
         // logTree(&tailorTree, "%lu  tailorTree", curTerm);
-        tree_t tmp = curTermDerivative;
-        curTermDerivative = differentiate(&curTermDerivative, variableToDiff);
-        freeNode(tmp.root, false);
+        tree_t newDeriv = differentiate(&curTermDerivative, variableToDiff);
+        freeNode(curTermDerivative.root, false);
+        curTermDerivative = newDeriv;
 
+        setParent(curTermDerivative.root);
         optimizeExpression(&curTermDerivative, curTermDerivative.root);
-        optimizeExpression(&tailorTree, tailorTree.root);
+        // optimizeExpression(&tailorTree, tailorTree.root);
     }
     freeNode(curTermDerivative.root, false);
     
@@ -269,7 +270,7 @@ static treeNode_t* removeNeutralElements(tree_t* derivative, treeNode_t* subTree
 
     LPRINTF("check if can removal neutral subTreeRoot = %p", subTreeRoot);
     if(subTreeRoot->type == OPERATOR){
-        if(_DATA_OP(subTreeRoot)[0] == '*' && isEqualDouble(_DATA_NUM(_L(subTreeRoot)), 0)){
+        if(_DATA_OP(subTreeRoot)[0] == '*' && _DATA_NUM(_L(subTreeRoot)) == 0){
             LPRINTF("zero multiply case removal neutral");
 
             freeNode(subTreeRoot, true);
@@ -349,9 +350,9 @@ static treeNode_t* removeNeutralSubtree(tree_t* derivative, treeNode_t* subTreeR
     // LPRINTF("subTreeRoot->parent = %p, subTreeRoot->parent->data.op = %s", subTreeRoot->parent->data.op);
 
     // LPRINTF("Проверка на то, есть ли умножение на 1 или плюсование 0. subTreeRoot->data.num = %d, subTreeRoot->parent->data.op[0] == '%c', subTreeRoot = %p, subTreeRoot->parent->right = %p", subTreeRoot->data.num, subTreeRoot->parent->data.op[0], subTreeRoot, subTreeRoot->parent->right);
-    if((_DATA_OP(_PAR(subTreeRoot))[0] == '*' && isEqualDouble(_DATA_NUM(_PAR(subTreeRoot)), 1))  || 
-        ((_DATA_OP(_PAR(subTreeRoot))[0] == '+' || _DATA_OP(_PAR(subTreeRoot))[0] == '-') && isEqualDouble(_DATA_NUM(subTreeRoot), 0)) ||
-        (_DATA_OP(_PAR(subTreeRoot))[0] == '/' && isEqualDouble(_DATA_NUM(subTreeRoot), 1) && _R(_PAR(subTreeRoot)) == subTreeRoot)){
+    if((_DATA_OP(_PAR(subTreeRoot))[0] == '*' && _DATA_NUM(_PAR(subTreeRoot)) == 1)  || 
+        ((_DATA_OP(_PAR(subTreeRoot))[0] == '+' || _DATA_OP(_PAR(subTreeRoot))[0] == '-') && _DATA_NUM(subTreeRoot) == 0) ||
+        (_DATA_OP(_PAR(subTreeRoot))[0] == '/' && _DATA_NUM(subTreeRoot) == 1 && _R(_PAR(subTreeRoot)) == subTreeRoot)){
         LPRINTF("удаляем поддерево с корнем %p", subTreeRoot);
 
         if(_PAR(_PAR(subTreeRoot))){
